@@ -10,7 +10,7 @@ import com.mygdx.game.RpgGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "SUPER SMASH";	//The title that appears when the game opens
+		config.title = "RPG";	//The title that appears when the game opens
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();	//The width of the computer screen
 		double height = screenSize.getHeight();	//Height of the computer screen
