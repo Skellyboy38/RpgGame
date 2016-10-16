@@ -14,9 +14,7 @@ public class DesktopLauncher {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();	//The width of the computer screen
 		double height = screenSize.getHeight();	//Height of the computer screen
-		config.width = (int)width;
-		int x = 5;
-		//Sets the width and height of the game 
+		config.width = (int)width;		//Sets the width and height of the game 
 		config.height = (int)height;	//This is the height of the screen
 		//config.fullscreen = true;		//Starts the game in full screen mode
 		new LwjglApplication(new RpgGame(), config);
