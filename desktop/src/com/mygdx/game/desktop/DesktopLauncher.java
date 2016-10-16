@@ -16,7 +16,7 @@ public class DesktopLauncher {
 		double height = screenSize.getHeight();	//Height of the computer screen
 		config.width = (int)width;		//Sets the width and height of the game 
 		config.height = (int)height;	//This is the height of the screen
-		//config.fullscreen = true;		//Starts the game in full screen mode
+		//config.fullscreen = true;		//Starts the game in screen mode
 		new LwjglApplication(new RpgGame(), config);
 	}
 }
