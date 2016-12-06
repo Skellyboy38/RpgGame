@@ -8,10 +8,14 @@ import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import monster.Monster;
 import path.Path;
@@ -27,6 +31,7 @@ public class RpgGame extends ApplicationAdapter {
 	public static final int HEIGHT = 600;
 	public static final int START_X = 0 - WIDTH/50;
 	public static final int START_Y = 27*(HEIGHT/30);
+	public static final float ZOOM_FACTOR = 0.05f;
 	
 	SpriteBatch batch;
 	Random random;
@@ -38,17 +43,33 @@ public class RpgGame extends ApplicationAdapter {
 	TileClickHandler clickHandler;
 	PathFinder finder;
 	Monster m;
+	OrthographicCamera cam;
+	FitViewport viewport;
+	InputProcessor zoom;
+	InputMultiplexer inputMultiplexer;
+	float effectiveViewportWidth;
+	float effectiveViewportHeight;
 	
 	String[] gemSkins = {"yellow", "red", "green", "blue", "black", "pink", "purple"};
 	
 	@Override
 	public void create () {
-		stage = new Stage();
+		batch = new SpriteBatch();
+		cam = new OrthographicCamera(WIDTH, HEIGHT);
+		effectiveViewportWidth = WIDTH;
+		effectiveViewportHeight = HEIGHT;
+		cam.position.set(cam.viewportWidth/2f, cam.viewportHeight/2f, 0);
+		cam.update();
+		viewport = new FitViewport(WIDTH, HEIGHT, cam);
+		stage = new Stage(viewport, batch);
+		zoom = new InputCore();
+		inputMultiplexer = new InputMultiplexer();
 		tiles = new ArrayList<ITile>();
 		checkpoints = new ArrayList<ITile>();
 		tileMap = new HashMap<Coordinate, ITile>();
-		Gdx.input.setInputProcessor(stage);
-		batch = new SpriteBatch();
+		inputMultiplexer.addProcessor(stage);
+		inputMultiplexer.addProcessor(zoom);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 		createCoordinates();
 		clickHandler = new TileClickHandler(tileMap, coordinates);
 		finder = new PathFinder();
@@ -59,8 +80,11 @@ public class RpgGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		updateEffectiveViewport();
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		cam.update();
+		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		renderTiles();
 		stage.act();
@@ -74,14 +98,20 @@ public class RpgGame extends ApplicationAdapter {
 		batch.dispose();
 	}
 	
+	public void updateEffectiveViewport() {
+		effectiveViewportWidth = WIDTH*cam.zoom;
+		effectiveViewportHeight = HEIGHT*cam.zoom;
+	}
+	
 	public List<Path> findAllPaths() {
 		Path p1 = finder.findPathBetweenTwoTiles(checkpoints.get(5), checkpoints.get(2));
 		Path p2 = finder.findPathBetweenTwoTiles(checkpoints.get(2), checkpoints.get(3));
 		Path p3 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(4));
 		Path p4 = finder.findPathBetweenTwoTiles(checkpoints.get(4), checkpoints.get(7));
 		Path p5 = finder.findPathBetweenTwoTiles(checkpoints.get(7), checkpoints.get(6));
-		Path p6 = finder.findPathBetweenTwoTiles(checkpoints.get(6), checkpoints.get(0));
-		Path p7 = finder.findPathBetweenTwoTiles(checkpoints.get(0), checkpoints.get(1));
+		Path p6 = finder.findPathBetweenTwoTiles(checkpoints.get(6), checkpoints.get(3));
+		Path p7 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(0));
+		Path p8 = finder.findPathBetweenTwoTiles(checkpoints.get(0), checkpoints.get(1));
 		List<Path> paths = new ArrayList<Path>();
 		paths.add(p1);
 		paths.add(p2);
@@ -90,6 +120,7 @@ public class RpgGame extends ApplicationAdapter {
 		paths.add(p5);
 		paths.add(p6);
 		paths.add(p7);
+		paths.add(p8);
 		return paths;
 	}
 	
@@ -119,6 +150,19 @@ public class RpgGame extends ApplicationAdapter {
 			else {
 				clickHandler.getClickedTile().unoccupy();
 			}
+		}
+		
+		if(Gdx.input.getX() <= 20 && (cam.position.x - effectiveViewportWidth/2) > 0) {
+			cam.position.x -= 10;
+		}
+		if(Gdx.input.getX() >= 980 && (cam.position.x + effectiveViewportWidth/2) < WIDTH) {
+			cam.position.x += 10;
+		}
+		if(Gdx.input.getY() <= 20 && (cam.position.y + effectiveViewportHeight/2) < HEIGHT) {
+			cam.position.y += 10;
+		}
+		if(Gdx.input.getY() >= 580 && (cam.position.y - effectiveViewportHeight/2) > 0) {
+			cam.position.y -= 10;
 		}
 	}
 	
@@ -284,5 +328,62 @@ public class RpgGame extends ApplicationAdapter {
 				coordinates[x][y] = new Coordinate(x, y);
 			}
 		}
+	}
+	
+	private class InputCore implements InputProcessor {
+
+		@Override
+		public boolean keyDown(int keycode) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean keyUp(int keycode) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean keyTyped(char character) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean mouseMoved(int screenX, int screenY) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean scrolled(int amount) {
+			if(amount == 1 && cam.zoom < 1){
+				cam.zoom += ZOOM_FACTOR;
+			}
+			else if(amount == -1 && cam.zoom > 0.4){
+				cam.zoom -= ZOOM_FACTOR;
+			}
+			return true;
+		}
+		
 	}
 }

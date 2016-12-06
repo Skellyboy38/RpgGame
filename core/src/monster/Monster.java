@@ -28,7 +28,7 @@ public class Monster implements IMonster {
 	public Monster(SpriteBatch batch, Texture texture, int posX, int posY) {
 		this.batch = batch;
 		this.path = new ArrayList<ITile>();
-		this.speed = 5;
+		this.speed = 4;
 		this.originalTexture = texture;
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
