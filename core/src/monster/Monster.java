@@ -24,6 +24,7 @@ public class Monster implements IMonster {
 	private SpriteBatch batch;
 	private List<ITile> path;
 	private int tileCounter;
+	private ITile lastTile;
 	
 	public Monster(SpriteBatch batch, Texture texture, int posX, int posY) {
 		this.batch = batch;
@@ -51,6 +52,10 @@ public class Monster implements IMonster {
 			}
 		}
 		render();
+	}
+	
+	public void kill() {
+		isDead = true;
 	}
 	
 	public void render() {
@@ -102,5 +107,17 @@ public class Monster implements IMonster {
 			}
 		}
 		tileCounter = 0;
+		Path lastPath = paths.get(paths.size() - 1);
+		List<ITile> tilesForLastPath = lastPath.getPath();
+		lastTile = tilesForLastPath.get(tilesForLastPath.size() - 1);
+	}
+	
+	public boolean donePath() {
+		if(this.hasReached(lastTile)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

@@ -17,9 +17,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import monster.Monster;
-import path.Path;
-import path.PathFinder;
+import monster.Summoner;
 import tile.Coordinate;
 import tile.ITile;
 import tile.Tile;
@@ -29,11 +27,11 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 600;
-	public static final int START_X = 0 - WIDTH/50;
-	public static final int START_Y = 27*(HEIGHT/30);
 	public static final float ZOOM_FACTOR = 0.05f;
+	public int numMonsters = 10;
 	
 	SpriteBatch batch;
+	Summoner summoner;
 	Random random;
 	List<ITile> tiles;
 	List<ITile> checkpoints; // The order of checkpoints from start to finish: 5, 2, 3, 4, 7, 6, 0, 1
@@ -41,8 +39,6 @@ public class RpgGame extends ApplicationAdapter {
 	Map<Coordinate, ITile> tileMap;
 	Coordinate[][] coordinates;
 	TileClickHandler clickHandler;
-	PathFinder finder;
-	Monster m;
 	OrthographicCamera cam;
 	FitViewport viewport;
 	InputProcessor zoom;
@@ -72,10 +68,9 @@ public class RpgGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		createCoordinates();
 		clickHandler = new TileClickHandler(tileMap, coordinates);
-		finder = new PathFinder();
 		createTiles();
 		random = new Random();
-		m = new Monster(batch, new Texture("monster.png"), START_X, START_Y);
+		summoner = new Summoner(batch, checkpoints);
 	}
 
 	@Override
@@ -87,8 +82,8 @@ public class RpgGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		renderTiles();
+		summoner.render();
 		stage.act();
-		m.update();
 		batch.end();
 		checkInputs();
 	}
@@ -103,43 +98,23 @@ public class RpgGame extends ApplicationAdapter {
 		effectiveViewportHeight = HEIGHT*cam.zoom;
 	}
 	
-	public List<Path> findAllPaths() {
-		Path p1 = finder.findPathBetweenTwoTiles(checkpoints.get(5), checkpoints.get(2));
-		Path p2 = finder.findPathBetweenTwoTiles(checkpoints.get(2), checkpoints.get(3));
-		Path p3 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(4));
-		Path p4 = finder.findPathBetweenTwoTiles(checkpoints.get(4), checkpoints.get(7));
-		Path p5 = finder.findPathBetweenTwoTiles(checkpoints.get(7), checkpoints.get(6));
-		Path p6 = finder.findPathBetweenTwoTiles(checkpoints.get(6), checkpoints.get(3));
-		Path p7 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(0));
-		Path p8 = finder.findPathBetweenTwoTiles(checkpoints.get(0), checkpoints.get(1));
-		List<Path> paths = new ArrayList<Path>();
-		paths.add(p1);
-		paths.add(p2);
-		paths.add(p3);
-		paths.add(p4);
-		paths.add(p5);
-		paths.add(p6);
-		paths.add(p7);
-		paths.add(p8);
-		return paths;
-	}
-	
 	public void checkInputs() {
 		boolean isEnterPressed = false;
 		if(Gdx.input.isKeyPressed(66) && !isEnterPressed) {
+			summoner.clearMonsters();
+			summoner.reset();
+			for(int i = 0; i < numMonsters; i++) {
+				summoner.createMonster();
+			}
+			summoner.start();
 			isEnterPressed = true;
-			m.jump(START_X, START_Y);
-			m.setPath(findAllPaths());
 		}
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
 		}
 		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null) {
 			clickHandler.getClickedTile().occupy();
-			if(finder.pathExists(checkpoints.get(5), checkpoints.get(2)) && finder.pathExists(checkpoints.get(2), checkpoints.get(3)) &&
-					finder.pathExists(checkpoints.get(3), checkpoints.get(4)) && finder.pathExists(checkpoints.get(4), checkpoints.get(7)) &&
-					finder.pathExists(checkpoints.get(7), checkpoints.get(6)) && finder.pathExists(checkpoints.get(6), checkpoints.get(0)) &&
-					finder.pathExists(checkpoints.get(0), checkpoints.get(1))) {
+			if(summoner.doesPathExist()) {
 				int randomNum = random.nextInt((6 - 0) + 1) + 0;
 				String gemString = gemSkins[randomNum];
 				clickHandler.getClickedTile().disable();
