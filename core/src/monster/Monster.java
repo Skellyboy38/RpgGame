@@ -41,6 +41,10 @@ public class Monster implements IMonster {
 		this.tileCounter = -1;
 	}
 	
+	public boolean isDead() {
+		return isDead;
+	}
+	
 	public void update() {
 		if(tileCounter >= 0 && tileCounter < path.size()) {
 			ITile next = path.get(tileCounter);
@@ -56,6 +60,7 @@ public class Monster implements IMonster {
 	
 	public void kill() {
 		isDead = true;
+		originalTexture.dispose();
 	}
 	
 	public void render() {

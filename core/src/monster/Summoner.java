@@ -15,6 +15,7 @@ import tile.ITile;
 public class Summoner {
 	public static final int START_X = 0 - RpgGame.WIDTH/50;
 	public static final int START_Y = 27*(RpgGame.HEIGHT/30);
+	public static final int SPAWN_DELAY = 200;
 	
 	private List<Monster> monsters;
 	private SpriteBatch batch;
@@ -23,6 +24,8 @@ public class Summoner {
 	private List<ITile> checkpoints;
 	private Boolean[] startTimes;
 	private int timeElapsed;
+	private int numberOfMonsters;
+	private List<Path> paths;
 
 	public Summoner(SpriteBatch batch, List<ITile> checkpoints) {
 		this.batch = batch;
@@ -31,17 +34,26 @@ public class Summoner {
 		canStart = false;
 		this.checkpoints = checkpoints;
 		this.timeElapsed = 0;
-		startTimes = new Boolean[10];
+	}
+	
+	public void setNumberOfMonsters(int numMonsters) {
+		numberOfMonsters = numMonsters;
+		startTimes = new Boolean[numMonsters];
 		for(int i = 0; i < startTimes.length; i++) {
 			startTimes[i] = false;
 		}
 	}
 	
 	public void reset() {
+		paths = findAllPaths();
 		for(int i = 0; i < startTimes.length; i++) {
 			startTimes[i] = false;
 		}
 		timeElapsed = 0;
+		clearMonsters();
+		for(int i = 0; i < numberOfMonsters; i++) {
+			createMonster();
+		}
 	}
 	
 	public void clearMonsters() {
@@ -51,24 +63,25 @@ public class Summoner {
 	public void createMonster() {
 		Monster m = new Monster(batch, new Texture("monster.png"), START_X, START_Y);
 		m.jump(START_X, START_Y);
-		m.setPath(findAllPaths());
+		m.setPath(paths);
 		monsters.add(m);
 	}
 	
 	public void checkStatus() {
-		for(Monster m : monsters) {
-			if(m.donePath()) {
-				deleteMonster(m);
-				monsters.remove(m);
+		for(int i = 0; i < monsters.size(); i++) {
+			if(!monsters.get(i).isDead() && monsters.get(i).donePath()) {
+				killMonster(monsters.get(i));
+				startTimes[i] = false;
 			}
 		}
 	}
 	
-	public void deleteMonster(Monster m) {
+	public void killMonster(Monster m) {
 		m.kill();
 	}
 	
 	public void render() {
+		checkStatus();
 		if(canStart) {
 			timeElapsed += (int)(Gdx.graphics.getDeltaTime()*1000);
 			for(int i = 0; i < monsters.size(); i++) {
@@ -76,8 +89,8 @@ public class Summoner {
 					monsters.get(i).update();
 				}
 			}
-			if((timeElapsed/1000)%1 == 0 && timeElapsed < 10000) {
-				startTimes[timeElapsed/1000] = true;
+			if((timeElapsed/SPAWN_DELAY)%1 == 0 && timeElapsed < SPAWN_DELAY*numberOfMonsters) {
+				startTimes[timeElapsed/SPAWN_DELAY] = true;
 			}
 		}
 	}

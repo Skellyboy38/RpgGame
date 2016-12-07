@@ -4,11 +4,14 @@ import java.util.Map;
 
 import com.mygdx.game.RpgGame;
 
+import gem.IGem;
+
 public class TileClickHandler {
 	
 	private Map<Coordinate, ITile> tileMap;
 	private Coordinate[][] coordinates;
 	private ITile clickedTile;
+	private IGem clickedGem;
 	
 	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates) {
 		this.tileMap = tileMap;
@@ -16,7 +19,7 @@ public class TileClickHandler {
 		this.clickedTile = null;
 	}
 	
-	public void click(int posX, int posY) {
+	public void clickTile(int posX, int posY) {
 		if(clickedTile != null) {
 			clickedTile.resetTexture();
 		}
@@ -32,7 +35,7 @@ public class TileClickHandler {
 		return clickedTile;
 	}
 	
-	public void unclick() {
+	public void unclickTile() {
 		clickedTile = null;
 	}
 }

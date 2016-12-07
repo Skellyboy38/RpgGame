@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -12,11 +11,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import gem.GemHandler;
 import monster.Summoner;
 import tile.Coordinate;
 import tile.ITile;
@@ -32,21 +31,19 @@ public class RpgGame extends ApplicationAdapter {
 	
 	SpriteBatch batch;
 	Summoner summoner;
-	Random random;
 	List<ITile> tiles;
 	List<ITile> checkpoints; // The order of checkpoints from start to finish: 5, 2, 3, 4, 7, 6, 0, 1
 	Stage stage;
 	Map<Coordinate, ITile> tileMap;
 	Coordinate[][] coordinates;
 	TileClickHandler clickHandler;
+	GemHandler gemHandler;
 	OrthographicCamera cam;
 	FitViewport viewport;
 	InputProcessor zoom;
 	InputMultiplexer inputMultiplexer;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
-	
-	String[] gemSkins = {"yellow", "red", "green", "blue", "black", "pink", "purple"};
 	
 	@Override
 	public void create () {
@@ -68,8 +65,8 @@ public class RpgGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		createCoordinates();
 		clickHandler = new TileClickHandler(tileMap, coordinates);
+		gemHandler = new GemHandler(batch, stage);
 		createTiles();
-		random = new Random();
 		summoner = new Summoner(batch, checkpoints);
 	}
 
@@ -81,9 +78,10 @@ public class RpgGame extends ApplicationAdapter {
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
-		renderTiles();
-		summoner.render();
 		stage.act();
+		renderTiles();
+		gemHandler.render();
+		summoner.render();
 		batch.end();
 		checkInputs();
 	}
@@ -100,27 +98,22 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public void checkInputs() {
 		boolean isEnterPressed = false;
-		if(Gdx.input.isKeyPressed(66) && !isEnterPressed) {
-			summoner.clearMonsters();
+		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
+			summoner.setNumberOfMonsters(20);
 			summoner.reset();
-			for(int i = 0; i < numMonsters; i++) {
-				summoner.createMonster();
-			}
 			summoner.start();
 			isEnterPressed = true;
 		}
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
 		}
-		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null) {
+		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null && !gemHandler.isReady()) {
 			clickHandler.getClickedTile().occupy();
 			if(summoner.doesPathExist()) {
-				int randomNum = random.nextInt((6 - 0) + 1) + 0;
-				String gemString = gemSkins[randomNum];
-				clickHandler.getClickedTile().disable();
-				clickHandler.getClickedTile().setTexture(new Texture(gemString + ".png"));
-				clickHandler.getClickedTile().setDefaultTexture(new Texture(gemString + ".png"));
-				clickHandler.unclick();
+				ITile tile = clickHandler.getClickedTile();
+				tile.disable();
+				clickHandler.unclickTile();
+				gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
 			}
 			else {
 				clickHandler.getClickedTile().unoccupy();

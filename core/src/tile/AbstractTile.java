@@ -73,7 +73,7 @@ public abstract class AbstractTile implements ITile {
 							isPressed = false;
 						}
 						else {
-							clickHandler.click(posX, posY);
+							clickHandler.clickTile(posX, posY);
 							texture.setTexture(new Texture("tilePressed.png"));
 							isPressed = true;
 						}
