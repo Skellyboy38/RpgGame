@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.RpgGame;
 
 import path.Path;
@@ -17,8 +18,9 @@ public class Summoner {
 	public static final int START_Y = 27*(RpgGame.HEIGHT/30);
 	public static final int SPAWN_DELAY = 200;
 	
-	private List<Monster> monsters;
+	private List<IMonster> monsters;
 	private SpriteBatch batch;
+	private ShapeRenderer renderer;
 	private boolean canStart;
 	private PathFinder finder;
 	private List<ITile> checkpoints;
@@ -26,14 +28,25 @@ public class Summoner {
 	private int timeElapsed;
 	private int numberOfMonsters;
 	private List<Path> paths;
+	private boolean isSummoning;
 
-	public Summoner(SpriteBatch batch, List<ITile> checkpoints) {
+	public Summoner(SpriteBatch batch, ShapeRenderer renderer, List<ITile> checkpoints) {
 		this.batch = batch;
-		monsters = new ArrayList<Monster>();
+		this.renderer = renderer;
+		monsters = new ArrayList<IMonster>();
 		finder = new PathFinder();
 		canStart = false;
 		this.checkpoints = checkpoints;
 		this.timeElapsed = 0;
+		isSummoning = false;
+	}
+	
+	public List<IMonster> getMonsters() {
+		return monsters;
+	}
+	
+	public boolean isSummoning() {
+		return isSummoning;
 	}
 	
 	public void setNumberOfMonsters(int numMonsters) {
@@ -61,7 +74,7 @@ public class Summoner {
 	}
 	
 	public void createMonster() {
-		Monster m = new Monster(batch, new Texture("monster.png"), START_X, START_Y);
+		Monster m = new MonsterLevel1(batch, renderer, new Texture("monster.png"), START_X, START_Y);
 		m.jump(START_X, START_Y);
 		m.setPath(paths);
 		monsters.add(m);
@@ -69,14 +82,21 @@ public class Summoner {
 	
 	public void checkStatus() {
 		for(int i = 0; i < monsters.size(); i++) {
-			if(!monsters.get(i).isDead() && monsters.get(i).donePath()) {
+			if(monsters.get(i).isDead() || monsters.get(i).donePath()) {
 				killMonster(monsters.get(i));
 				startTimes[i] = false;
 			}
 		}
+		boolean isDoneSummoning = true;
+		for(IMonster m : monsters) {
+			if(!m.isDead()) {
+				isDoneSummoning = false;
+			}
+		}
+		isSummoning = !isDoneSummoning;
 	}
 	
-	public void killMonster(Monster m) {
+	public void killMonster(IMonster m) {
 		m.kill();
 	}
 	
@@ -97,6 +117,7 @@ public class Summoner {
 	
 	public void start() {
 		canStart = true;
+		isSummoning = true;
 	}
 	
 	public List<Path> findAllPaths() {

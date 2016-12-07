@@ -9,12 +9,18 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import collision.CollisionDetector;
 import gem.GemHandler;
 import monster.Summoner;
 import tile.Coordinate;
@@ -27,10 +33,13 @@ public class RpgGame extends ApplicationAdapter {
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 600;
 	public static final float ZOOM_FACTOR = 0.05f;
+	public static BitmapFont font;
 	public int numMonsters = 10;
 	
 	SpriteBatch batch;
+	ShapeRenderer renderer;
 	Summoner summoner;
+	CollisionDetector collisionDetector;
 	List<ITile> tiles;
 	List<ITile> checkpoints; // The order of checkpoints from start to finish: 5, 2, 3, 4, 7, 6, 0, 1
 	Stage stage;
@@ -47,7 +56,12 @@ public class RpgGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		font = new BitmapFont();
+		font.setColor(Color.WHITE);
+		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		font.getData().setScale(1f);
 		batch = new SpriteBatch();
+		renderer = new ShapeRenderer();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		effectiveViewportWidth = WIDTH;
 		effectiveViewportHeight = HEIGHT;
@@ -64,10 +78,11 @@ public class RpgGame extends ApplicationAdapter {
 		inputMultiplexer.addProcessor(zoom);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		createCoordinates();
-		clickHandler = new TileClickHandler(tileMap, coordinates);
-		gemHandler = new GemHandler(batch, stage);
+		clickHandler = new TileClickHandler(tileMap, coordinates, batch);
+		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
 		createTiles();
-		summoner = new Summoner(batch, checkpoints);
+		summoner = new Summoner(batch, renderer, checkpoints);
+		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
 	}
 
 	@Override
@@ -77,12 +92,13 @@ public class RpgGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
-		batch.begin();
+		renderer.setProjectionMatrix(cam.combined);
 		stage.act();
 		renderTiles();
 		gemHandler.render();
+		clickHandler.render();
 		summoner.render();
-		batch.end();
+		collisionDetector.detectCollisions();
 		checkInputs();
 	}
 	
@@ -99,6 +115,9 @@ public class RpgGame extends ApplicationAdapter {
 	public void checkInputs() {
 		boolean isEnterPressed = false;
 		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
+			gemHandler.commitGem(clickHandler.getClickedGem());
+			clickHandler.unclickGem();
+			gemHandler.reset();
 			summoner.setNumberOfMonsters(20);
 			summoner.reset();
 			summoner.start();
@@ -107,7 +126,7 @@ public class RpgGame extends ApplicationAdapter {
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
 		}
-		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null && !gemHandler.isReady()) {
+		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null && !gemHandler.isReady() && !summoner.isSummoning()) {
 			clickHandler.getClickedTile().occupy();
 			if(summoner.doesPathExist()) {
 				ITile tile = clickHandler.getClickedTile();

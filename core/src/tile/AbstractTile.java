@@ -156,7 +156,9 @@ public abstract class AbstractTile implements ITile {
 	}
 	
 	public void render() {
+		batch.begin();
 		batch.draw(texture, posX, posY);
+		batch.end();
 	}
 	
 	public abstract void update();
