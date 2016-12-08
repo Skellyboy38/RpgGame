@@ -26,6 +26,8 @@ public class GreenGem extends Gem {
 	private ShapeRenderer renderer;
 	private int elapsedTime;
 	private int range;
+	private String name;
+	private String description;
 	private List<IBullet> bullets;
 
 	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY) {
@@ -39,6 +41,8 @@ public class GreenGem extends Gem {
 		damage = 1;
 		elapsedTime = 0;
 		delay = 200;
+		name = "Green gem";
+		description = "The green gem fires single bullets.";
 	}
 	
 	public List<IBullet> getBullets() {
@@ -78,6 +82,22 @@ public class GreenGem extends Gem {
 	
 	public boolean canHit() {
 		return canHit;
+	}
+	
+	public int getSpeed() {
+		return delay;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getRange() {
+		return range;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 
 }

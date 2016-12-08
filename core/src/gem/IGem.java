@@ -2,6 +2,7 @@ package gem;
 
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 
 import bullets.IBullet;
@@ -31,4 +32,14 @@ public interface IGem {
 	public void update();
 	
 	public List<IBullet> getBullets();
+	
+	public int getSpeed();
+	
+	public String getName();
+	
+	public int getRange();
+	
+	public String getDescription();
+	
+	public TextureRegion getTexture();
 }

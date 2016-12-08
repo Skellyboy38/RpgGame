@@ -9,11 +9,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +20,7 @@ import collision.CollisionDetector;
 import gem.GemHandler;
 import gem.Rock;
 import monster.Summoner;
+import overlay.Overlay;
 import tile.Coordinate;
 import tile.ITile;
 import tile.Tile;
@@ -30,10 +28,9 @@ import tile.TileClickHandler;
 
 public class RpgGame extends ApplicationAdapter {
 	
-	public static final int WIDTH = 1000;
-	public static final int HEIGHT = 600;
+	public static int WIDTH = 1000;
+	public static int HEIGHT = 600;
 	public static final float ZOOM_FACTOR = 0.05f;
-	public static BitmapFont font;
 	public int numMonsters = 10;
 	
 	SpriteBatch batch;
@@ -46,6 +43,7 @@ public class RpgGame extends ApplicationAdapter {
 	Map<Coordinate, ITile> tileMap;
 	Coordinate[][] coordinates;
 	TileClickHandler clickHandler;
+	Overlay overlay;
 	GemHandler gemHandler;
 	OrthographicCamera cam;
 	FitViewport viewport;
@@ -56,10 +54,6 @@ public class RpgGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		font = new BitmapFont();
-		font.setColor(Color.WHITE);
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		font.getData().setScale(1f);
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
@@ -83,6 +77,7 @@ public class RpgGame extends ApplicationAdapter {
 		createTiles();
 		summoner = new Summoner(batch, renderer, checkpoints);
 		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
+		overlay = new Overlay(clickHandler);
 	}
 
 	@Override
@@ -98,6 +93,7 @@ public class RpgGame extends ApplicationAdapter {
 		gemHandler.render();
 		clickHandler.render();
 		summoner.render();
+		overlay.render();
 		collisionDetector.detectCollisions();
 		checkInputs();
 	}
@@ -146,16 +142,16 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 		
-		if(Gdx.input.getX() <= 20 && (cam.position.x - effectiveViewportWidth/2) > 0) {
+		if(Gdx.input.getX() <= 20 && (cam.position.x - effectiveViewportWidth/2) > -50) {
 			cam.position.x -= 10;
 		}
-		if(Gdx.input.getX() >= 980 && (cam.position.x + effectiveViewportWidth/2) < WIDTH) {
+		if(Gdx.input.getX() >= 980 && (cam.position.x + effectiveViewportWidth/2) < WIDTH + 50) {
 			cam.position.x += 10;
 		}
-		if(Gdx.input.getY() <= 20 && (cam.position.y + effectiveViewportHeight/2) < HEIGHT) {
+		if(Gdx.input.getY() <= 20 && (cam.position.y + effectiveViewportHeight/2) < HEIGHT + 50) {
 			cam.position.y += 10;
 		}
-		if(Gdx.input.getY() >= 580 && (cam.position.y - effectiveViewportHeight/2) > 0) {
+		if(Gdx.input.getY() >= 580 && (cam.position.y - effectiveViewportHeight/2) > -50) {
 			cam.position.y -= 10;
 		}
 	}
@@ -370,7 +366,7 @@ public class RpgGame extends ApplicationAdapter {
 
 		@Override
 		public boolean scrolled(int amount) {
-			if(amount == 1 && cam.zoom < 1){
+			if(amount == 1 && cam.zoom < 1.1){
 				cam.zoom += ZOOM_FACTOR;
 			}
 			else if(amount == -1 && cam.zoom > 0.4){
@@ -378,6 +374,10 @@ public class RpgGame extends ApplicationAdapter {
 			}
 			return true;
 		}
-		
 	}
+	
+	public void resize(int width, int height) {
+        viewport.update(width, height);
+        cam.update();
+    }
 }

@@ -55,6 +55,10 @@ public class Rock {
 		});
 	}
 	
+	public TextureRegion getTexture() {
+		return texture;
+	}
+	
 	public Coordinate getCoordinates() {
 		return coordinates;
 	}

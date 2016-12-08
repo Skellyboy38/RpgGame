@@ -44,6 +44,10 @@ public abstract class Gem implements IGem {
 		isTemporary = true;
 		instance = this;
 	}
+	
+	public TextureRegion getTexture() {
+		return texture;
+	}
 
 	public void createButton() {
 		TextButtonStyle style = new TextButtonStyle();
