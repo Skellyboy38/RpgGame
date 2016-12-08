@@ -48,6 +48,10 @@ public abstract class Gem implements IGem {
 	public TextureRegion getTexture() {
 		return texture;
 	}
+	
+	public void removeListeners() {
+		button.remove();
+	}
 
 	public void createButton() {
 		TextButtonStyle style = new TextButtonStyle();

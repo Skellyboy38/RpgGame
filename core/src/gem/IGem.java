@@ -42,4 +42,6 @@ public interface IGem {
 	public String getDescription();
 	
 	public TextureRegion getTexture();
+	
+	public void removeListeners();
 }

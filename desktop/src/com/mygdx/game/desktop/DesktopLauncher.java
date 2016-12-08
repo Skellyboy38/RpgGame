@@ -13,7 +13,7 @@ public class DesktopLauncher {
 		config.title = "RPG";	//The title that appears when the game opens
 		int width = 1000;
 		int height = 600;
-		config.width = (int)width;		//Sets the width and height of the game 
+		config.width = (int)width;		//Sets the width and height of the game
 		config.height = (int)height;	//This is the height of the screen
 		new LwjglApplication(new RpgGame(), config);
 	}

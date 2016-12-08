@@ -38,6 +38,10 @@ public class Rock {
 		this.coordinates = new Coordinate(posX, posY);
 		instance = this;
 	}
+	
+	public void removeListeners() {
+		button.remove();
+	}
 
 	public void createButton() {
 		TextButtonStyle style = new TextButtonStyle();

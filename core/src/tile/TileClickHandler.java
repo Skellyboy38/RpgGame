@@ -96,4 +96,10 @@ public class TileClickHandler {
 	public void unclickRock() {
 		clickedRock = null;
 	}
+	
+	public void reset() {
+		unclickGem();
+		unclickRock();
+		unclickTile();
+	}
 }

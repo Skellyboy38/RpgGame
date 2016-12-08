@@ -31,4 +31,6 @@ public interface IMonster {
 	public int getHeight();
 	
 	public Coordinate getCenter();
+	
+	public boolean canDamagePlayer();
 }

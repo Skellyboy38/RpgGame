@@ -45,4 +45,6 @@ public interface ITile {
 	public Coordinate getPosition();
 	
 	public void setClicked(boolean isClicked);
+	
+	public void reset();
 }

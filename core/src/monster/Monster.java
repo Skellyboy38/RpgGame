@@ -35,6 +35,7 @@ public class Monster implements IMonster {
 	private int maxHp;
 	private boolean canFly;
 	private int currentHp;
+	private boolean canDamagePlayer;
 	
 	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp) {
 		this.batch = batch;
@@ -53,6 +54,7 @@ public class Monster implements IMonster {
 		isDead = false;
 		this.tileCounter = -1;
 		canFly = false;
+		canDamagePlayer = true;
 		this.maxHp = maxHp;
 		this.currentHp = maxHp; 
 	}
@@ -65,6 +67,10 @@ public class Monster implements IMonster {
 	
 	public Rectangle getCollisionBox() {
 		return collisionBox;
+	}
+	
+	public boolean canDamagePlayer() {
+		return canDamagePlayer;
 	}
 	
 	public boolean isDead() {
@@ -87,6 +93,7 @@ public class Monster implements IMonster {
 	
 	public void kill() {
 		isDead = true;
+		canDamagePlayer = false;
 		originalTexture.dispose();
 	}
 	

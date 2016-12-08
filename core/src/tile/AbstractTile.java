@@ -103,6 +103,12 @@ public abstract class AbstractTile implements ITile {
 		}
 	}
 	
+	public void reset() {
+		this.isClicked = false;
+		this.isHoverable = true;
+		this.isClickable = true;
+	}
+	
 	public void disable() {
 		disableHover();
 		disableClick();
@@ -172,7 +178,7 @@ public abstract class AbstractTile implements ITile {
 	}
 	
 	public boolean isCheckpoint() {
-		return isCheckpoint();
+		return isCheckpoint;
 	}
 	
 	public Coordinate getPosition() {

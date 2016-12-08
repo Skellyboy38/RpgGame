@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import gem.IGem;
 import monster.Summoner;
+import player.Player;
 import tile.TileClickHandler;
 
 public class Overlay {
@@ -18,14 +19,16 @@ public class Overlay {
 	private Summoner summoner;
 	private SpriteBatch batch;
 	private BitmapFont font;
+	private Player player;
 	
-	public Overlay(TileClickHandler clickHandler, Summoner summoner) {
+	public Overlay(TileClickHandler clickHandler, Summoner summoner, Player player) {
 		this.clickHandler = clickHandler;
 		this.summoner = summoner;
 		batch = new SpriteBatch();
 		background = new Texture("overlay.png");
 		infoArea = new Texture("infoArea.png");
 		font = new BitmapFont();
+		this.player = player;
 	}
 	
 	public void render() {
@@ -36,7 +39,7 @@ public class Overlay {
 		batch.setColor(c.r, c.g, c.b, 1f);
 		font.setColor(Color.BLACK);
 		font.getData().setScale(2f);
-		font.draw(batch, "Current level: " + summoner.getLevel(), 550, 50);
+		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth(), 550, 80);
 		if(clickHandler.getClickedGem() != null) {
 			IGem gem = clickHandler.getClickedGem();
 			TextureRegion texture = new TextureRegion(gem.getTexture());

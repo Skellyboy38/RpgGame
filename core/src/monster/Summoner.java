@@ -11,6 +11,7 @@ import com.mygdx.game.RpgGame;
 
 import path.Path;
 import path.PathFinder;
+import player.Player;
 import settings.Settings;
 import tile.ITile;
 
@@ -31,8 +32,9 @@ public class Summoner {
 	private boolean isSummoning;
 	private int level;
 	private boolean canIncrementLevel;
+	private Player player;
 
-	public Summoner(SpriteBatch batch, ShapeRenderer renderer, List<ITile> checkpoints) {
+	public Summoner(SpriteBatch batch, ShapeRenderer renderer, List<ITile> checkpoints, Player player) {
 		this.level = 1;
 		this.batch = batch;
 		this.renderer = renderer;
@@ -43,6 +45,7 @@ public class Summoner {
 		this.timeElapsed = 0;
 		isSummoning = false;
 		canIncrementLevel = false;
+		this.player = player;
 	}
 	
 	public List<IMonster> getMonsters() {
@@ -66,6 +69,14 @@ public class Summoner {
 	}
 	
 	public void reset() {
+		level = 1;
+		monsters.clear();
+		canStart = false;
+		isSummoning = false;
+		canIncrementLevel = false;
+	}
+	
+	public void nextStage() {
 		setNumberOfMonsters(Settings.levels.get(level).number);
 		paths = findAllPaths();
 		for(int i = 0; i < startTimes.length; i++) {
@@ -246,7 +257,14 @@ public class Summoner {
 	
 	public void checkStatus() {
 		for(int i = 0; i < monsters.size(); i++) {
-			if(monsters.get(i).isDead() || monsters.get(i).donePath()) {
+			if(monsters.get(i).donePath()) {
+				if(monsters.get(i).canDamagePlayer()) {
+					player.damage(1);
+				}
+				killMonster(monsters.get(i));
+				startTimes[i] = false;
+			}
+			else if(monsters.get(i).isDead()) {
 				killMonster(monsters.get(i));
 				startTimes[i] = false;
 			}
@@ -292,14 +310,15 @@ public class Summoner {
 	}
 	
 	public List<Path> findAllPaths() {
-		Path p1 = finder.findPathBetweenTwoTiles(checkpoints.get(5), checkpoints.get(2));
-		Path p2 = finder.findPathBetweenTwoTiles(checkpoints.get(2), checkpoints.get(3));
-		Path p3 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(4));
-		Path p4 = finder.findPathBetweenTwoTiles(checkpoints.get(4), checkpoints.get(7));
-		Path p5 = finder.findPathBetweenTwoTiles(checkpoints.get(7), checkpoints.get(6));
-		Path p6 = finder.findPathBetweenTwoTiles(checkpoints.get(6), checkpoints.get(3));
-		Path p7 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(0));
-		Path p8 = finder.findPathBetweenTwoTiles(checkpoints.get(0), checkpoints.get(1));
+		Path p1 = finder.findPathBetweenTwoTiles(checkpoints.get(5), checkpoints.get(6));
+		Path p2 = finder.findPathBetweenTwoTiles(checkpoints.get(6), checkpoints.get(2));
+		Path p3 = finder.findPathBetweenTwoTiles(checkpoints.get(2), checkpoints.get(3));
+		Path p4 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(4));
+		Path p5 = finder.findPathBetweenTwoTiles(checkpoints.get(4), checkpoints.get(8));
+		Path p6 = finder.findPathBetweenTwoTiles(checkpoints.get(8), checkpoints.get(7));
+		Path p7 = finder.findPathBetweenTwoTiles(checkpoints.get(7), checkpoints.get(3));
+		Path p8 = finder.findPathBetweenTwoTiles(checkpoints.get(3), checkpoints.get(0));
+		Path p9 = finder.findPathBetweenTwoTiles(checkpoints.get(0), checkpoints.get(1));
 		List<Path> paths = new ArrayList<Path>();
 		paths.add(p1);
 		paths.add(p2);
@@ -309,13 +328,14 @@ public class Summoner {
 		paths.add(p6);
 		paths.add(p7);
 		paths.add(p8);
+		paths.add(p9);
 		return paths;
 	}
 	
 	public boolean doesPathExist() {
-		if(finder.pathExists(checkpoints.get(5), checkpoints.get(2)) && finder.pathExists(checkpoints.get(2), checkpoints.get(3)) &&
-				finder.pathExists(checkpoints.get(3), checkpoints.get(4)) && finder.pathExists(checkpoints.get(4), checkpoints.get(7)) &&
-				finder.pathExists(checkpoints.get(7), checkpoints.get(6)) && finder.pathExists(checkpoints.get(6), checkpoints.get(0)) &&
+		if(finder.pathExists(checkpoints.get(5), checkpoints.get(6)) && finder.pathExists(checkpoints.get(6), checkpoints.get(2)) && finder.pathExists(checkpoints.get(2), checkpoints.get(3)) &&
+				finder.pathExists(checkpoints.get(3), checkpoints.get(4)) && finder.pathExists(checkpoints.get(4), checkpoints.get(8)) &&
+				finder.pathExists(checkpoints.get(8), checkpoints.get(7)) && finder.pathExists(checkpoints.get(7), checkpoints.get(0)) &&
 				finder.pathExists(checkpoints.get(0), checkpoints.get(1))) {
 			return true;
 		}

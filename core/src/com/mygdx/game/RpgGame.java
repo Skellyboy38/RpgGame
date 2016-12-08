@@ -21,6 +21,7 @@ import gem.GemHandler;
 import gem.Rock;
 import monster.Summoner;
 import overlay.Overlay;
+import player.Player;
 import settings.Settings;
 import tile.Coordinate;
 import tile.ITile;
@@ -31,6 +32,7 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 600;
+	public static int PLAYER_HP = 20;
 	public static final float ZOOM_FACTOR = 0.05f;
 	public int numMonsters = 10;
 	
@@ -39,7 +41,7 @@ public class RpgGame extends ApplicationAdapter {
 	Summoner summoner;
 	CollisionDetector collisionDetector;
 	List<ITile> tiles;
-	List<ITile> checkpoints; // The order of checkpoints from start to finish: 5, 2, 3, 4, 7, 6, 0, 1
+	List<ITile> checkpoints; // The order of checkpoints from start to finish: 5, 6, 2, 3, 4, 8, 7, 0, 1
 	Stage stage;
 	Map<Coordinate, ITile> tileMap;
 	Coordinate[][] coordinates;
@@ -50,6 +52,7 @@ public class RpgGame extends ApplicationAdapter {
 	FitViewport viewport;
 	InputProcessor zoom;
 	InputMultiplexer inputMultiplexer;
+	Player player;
 	Settings gameSettings;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
@@ -57,6 +60,7 @@ public class RpgGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		gameSettings = new Settings();
+		player = new Player(PLAYER_HP);
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
@@ -78,27 +82,50 @@ public class RpgGame extends ApplicationAdapter {
 		clickHandler = new TileClickHandler(tileMap, coordinates, batch);
 		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
 		createTiles();
-		summoner = new Summoner(batch, renderer, checkpoints);
+		summoner = new Summoner(batch, renderer, checkpoints, player);
 		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
-		overlay = new Overlay(clickHandler, summoner);
+		overlay = new Overlay(clickHandler, summoner, player);
 	}
 
 	@Override
 	public void render () {
-		updateEffectiveViewport();
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		cam.update();
-		batch.setProjectionMatrix(cam.combined);
-		renderer.setProjectionMatrix(cam.combined);
-		stage.act();
-		renderTiles();
-		gemHandler.render();
-		clickHandler.render();
-		summoner.render();
-		overlay.render();
-		collisionDetector.detectCollisions();
-		checkInputs();
+		if(!player.isDead()) {
+			updateEffectiveViewport();
+			Gdx.gl.glClearColor(1, 1, 1, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			cam.update();
+			batch.setProjectionMatrix(cam.combined);
+			renderer.setProjectionMatrix(cam.combined);
+			stage.act();
+			renderTiles();
+			gemHandler.render();
+			clickHandler.render();
+			summoner.render();
+			overlay.render();
+			collisionDetector.detectCollisions();
+			checkInputs();
+		}
+		else {
+			restart();
+		}
+	}
+	
+	public void restart() {
+		resetTiles();
+		player.reset();
+		clickHandler.reset();
+		gemHandler.reset();
+		summoner.reset();
+	}
+	
+	public void resetTiles() {
+		for(int y = 0; y < 30; y++) {
+			for(int x = 0; x < 50; x++) {
+				if(!tileMap.get(coordinates[x][y]).isCheckpoint()) {
+					tileMap.get(coordinates[x][y]).reset();
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -116,8 +143,8 @@ public class RpgGame extends ApplicationAdapter {
 		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
 			gemHandler.commitGem(clickHandler.getClickedGem());
 			clickHandler.unclickGem();
-			gemHandler.reset();
-			summoner.reset();
+			gemHandler.nextStage();
+			summoner.nextStage();
 			summoner.start();
 			isEnterPressed = true;
 		}
@@ -244,10 +271,10 @@ public class RpgGame extends ApplicationAdapter {
 	}
 	
 	public boolean isCheckpoint(int x, int y) {
-		if(y == 27 && (x == 0 || x == 25 || x == 45)) {
+		if(y == 27 && (x == 0 || x == 10 || x == 25 || x == 45)) {
 			return true;
 		}
-		else if(y == 9 && (x == 5 || x == 25 || x == 45)) {
+		else if(y == 9 && (x == 10 || x == 25 || x == 45)) {
 			return true;
 		}
 		else if(y == 1 && (x == 25 || x == 49)){
@@ -260,10 +287,10 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public String getTextureBasedOnPosition(int x, int y) {
 		if(y == 27) {
-			if((x > 0 && x <= 5) || (x > 25 && x < 45)) {
+			if((x > 0 && x <= 9) || (x > 25 && x < 45)) {
 				return "path.png";
 			}
-			else if(x == 0 || x == 25 || x == 45) {
+			else if(x == 0 || x == 10 || x == 25 || x == 45) {
 				return "checkpoint.png";
 			}
 			else {
@@ -271,7 +298,7 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 		else if(y < 27 && y > 9) {
-			if(x == 5 || x == 25 || x == 45) {
+			if(x == 10 || x == 25 || x == 45) {
 				return "path.png";
 			}
 			else {
@@ -279,10 +306,10 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 		else if(y == 9) {
-			if((x > 5 && x < 25) || (x > 25 && x < 45)) {
+			if((x > 10 && x < 25) || (x > 25 && x < 45)) {
 				return "path.png";
 			}
-			else if(x == 5 || x == 25 || x == 45) {
+			else if(x == 10 || x == 25 || x == 45) {
 				return "checkpoint.png";
 			}
 			else {

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -23,6 +24,7 @@ public class GemHandler {
 	private TileClickHandler clickHandler;
 	private GemCreator creator;
 	private ShapeRenderer renderer;
+	private TextureRegion newGem;
 	
 	private SpriteBatch batch;
 	
@@ -35,6 +37,7 @@ public class GemHandler {
 		gems = new ArrayList<IGem>();
 		currentGems = new ArrayList<IGem>();
 		rocks = new ArrayList<Rock>();
+		newGem = new TextureRegion(new Texture("temporaryGem.png"));
 	}
 	
 	public List<IGem> getFinalizedGems() {
@@ -50,6 +53,9 @@ public class GemHandler {
 		}
 		for(IGem gem : currentGems) {
 			gem.render();
+			batch.begin();
+			batch.draw(newGem, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			batch.end();
 		}
 	}
 	
@@ -60,6 +66,9 @@ public class GemHandler {
 		for(IGem g : currentGems) {
 			rocks.add(new Rock(batch, stage, clickHandler, new Texture("rock.png"), g.getCoordinates().getX(), g.getCoordinates().getY()));
 		}
+		for(IGem g : currentGems) {
+			g.removeListeners();
+		}
 		currentGems.clear();
 	}
 	
@@ -69,6 +78,7 @@ public class GemHandler {
 	}
 	
 	public void replaceRock(Rock rock, int posX, int posY) {
+		rock.removeListeners();
 		rocks.remove(rock);
 		addTemporaryGem(posX, posY);
 	}
@@ -82,6 +92,17 @@ public class GemHandler {
 	}
 	
 	public void reset() {
+		for(IGem gem : gems) {
+			gem.removeListeners();
+		}
+		gems.clear();
+		for(Rock r : rocks) {
+			r.removeListeners();
+		}
+		rocks.clear();
+	}
+	
+	public void nextStage() {
 		currentGems.clear();
 	}
 	
