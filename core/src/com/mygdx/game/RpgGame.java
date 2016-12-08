@@ -21,6 +21,7 @@ import gem.GemHandler;
 import gem.Rock;
 import monster.Summoner;
 import overlay.Overlay;
+import settings.Settings;
 import tile.Coordinate;
 import tile.ITile;
 import tile.Tile;
@@ -49,11 +50,13 @@ public class RpgGame extends ApplicationAdapter {
 	FitViewport viewport;
 	InputProcessor zoom;
 	InputMultiplexer inputMultiplexer;
+	Settings gameSettings;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
 	
 	@Override
 	public void create () {
+		gameSettings = new Settings();
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
@@ -77,7 +80,7 @@ public class RpgGame extends ApplicationAdapter {
 		createTiles();
 		summoner = new Summoner(batch, renderer, checkpoints);
 		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
-		overlay = new Overlay(clickHandler);
+		overlay = new Overlay(clickHandler, summoner);
 	}
 
 	@Override
@@ -114,7 +117,6 @@ public class RpgGame extends ApplicationAdapter {
 			gemHandler.commitGem(clickHandler.getClickedGem());
 			clickHandler.unclickGem();
 			gemHandler.reset();
-			summoner.setNumberOfMonsters(20);
 			summoner.reset();
 			summoner.start();
 			isEnterPressed = true;

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import bullets.GreenBullet;
 import bullets.IBullet;
 import monster.IMonster;
+import settings.Settings;
 import tile.TileClickHandler;
 
 public class GreenGem extends Gem {
@@ -30,19 +31,19 @@ public class GreenGem extends Gem {
 	private String description;
 	private List<IBullet> bullets;
 
-	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY) {
+	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
 		this.renderer = renderer;
 		bullets = new ArrayList<IBullet>();
 		collisionBox = new Circle();
-		range = 100;
+		range = Settings.gemSettings.get("green").get(level).range;
 		collisionBox.set(posX, posY, range);
 		canHit = true;
-		damage = 1;
+		damage = Settings.gemSettings.get("green").get(level).damage;
 		elapsedTime = 0;
-		delay = 200;
+		delay = Settings.gemSettings.get("green").get(level).delay;
 		name = "Green gem";
-		description = "The green gem fires single bullets.";
+		description = "The green gem fires single bullets \nbut its range increases substantially.";
 	}
 	
 	public List<IBullet> getBullets() {

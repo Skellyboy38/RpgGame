@@ -122,7 +122,7 @@ public class GemHandler {
 				}
 			}
 			if(gemType.equals("green")) {
-				return new GreenGem(batch, renderer, stage, clickHandler, new Texture(gemType + ".png"), posX, posY);
+				return new GreenGem(batch, renderer, stage, clickHandler, new Texture(gemType + ".png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;

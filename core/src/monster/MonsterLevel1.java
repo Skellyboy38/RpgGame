@@ -11,7 +11,7 @@ public class MonsterLevel1 extends Monster {
 	private int currentHp;
 
 	public MonsterLevel1(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY) {
-		super(batch, renderer, texture, posX, posY);
+		super(batch, renderer, texture, posX, posY, 1, 1);
 		canFly = false;
 		maxHp = 5;
 		currentHp = maxHp; 

@@ -16,7 +16,7 @@ import path.Path;
 import tile.Coordinate;
 import tile.ITile;
 
-public abstract class Monster implements IMonster {
+public class Monster implements IMonster {
 	
 	private int posX;
 	private int posY;
@@ -32,12 +32,15 @@ public abstract class Monster implements IMonster {
 	private Rectangle collisionBox;
 	private Rectangle hpFrame;
 	private Rectangle hpFill;
+	private int maxHp;
+	private boolean canFly;
+	private int currentHp;
 	
-	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY) {
+	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp) {
 		this.batch = batch;
 		this.renderer = renderer;
 		this.path = new ArrayList<ITile>();
-		this.speed = 4;
+		this.speed = speed;
 		this.originalTexture = texture;
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
@@ -49,6 +52,9 @@ public abstract class Monster implements IMonster {
 		this.posY = posY;
 		isDead = false;
 		this.tileCounter = -1;
+		canFly = false;
+		this.maxHp = maxHp;
+		this.currentHp = maxHp; 
 	}
 	
 	public void updateCollisionBox() {
@@ -197,7 +203,21 @@ public abstract class Monster implements IMonster {
 	public Coordinate getCenter() {
 		return new Coordinate(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2);
 	}
+	
+	public int getHp() {
+		return currentHp;
+	}
+	
+	public boolean canFly() {
+		return canFly;
+	}
 
 	@Override
-	abstract public int getHp();
+	public int getMaxHp() {
+		return maxHp;
+	}
+	
+	public void hit(int damage) {
+		currentHp -= damage;
+	}
 }
