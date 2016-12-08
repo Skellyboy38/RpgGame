@@ -64,17 +64,21 @@ public class GemHandler {
 	}
 	
 	public void addTemporaryGem(int posX, int posY) {
-		if(currentGems.size() == 5) {
-			return;
-		}
-		else {
-			IGem temporaryGem = creator.createGem(posX, posY);
-			currentGems.add(temporaryGem);
-		}
+		IGem temporaryGem = creator.createGem(posX, posY);
+		currentGems.add(temporaryGem);
+	}
+	
+	public void replaceRock(Rock rock, int posX, int posY) {
+		rocks.remove(rock);
+		addTemporaryGem(posX, posY);
 	}
 	
 	public boolean isReady() {
 		return currentGems.size() == 5 && clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isTemporary();
+	}
+	
+	public boolean hasFiveGems() {
+		return currentGems.size() == 5;
 	}
 	
 	public void reset() {

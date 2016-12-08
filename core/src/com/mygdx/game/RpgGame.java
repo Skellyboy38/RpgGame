@@ -16,12 +16,12 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import collision.CollisionDetector;
 import gem.GemHandler;
+import gem.Rock;
 import monster.Summoner;
 import tile.Coordinate;
 import tile.ITile;
@@ -126,16 +126,23 @@ public class RpgGame extends ApplicationAdapter {
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
 		}
-		if(Gdx.input.isKeyPressed(62) && clickHandler.getClickedTile() != null && !gemHandler.isReady() && !summoner.isSummoning()) {
-			clickHandler.getClickedTile().occupy();
-			if(summoner.doesPathExist()) {
-				ITile tile = clickHandler.getClickedTile();
-				tile.disable();
-				clickHandler.unclickTile();
-				gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
+		if(Gdx.input.isKeyPressed(62) && (clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
+			if(clickHandler.getClickedTile() != null) {
+				clickHandler.getClickedTile().occupy();
+				if(summoner.doesPathExist()) {
+					ITile tile = clickHandler.getClickedTile();
+					tile.disable();
+					clickHandler.unclickTile();
+					gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
+				}
+				else {
+					clickHandler.getClickedTile().unoccupy();
+				}
 			}
 			else {
-				clickHandler.getClickedTile().unoccupy();
+				Rock rock = clickHandler.getClickedRock();
+				clickHandler.unclickRock();
+				gemHandler.replaceRock(rock, rock.getCoordinates().getX(), rock.getCoordinates().getY());
 			}
 		}
 		

@@ -101,10 +101,10 @@ public abstract class Monster implements IMonster {
 	}
 	
 	public Color getHpColor() {
-		if((float)getHp()/getMaxHp() > 0.5) {
+		if((float)getHp()/getMaxHp() > 0.8) {
 			return Color.GREEN;
 		}
-		else if((float)getHp()/getMaxHp() > 0.2) {
+		else if((float)getHp()/getMaxHp() >= 0.4) {
 			return Color.YELLOW;
 		}
 		else {

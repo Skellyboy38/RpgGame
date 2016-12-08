@@ -17,7 +17,7 @@ import com.mygdx.game.RpgGame;
 public abstract class AbstractTile implements ITile {
 	
 	private boolean isOccupied;
-	private boolean isPressed;
+	private boolean isClicked;
 	private boolean isHoverable;
 	private boolean isClickable;
 	private List<Coordinate> coordinates;
@@ -35,7 +35,7 @@ public abstract class AbstractTile implements ITile {
 		this.originalTexture = texture;
 		this.texture = new TextureRegion(originalTexture);
 		isOccupied = false;
-		isPressed = false;
+		isClicked = false;
 		coordinates = new ArrayList<Coordinate>();
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
 		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
@@ -56,6 +56,10 @@ public abstract class AbstractTile implements ITile {
 		return id;
 	}
 	
+	public void setClicked(boolean isClicked) {
+		this.isClicked = isClicked;
+	}
+	
 	public void createButton() {
 		TextButtonStyle style = new TextButtonStyle();
 		style.font = new BitmapFont();
@@ -68,14 +72,14 @@ public abstract class AbstractTile implements ITile {
 			button.addListener(new InputListener() {
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					if(isClickable) {
-						if(isPressed) {
+						if(isClicked) {
 							resetTexture();
-							isPressed = false;
+							isClicked = false;
 						}
 						else {
 							clickHandler.clickTile(posX, posY);
 							texture.setTexture(new Texture("tilePressed.png"));
-							isPressed = true;
+							isClicked = true;
 						}
 						return true;
 					}
@@ -84,14 +88,14 @@ public abstract class AbstractTile implements ITile {
 				
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					if(!isPressed && isHoverable) {
+					if(!isClicked && isHoverable) {
 						texture.setTexture(new Texture("tileHover.png"));
 					}
 				}
 				
 				@Override
 				public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					if(!isPressed && isHoverable) {
+					if(!isClicked && isHoverable) {
 						resetTexture();
 					}
 				}

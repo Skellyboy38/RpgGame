@@ -18,27 +18,30 @@ public class TileClickHandler {
 	private IGem clickedGem;
 	private Rock clickedRock;
 	private SpriteBatch batch;
-	private TextureRegion clickedGemTexture;
+	private TextureRegion clickedTexture;
 	
 	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch) {
 		this.tileMap = tileMap;
 		this.batch = batch;
 		this.coordinates = coordinates;
 		this.clickedTile = null;
-		this.clickedGemTexture = new TextureRegion(new Texture("clickedGem.png"));
+		this.clickedTexture = new TextureRegion(new Texture("clickedGem.png"));
 	}
 	
 	public void render() {
-		if(clickedGem != null) {
-			batch.begin();
-			batch.draw(clickedGemTexture, clickedGem.getCoordinates().getX(), clickedGem.getCoordinates().getY());
-			batch.end();
+		batch.begin();
+		if(clickedRock != null) {
+			batch.draw(clickedTexture, clickedRock.getCoordinates().getX(), clickedRock.getCoordinates().getY());
+		}
+		else if(clickedGem != null) {
 			clickedGem.drawCollisionBox();
 		}
+		batch.end();
 	}
 	
 	public void clickTile(int posX, int posY) {
 		if(clickedTile != null) {
+			clickedTile.setClicked(false);
 			clickedTile.resetTexture();
 		}
 		
@@ -80,6 +83,10 @@ public class TileClickHandler {
 	
 	public void unclickGem() {
 		clickedGem = null;
+	}
+	
+	public Rock getClickedRock() {
+		return clickedRock;
 	}
 	
 	public void clickRock(Rock r) {
