@@ -25,6 +25,8 @@ public interface IGem {
 	
 	public void hit(IMonster m);
 	
+	public void hit(List<IMonster> monsters);
+	
 	public int getDamage();
 	
 	public boolean canHit();
@@ -36,6 +38,8 @@ public interface IGem {
 	public int getSpeed();
 	
 	public String getName();
+	
+	public String getType();
 	
 	public int getRange();
 	

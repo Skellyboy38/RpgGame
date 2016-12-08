@@ -3,6 +3,7 @@ package monster;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -36,6 +37,10 @@ public class Monster implements IMonster {
 	private boolean canFly;
 	private int currentHp;
 	private boolean canDamagePlayer;
+	private int originalSpeed;
+	private boolean isSlowed;
+	private int slowTimer;
+	private int slowDuration;
 	
 	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp) {
 		this.batch = batch;
@@ -57,12 +62,25 @@ public class Monster implements IMonster {
 		canDamagePlayer = true;
 		this.maxHp = maxHp;
 		this.currentHp = maxHp; 
+		this.originalSpeed = speed;
+		this.isSlowed = false;
+		this.slowTimer = 0;
+		this.slowDuration = 0;
 	}
 	
 	public void updateCollisionBox() {
 		collisionBox.setPosition(posX, posY);
 		hpFrame.setPosition(posX, (int)(posY + texture.getRegionHeight()*1.1));
 		hpFill.setPosition(posX, (int)(posY + texture.getRegionHeight()*1.1));
+	}
+	
+	public void slow(int amount, int duration) {
+		if(!isSlowed) {
+			speed -= amount;
+			isSlowed = true;
+		}
+		slowTimer = 0;
+		slowDuration = duration;
 	}
 	
 	public Rectangle getCollisionBox() {
@@ -85,6 +103,13 @@ public class Monster implements IMonster {
 			}
 			else {
 				tileCounter++;
+			}
+		}
+		if(isSlowed) {
+			slowTimer += Gdx.graphics.getDeltaTime()*1000;
+			if((slowTimer/slowDuration) >= 1) {
+				isSlowed = false;
+				speed = originalSpeed;
 			}
 		}
 		updateCollisionBox();
@@ -162,10 +187,19 @@ public class Monster implements IMonster {
 		}
 	}
 	
+	public boolean isSlowed() {
+		return isSlowed;
+	}
+	
+	// THIS METHOD MIGHT BE BUGGY - TO TEST
 	public boolean hasReached(ITile tile) {
 		Coordinate c = tile.getPosition();
 		int x = c.getX();
 		int y = c.getY();
+		if((posX <= x + 2 && posX >= x - 2) && (posY <= y + 2 && posY >= y - 2)) {
+			posX = x;
+			posY = y;
+		}
 		return posX == x && posY == y;
 	}
 	

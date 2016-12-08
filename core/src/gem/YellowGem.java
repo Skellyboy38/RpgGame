@@ -12,14 +12,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import bullets.GreenBullet;
 import bullets.IBullet;
+import bullets.YellowBullet;
 import monster.IMonster;
 import settings.Settings;
 import tile.TileClickHandler;
 
-public class GreenGem extends Gem {
-	
+public class YellowGem extends Gem {
 	private Circle collisionBox;
 	private boolean canHit;
 	private int damage;
@@ -32,36 +31,38 @@ public class GreenGem extends Gem {
 	private String description;
 	private List<IBullet> bullets;
 
-	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
+	public YellowGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
 		this.renderer = renderer;
 		bullets = new ArrayList<IBullet>();
 		collisionBox = new Circle();
-		range = Settings.gemSettings.get("green").get(level).range;
+		range = Settings.gemSettings.get("yellow").get(level).range;
 		collisionBox.set(posX, posY, range);
 		canHit = true;
-		damage = Settings.gemSettings.get("green").get(level).damage;
+		damage = Settings.gemSettings.get("yellow").get(level).damage;
 		elapsedTime = 0;
-		delay = Settings.gemSettings.get("green").get(level).delay;
-		name = "Green gem";
-		type = "green";
-		description = "The green gem fires single bullets \nbut its range increases substantially.";
+		delay = Settings.gemSettings.get("yellow").get(level).delay;
+		name = "Yellow gem";
+		type = "yellow";
+		description = "The yellow gem hits all enemies around it, but slower.";
 	}
 	
 	public List<IBullet> getBullets() {
 		return bullets;
 	}
 	
-	public String getType() {
-		return type;
+	public void hit(List<IMonster> monsters) {
+		elapsedTime = 0;
+		canHit = false;
+		for(IMonster m : monsters) {
+			if(!m.isDead()) {
+				hit(m);
+			}
+		}
 	}
 	
 	public void hit(IMonster m) {
-		if(!m.isDead()) {
-			elapsedTime = 0;
-			canHit = false;
-			bullets.add(new GreenBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
-		}
+		bullets.add(new YellowBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
 	}
 	
 	public void update() {
@@ -101,6 +102,10 @@ public class GreenGem extends Gem {
 		return name;
 	}
 	
+	public String getType() {
+		return type;
+	}
+	
 	public int getRange() {
 		return range;
 	}
@@ -108,5 +113,4 @@ public class GreenGem extends Gem {
 	public String getDescription() {
 		return description;
 	}
-
 }

@@ -28,6 +28,7 @@ public class Overlay {
 		background = new Texture("overlay.png");
 		infoArea = new Texture("infoArea.png");
 		font = new BitmapFont();
+		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		this.player = player;
 	}
 	
@@ -38,8 +39,8 @@ public class Overlay {
 		batch.draw(background, 0, 0);
 		batch.setColor(c.r, c.g, c.b, 1f);
 		font.setColor(Color.BLACK);
-		font.getData().setScale(2f);
-		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth(), 550, 80);
+		font.getData().setScale(1f);
+		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth(), 10, 590);
 		if(clickHandler.getClickedGem() != null) {
 			IGem gem = clickHandler.getClickedGem();
 			TextureRegion texture = new TextureRegion(gem.getTexture());
@@ -55,7 +56,7 @@ public class Overlay {
 			batch.draw(texture, 300, 25);
 			font.setColor(Color.BLACK);
 			font.getData().setScale(0.7f);
-			font.draw(batch, info, 30, 80);
+			font.draw(batch, info, 16, 84);
 		}
 		else if(clickHandler.getClickedRock() != null) {
 			String info = "I am a rock.";

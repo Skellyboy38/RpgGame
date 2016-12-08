@@ -12,14 +12,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import bullets.GreenBullet;
 import bullets.IBullet;
+import bullets.BlueBullet;
 import monster.IMonster;
 import settings.Settings;
 import tile.TileClickHandler;
 
-public class GreenGem extends Gem {
-	
+public class BlueGem extends Gem {
 	private Circle collisionBox;
 	private boolean canHit;
 	private int damage;
@@ -32,35 +31,32 @@ public class GreenGem extends Gem {
 	private String description;
 	private List<IBullet> bullets;
 
-	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
+	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
 		this.renderer = renderer;
 		bullets = new ArrayList<IBullet>();
 		collisionBox = new Circle();
-		range = Settings.gemSettings.get("green").get(level).range;
+		range = Settings.gemSettings.get("blue").get(level).range;
 		collisionBox.set(posX, posY, range);
 		canHit = true;
-		damage = Settings.gemSettings.get("green").get(level).damage;
+		damage = Settings.gemSettings.get("blue").get(level).damage;
 		elapsedTime = 0;
-		delay = Settings.gemSettings.get("green").get(level).delay;
-		name = "Green gem";
-		type = "green";
-		description = "The green gem fires single bullets \nbut its range increases substantially.";
+		delay = Settings.gemSettings.get("blue").get(level).delay;
+		name = "Blue gem";
+		type = "blue";
+		description = "The blue gem slows enemies hit.";
 	}
 	
 	public List<IBullet> getBullets() {
 		return bullets;
 	}
 	
-	public String getType() {
-		return type;
-	}
-	
 	public void hit(IMonster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new GreenBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
+			bullets.add(new BlueBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
+			m.slow(1, 1000);
 		}
 	}
 	
@@ -101,6 +97,10 @@ public class GreenGem extends Gem {
 		return name;
 	}
 	
+	public String getType() {
+		return type;
+	}
+	
 	public int getRange() {
 		return range;
 	}
@@ -108,5 +108,4 @@ public class GreenGem extends Gem {
 	public String getDescription() {
 		return description;
 	}
-
 }

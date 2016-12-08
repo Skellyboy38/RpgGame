@@ -33,4 +33,8 @@ public interface IMonster {
 	public Coordinate getCenter();
 	
 	public boolean canDamagePlayer();
+	
+	public void slow(int amount, int duration);
+	
+	public boolean isSlowed();
 }

@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.mygdx.game.RpgGame;
+import java.util.List;
 
 import bullets.IBullet;
+import monster.IMonster;
 import tile.Coordinate;
 import tile.TileClickHandler;
 
@@ -92,6 +94,11 @@ public abstract class Gem implements IGem {
 	
 	public void setPermanent() {
 		isTemporary = false;
+	}
+	
+	@Override
+	public void hit(List<IMonster> monsters) {
+		//do nothing
 	}
 	
 	abstract public void drawCollisionBox();

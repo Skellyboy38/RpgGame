@@ -108,7 +108,6 @@ public class GemHandler {
 	
 	private class GemCreator {
 		private Random random;
-		private Map<String, Float> gemTypeChances;
 		private Map<Integer, Float> gemLevelChances;
 		
 		public GemCreator() {
@@ -117,14 +116,6 @@ public class GemHandler {
 		}
 		
 		public void createGemChances() {
-			gemTypeChances = new HashMap<String, Float>();
-			gemTypeChances.put("green", 1f);
-			gemTypeChances.put("red", 0f);
-			gemTypeChances.put("blue", 0f);
-			gemTypeChances.put("black", 0f);
-			gemTypeChances.put("yellow", 0f);
-			gemTypeChances.put("pink", 0f);
-			gemTypeChances.put("purple", 0f);
 			
 			gemLevelChances = new HashMap<Integer, Float>();
 			gemLevelChances.put(1, 1f);
@@ -135,15 +126,21 @@ public class GemHandler {
 		}
 		
 		public IGem createGem(int posX, int posY) {
-			String gemType = "green"; //To be changed later
+			int type = random.nextInt(3);
 			int gemLevel = 1;
 			for(Integer i : gemLevelChances.keySet()) {
 				if(gemLevelChances.get(i) == 1) {
 					break;
 				}
 			}
-			if(gemType.equals("green")) {
-				return new GreenGem(batch, renderer, stage, clickHandler, new Texture(gemType + ".png"), posX, posY, gemLevel);
+			if(type == 0) {
+				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green.png"), posX, posY, gemLevel);
+			}
+			else if(type == 1) {
+				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow.png"), posX, posY, gemLevel);
+			}
+			else if(type == 2) {
+				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue.png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;
