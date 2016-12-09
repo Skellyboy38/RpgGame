@@ -116,157 +116,157 @@ public class Summoner {
 		Monster m;
 		switch(level) {
 		case 1:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(1).speed, Settings.levels.get(1).hp, Settings.levels.get(1).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(1).speed, Settings.levels.get(1).hp, Settings.levels.get(1).value);
 			break;
 		case 2:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(2).speed, Settings.levels.get(2).hp, Settings.levels.get(2).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(2).speed, Settings.levels.get(2).hp, Settings.levels.get(2).value);
 			break;
 		case 3:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(3).speed, Settings.levels.get(3).hp, Settings.levels.get(3).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(3).speed, Settings.levels.get(3).hp, Settings.levels.get(3).value);
 			break;
 		case 4:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(4).speed, Settings.levels.get(4).hp, Settings.levels.get(4).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(4).speed, Settings.levels.get(4).hp, Settings.levels.get(4).value);
 			break;
 		case 5:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(5).speed, Settings.levels.get(5).hp, Settings.levels.get(5).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(5).speed, Settings.levels.get(5).hp, Settings.levels.get(5).value);
 			break;
 		case 6:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(6).speed, Settings.levels.get(6).hp, Settings.levels.get(6).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(6).speed, Settings.levels.get(6).hp, Settings.levels.get(6).value);
 			break;
 		case 7:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(7).speed, Settings.levels.get(7).hp, Settings.levels.get(7).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(7).speed, Settings.levels.get(7).hp, Settings.levels.get(7).value);
 			break;
 		case 8:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(8).speed, Settings.levels.get(8).hp, Settings.levels.get(8).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(8).speed, Settings.levels.get(8).hp, Settings.levels.get(8).value);
 			break;
 		case 9:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(9).speed, Settings.levels.get(9).hp, Settings.levels.get(9).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(9).speed, Settings.levels.get(9).hp, Settings.levels.get(9).value);
 			break;
 		case 10:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(10).speed, Settings.levels.get(10).hp, Settings.levels.get(10).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(10).speed, Settings.levels.get(10).hp, Settings.levels.get(10).value);
 			break;
 		case 11:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(11).speed, Settings.levels.get(11).hp, Settings.levels.get(11).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(11).speed, Settings.levels.get(11).hp, Settings.levels.get(11).value);
 			break;
 		case 12:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(12).speed, Settings.levels.get(12).hp, Settings.levels.get(12).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(12).speed, Settings.levels.get(12).hp, Settings.levels.get(12).value);
 			break;
 		case 13:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(13).speed, Settings.levels.get(13).hp, Settings.levels.get(13).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(13).speed, Settings.levels.get(13).hp, Settings.levels.get(13).value);
 			break;
 		case 14:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(14).speed, Settings.levels.get(14).hp, Settings.levels.get(14).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(14).speed, Settings.levels.get(14).hp, Settings.levels.get(14).value);
 			break;
 		case 15:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(15).speed, Settings.levels.get(15).hp, Settings.levels.get(15).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(15).speed, Settings.levels.get(15).hp, Settings.levels.get(15).value);
 			break;
 		case 16:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(16).speed, Settings.levels.get(16).hp, Settings.levels.get(16).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(16).speed, Settings.levels.get(16).hp, Settings.levels.get(16).value);
 			break;
 		case 17:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(17).speed, Settings.levels.get(17).hp, Settings.levels.get(17).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(17).speed, Settings.levels.get(17).hp, Settings.levels.get(17).value);
 			break;
 		case 18:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(18).speed, Settings.levels.get(18).hp, Settings.levels.get(18).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(18).speed, Settings.levels.get(18).hp, Settings.levels.get(18).value);
 			break;
 		case 19:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(19).speed, Settings.levels.get(19).hp, Settings.levels.get(19).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(19).speed, Settings.levels.get(19).hp, Settings.levels.get(19).value);
 			break;
 		case 20:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(20).speed, Settings.levels.get(20).hp, Settings.levels.get(20).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(20).speed, Settings.levels.get(20).hp, Settings.levels.get(20).value);
 			break;
 		case 21:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(21).speed, Settings.levels.get(21).hp, Settings.levels.get(21).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(21).speed, Settings.levels.get(21).hp, Settings.levels.get(21).value);
 			break;
 		case 22:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(22).speed, Settings.levels.get(22).hp, Settings.levels.get(22).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(22).speed, Settings.levels.get(22).hp, Settings.levels.get(22).value);
 			break;
 		case 23:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(23).speed, Settings.levels.get(23).hp, Settings.levels.get(23).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(23).speed, Settings.levels.get(23).hp, Settings.levels.get(23).value);
 			break;
 		case 24:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(24).speed, Settings.levels.get(24).hp, Settings.levels.get(24).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(24).speed, Settings.levels.get(24).hp, Settings.levels.get(24).value);
 			break;
 		case 25:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(25).speed, Settings.levels.get(25).hp, Settings.levels.get(25).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(25).speed, Settings.levels.get(25).hp, Settings.levels.get(25).value);
 			break;
 		case 26:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(26).speed, Settings.levels.get(26).hp, Settings.levels.get(26).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(26).speed, Settings.levels.get(26).hp, Settings.levels.get(26).value);
 			break;
 		case 27:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(27).speed, Settings.levels.get(27).hp, Settings.levels.get(27).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(27).speed, Settings.levels.get(27).hp, Settings.levels.get(27).value);
 			break;
 		case 28:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(28).speed, Settings.levels.get(28).hp, Settings.levels.get(28).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(28).speed, Settings.levels.get(28).hp, Settings.levels.get(28).value);
 			break;
 		case 29:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(29).speed, Settings.levels.get(29).hp, Settings.levels.get(29).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(29).speed, Settings.levels.get(29).hp, Settings.levels.get(29).value);
 			break;
 		case 30:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(30).speed, Settings.levels.get(30).hp, Settings.levels.get(30).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(30).speed, Settings.levels.get(30).hp, Settings.levels.get(30).value);
 			break;
 		case 31:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(31).speed, Settings.levels.get(31).hp, Settings.levels.get(31).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(31).speed, Settings.levels.get(31).hp, Settings.levels.get(31).value);
 			break;
 		case 32:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(32).speed, Settings.levels.get(32).hp, Settings.levels.get(32).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(32).speed, Settings.levels.get(32).hp, Settings.levels.get(32).value);
 			break;
 		case 33:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(33).speed, Settings.levels.get(33).hp, Settings.levels.get(33).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(33).speed, Settings.levels.get(33).hp, Settings.levels.get(33).value);
 			break;
 		case 34:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(34).speed, Settings.levels.get(34).hp, Settings.levels.get(34).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(34).speed, Settings.levels.get(34).hp, Settings.levels.get(34).value);
 			break;
 		case 35:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(35).speed, Settings.levels.get(35).hp, Settings.levels.get(35).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(35).speed, Settings.levels.get(35).hp, Settings.levels.get(35).value);
 			break;
 		case 36:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(36).speed, Settings.levels.get(36).hp, Settings.levels.get(36).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(36).speed, Settings.levels.get(36).hp, Settings.levels.get(36).value);
 			break;
 		case 37:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(37).speed, Settings.levels.get(37).hp, Settings.levels.get(37).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(37).speed, Settings.levels.get(37).hp, Settings.levels.get(37).value);
 			break;
 		case 38:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(38).speed, Settings.levels.get(38).hp, Settings.levels.get(38).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(38).speed, Settings.levels.get(38).hp, Settings.levels.get(38).value);
 			break;
 		case 39:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(39).speed, Settings.levels.get(39).hp, Settings.levels.get(39).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(39).speed, Settings.levels.get(39).hp, Settings.levels.get(39).value);
 			break;
 		case 40:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(40).speed, Settings.levels.get(40).hp, Settings.levels.get(40).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(40).speed, Settings.levels.get(40).hp, Settings.levels.get(40).value);
 			break;
 		case 41:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(41).speed, Settings.levels.get(41).hp, Settings.levels.get(41).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(41).speed, Settings.levels.get(41).hp, Settings.levels.get(41).value);
 			break;
 		case 42:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(42).speed, Settings.levels.get(42).hp, Settings.levels.get(42).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(42).speed, Settings.levels.get(42).hp, Settings.levels.get(42).value);
 			break;
 		case 43:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(43).speed, Settings.levels.get(43).hp, Settings.levels.get(43).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(43).speed, Settings.levels.get(43).hp, Settings.levels.get(43).value);
 			break;
 		case 44:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(44).speed, Settings.levels.get(44).hp, Settings.levels.get(44).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(44).speed, Settings.levels.get(44).hp, Settings.levels.get(44).value);
 			break;
 		case 45:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(45).speed, Settings.levels.get(45).hp, Settings.levels.get(45).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(45).speed, Settings.levels.get(45).hp, Settings.levels.get(45).value);
 			break;
 		case 46:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(46).speed, Settings.levels.get(46).hp, Settings.levels.get(46).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(46).speed, Settings.levels.get(46).hp, Settings.levels.get(46).value);
 			break;
 		case 47:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(47).speed, Settings.levels.get(47).hp, Settings.levels.get(47).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(47).speed, Settings.levels.get(47).hp, Settings.levels.get(47).value);
 			break;
 		case 48:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(48).speed, Settings.levels.get(48).hp, Settings.levels.get(48).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(48).speed, Settings.levels.get(48).hp, Settings.levels.get(48).value);
 			break;
 		case 49:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(49).speed, Settings.levels.get(49).hp, Settings.levels.get(49).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(49).speed, Settings.levels.get(49).hp, Settings.levels.get(49).value);
 			break;
 		case 50:
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(50).speed, Settings.levels.get(50).hp, Settings.levels.get(50).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(50).speed, Settings.levels.get(50).hp, Settings.levels.get(50).value);
 			break;
 		default: 
-			m = new Monster(batch, renderer, new Texture("monster.png"), START_X, START_Y, Settings.levels.get(1).speed, Settings.levels.get(1).hp, Settings.levels.get(1).value);
+			m = new Monster(batch, renderer, new Texture("monsterSheet.png"), START_X, START_Y, Settings.levels.get(1).speed, Settings.levels.get(1).hp, Settings.levels.get(1).value);
 			break;
 		}
 		m.jump(START_X, START_Y);

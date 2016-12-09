@@ -48,7 +48,7 @@ public class TileClickHandler {
 	
 	public void clickTile(int posX, int posY) {
 		if(clickedTile != null) {
-			clickedTile.reset();
+			clickedTile.hardReset();
 		}
 		
 		int x = posX/(RpgGame.WIDTH/50);

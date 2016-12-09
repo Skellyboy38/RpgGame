@@ -134,13 +134,13 @@ public class GemHandler {
 				}
 			}
 			if(type == 0) {
-				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green.png"), posX, posY, gemLevel);
+				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green_1.png"), posX, posY, gemLevel);
 			}
 			else if(type == 1) {
-				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow.png"), posX, posY, gemLevel);
+				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow_1.png"), posX, posY, gemLevel);
 			}
 			else if(type == 2) {
-				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue.png"), posX, posY, gemLevel);
+				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue_1.png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;

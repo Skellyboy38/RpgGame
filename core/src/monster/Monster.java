@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -24,7 +25,7 @@ public class Monster implements IMonster {
 	private int speed;
 	private int value;
 	private boolean isDead;
-	private Texture originalTexture;
+	private Texture animationSheet;
 	private TextureRegion texture;
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
@@ -49,6 +50,8 @@ public class Monster implements IMonster {
 	private int poisonDuration;
 	private int poisonDamage;
 	private int poisonDelay;
+	private Animation animation;
+	private float animationCounter;
 	
 	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value) {
 		this.batch = batch;
@@ -56,7 +59,13 @@ public class Monster implements IMonster {
 		this.path = new ArrayList<ITile>();
 		this.speed = speed;
 		this.value = value;
-		this.originalTexture = texture;
+		this.animationSheet = texture;
+		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, 20);
+		TextureRegion[] frames = new TextureRegion[6];
+		for(int i = 0; i < 6; i++) {
+			frames[i] = temp[0][i];
+		}
+		animation = new Animation(0.1f, frames);
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
 		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
@@ -82,6 +91,7 @@ public class Monster implements IMonster {
 		this.poisonDuration = 0;
 		this.poisonDamage = 0;
 		this.poisonDelay = 500;
+		this.animationCounter = 0;
 	}
 	
 	public void updateCollisionBox() {
@@ -166,13 +176,16 @@ public class Monster implements IMonster {
 	public void kill() {
 		isDead = true;
 		canDamagePlayer = false;
-		originalTexture.dispose();
+		animationSheet.dispose();
 	}
 	
 	public void render() {
 		if(!isDead) {
+			animationCounter += Gdx.graphics.getDeltaTime();
+			TextureRegion currentFrame;
+			currentFrame = animation.getKeyFrame(animationCounter, true);
 			batch.begin();
-			batch.draw(texture, posX, posY);
+			batch.draw(currentFrame, posX, posY);
 			batch.end();
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(getHpColor());
