@@ -9,6 +9,7 @@ import com.mygdx.game.RpgGame;
 
 import gem.IGem;
 import gem.Rock;
+import monster.Summoner;
 
 public class TileClickHandler {
 	
@@ -19,10 +20,12 @@ public class TileClickHandler {
 	private Rock clickedRock;
 	private SpriteBatch batch;
 	private TextureRegion clickedTexture;
+	private Summoner summoner;
 	
-	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch) {
+	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch, Summoner summoner) {
 		this.tileMap = tileMap;
 		this.batch = batch;
+		this.summoner = summoner;
 		this.coordinates = coordinates;
 		this.clickedTile = null;
 		this.clickedTexture = new TextureRegion(new Texture("clickedGem.png"));
@@ -39,10 +42,13 @@ public class TileClickHandler {
 		batch.end();
 	}
 	
+	public void drawPath() {
+		summoner.drawPath();
+	}
+	
 	public void clickTile(int posX, int posY) {
 		if(clickedTile != null) {
-			clickedTile.setClicked(false);
-			clickedTile.resetTexture();
+			clickedTile.reset();
 		}
 		
 		int x = posX/(RpgGame.WIDTH/50);
@@ -58,9 +64,16 @@ public class TileClickHandler {
 		return clickedTile;
 	}
 	
+	public void buryTile() {
+		if(clickedTile != null) {
+			clickedTile.reset();
+		}
+		clickedTile = null;
+	}
+	
 	public void unclickTile() {
 		if(clickedTile != null) {
-			clickedTile.resetTexture();
+			clickedTile.hardReset();
 		}
 		clickedTile = null;
 	}

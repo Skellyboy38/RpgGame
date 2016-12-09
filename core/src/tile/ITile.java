@@ -47,4 +47,6 @@ public interface ITile {
 	public void setClicked(boolean isClicked);
 	
 	public void reset();
+	
+	public void hardReset();
 }

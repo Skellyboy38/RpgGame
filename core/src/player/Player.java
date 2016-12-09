@@ -13,6 +13,7 @@ public class Player {
 	
 	public void reset() {
 		this.currentHp = hp;
+		this.money = 0;
 	}
 	
 	public void addMoney(int toAdd) {

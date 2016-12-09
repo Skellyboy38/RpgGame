@@ -75,11 +75,15 @@ public abstract class AbstractTile implements ITile {
 						if(isClicked) {
 							resetTexture();
 							isClicked = false;
+							unoccupy();
+							clickHandler.drawPath();
 						}
 						else {
 							clickHandler.clickTile(posX, posY);
 							texture.setTexture(new Texture("tilePressed.png"));
 							isClicked = true;
+							occupy();
+							clickHandler.drawPath();
 						}
 						return true;
 					}
@@ -104,9 +108,18 @@ public abstract class AbstractTile implements ITile {
 	}
 	
 	public void reset() {
-		this.isClicked = false;
-		this.isHoverable = true;
-		this.isClickable = true;
+		setClicked(false);
+		enableHover();
+		enableClick();
+		resetTexture();
+	}
+	
+	public void hardReset() {
+		setClicked(false);
+		enableHover();
+		enableClick();
+		unoccupy();
+		resetTexture();
 	}
 	
 	public void disable() {

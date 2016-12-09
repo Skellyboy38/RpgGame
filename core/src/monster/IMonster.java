@@ -39,4 +39,10 @@ public interface IMonster {
 	public boolean isSlowed();
 	
 	public void poison(int damage, int duration);
+	
+	public int getValue();
+	
+	public boolean canGiveGold();
+	
+	public void giveGold();
 }

@@ -34,7 +34,6 @@ public class RpgGame extends ApplicationAdapter {
 	public static int HEIGHT = 600;
 	public static int PLAYER_HP = 20;
 	public static final float ZOOM_FACTOR = 0.05f;
-	public int numMonsters = 10;
 	
 	SpriteBatch batch;
 	ShapeRenderer renderer;
@@ -75,16 +74,17 @@ public class RpgGame extends ApplicationAdapter {
 		tiles = new ArrayList<ITile>();
 		checkpoints = new ArrayList<ITile>();
 		tileMap = new HashMap<Coordinate, ITile>();
+		summoner = new Summoner(batch, renderer, checkpoints, player);
+		createCoordinates();
+		clickHandler = new TileClickHandler(tileMap, coordinates, batch, summoner);
+		createTiles();
+		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
+		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
+		overlay = new Overlay(clickHandler, summoner, player);
+		inputMultiplexer.addProcessor(overlay.getStage());
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(zoom);
 		Gdx.input.setInputProcessor(inputMultiplexer);
-		createCoordinates();
-		clickHandler = new TileClickHandler(tileMap, coordinates, batch);
-		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
-		createTiles();
-		summoner = new Summoner(batch, renderer, checkpoints, player);
-		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
-		overlay = new Overlay(clickHandler, summoner, player);
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class RpgGame extends ApplicationAdapter {
 				if(summoner.doesPathExist()) {
 					ITile tile = clickHandler.getClickedTile();
 					tile.disable();
-					clickHandler.unclickTile();
+					clickHandler.buryTile();
 					gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
 				}
 				else {

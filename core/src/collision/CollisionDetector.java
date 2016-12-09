@@ -24,12 +24,12 @@ public class CollisionDetector {
 			boolean areAllMonstersSlowed = true;
 			String type = g.getType();
 			for(IMonster m : monsters) {
-				if(Intersector.overlaps(g.getCollisionBox(), m.getCollisionBox()) && g.canHit()) {
+				if(Intersector.overlaps(g.getCollisionBox(), m.getCollisionBox()) && !m.isDead()) {
 					allMonstersInRange.add(m);
 					if(!m.isSlowed()) {
 						areAllMonstersSlowed = false;
 					}
-					if(type.equals("green")) {
+					if(type.equals("green") && g.canHit()) {
 						g.hit(m);
 						m.hit(g.getDamage());
 					}
@@ -41,7 +41,7 @@ public class CollisionDetector {
 					m.hit(g.getDamage());
 				}
 			}
-			if(type.equals("blue")) {
+			if(type.equals("blue") && g.canHit()) {
 				if(areAllMonstersSlowed && !allMonstersInRange.isEmpty()) {
 					g.hit(allMonstersInRange.get(0));
 					allMonstersInRange.get(0).hit(g.getDamage());

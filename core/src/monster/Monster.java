@@ -22,6 +22,7 @@ public class Monster implements IMonster {
 	private int posX;
 	private int posY;
 	private int speed;
+	private int value;
 	private boolean isDead;
 	private Texture originalTexture;
 	private TextureRegion texture;
@@ -37,6 +38,7 @@ public class Monster implements IMonster {
 	private boolean canFly;
 	private int currentHp;
 	private boolean canDamagePlayer;
+	private boolean canGiveGold;
 	private int originalSpeed;
 	private boolean isSlowed;
 	private boolean isPoisoned;
@@ -48,11 +50,12 @@ public class Monster implements IMonster {
 	private int poisonDamage;
 	private int poisonDelay;
 	
-	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp) {
+	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value) {
 		this.batch = batch;
 		this.renderer = renderer;
 		this.path = new ArrayList<ITile>();
 		this.speed = speed;
+		this.value = value;
 		this.originalTexture = texture;
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
@@ -66,6 +69,7 @@ public class Monster implements IMonster {
 		this.tileCounter = -1;
 		canFly = false;
 		canDamagePlayer = true;
+		canGiveGold = true;
 		this.maxHp = maxHp;
 		this.currentHp = maxHp; 
 		this.originalSpeed = speed;
@@ -95,6 +99,10 @@ public class Monster implements IMonster {
 		slowDuration = duration;
 	}
 	
+	public int getValue() {
+		return value;
+	}
+	
 	public void poison(int amount, int duration) {
 		isPoisoned = true;
 		poisonDamage = amount;
@@ -107,6 +115,14 @@ public class Monster implements IMonster {
 	
 	public boolean canDamagePlayer() {
 		return canDamagePlayer;
+	}
+	
+	public void giveGold() {
+		canGiveGold = false;
+	}
+	
+	public boolean canGiveGold() {
+		return canGiveGold;
 	}
 	
 	public boolean isDead() {
