@@ -48,4 +48,6 @@ public interface IGem {
 	public TextureRegion getTexture();
 	
 	public void removeListeners();
+	
+	public int getLevel();
 }

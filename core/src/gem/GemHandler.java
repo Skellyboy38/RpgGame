@@ -1,9 +1,7 @@
 package gem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import settings.Settings;
 import tile.TileClickHandler;
 
 public class GemHandler {
@@ -102,45 +101,68 @@ public class GemHandler {
 		rocks.clear();
 	}
 	
+	public void increaseGemChances() {
+		creator.increaseChances();
+	}
+	
+	public Float[] getGemChances() {
+		return creator.getGemChances();
+	}
+	
 	public void nextStage() {
 		currentGems.clear();
 	}
 	
 	private class GemCreator {
 		private Random random;
-		private Map<Integer, Float> gemLevelChances;
+		private Float[] gemLevelChances;
+		private int chancesLevel;
 		
 		public GemCreator() {
 			this.random = new Random();
-			createGemChances();
+			this.chancesLevel = 1;
+			this.gemLevelChances = Settings.gemChances.get(chancesLevel);
 		}
 		
-		public void createGemChances() {
-			
-			gemLevelChances = new HashMap<Integer, Float>();
-			gemLevelChances.put(1, 1f);
-			gemLevelChances.put(2, 0f);
-			gemLevelChances.put(3, 0f);
-			gemLevelChances.put(4, 0f);
-			gemLevelChances.put(5, 0f);
+		public Float[] getGemChances() {
+			return gemLevelChances;
+		}
+		
+		public void increaseChances() {
+			if(chancesLevel != 10) {
+				chancesLevel++;
+			}
+			gemLevelChances = Settings.gemChances.get(chancesLevel);
 		}
 		
 		public IGem createGem(int posX, int posY) {
 			int type = random.nextInt(3);
-			int gemLevel = 1;
-			for(Integer i : gemLevelChances.keySet()) {
-				if(gemLevelChances.get(i) == 1) {
-					break;
-				}
+			float gemLevelChance = random.nextFloat();
+			int gemLevel;
+			if(gemLevelChance <= gemLevelChances[0]) {
+				gemLevel = 1;
 			}
+			else if(gemLevelChance <= gemLevelChances[0] + gemLevelChances[1]) {
+				gemLevel = 2;
+			}
+			else if(gemLevelChance <= gemLevelChances[0] + gemLevelChances[1] + gemLevelChances[2]) {
+				gemLevel = 3;
+			}
+			else if(gemLevelChance <= gemLevelChances[0] + gemLevelChances[1] + gemLevelChances[2] + gemLevelChances[3]) {
+				gemLevel = 4;
+			}
+			else {
+				gemLevel = 5;
+			}
+			
 			if(type == 0) {
-				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green_1.png"), posX, posY, gemLevel);
+				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else if(type == 1) {
-				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow_1.png"), posX, posY, gemLevel);
+				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else if(type == 2) {
-				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue_1.png"), posX, posY, gemLevel);
+				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;

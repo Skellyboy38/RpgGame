@@ -329,7 +329,7 @@ public class Summoner {
 				for(ITile tile : p.getPath()) {
 					batch.begin();
 					Color c = batch.getColor();
-					batch.setColor(c.r, c.g, c.b, 0.3f);
+					batch.setColor(c.r, c.g, c.b, 0.1f);
 					batch.draw(temporaryPathTexture, tile.getPosition().getX(), tile.getPosition().getY());
 					batch.setColor(c.r, c.g, c.b, 1f);
 					batch.end();

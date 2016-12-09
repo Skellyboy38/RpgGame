@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -55,9 +56,11 @@ public class RpgGame extends ApplicationAdapter {
 	Settings gameSettings;
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
+	Texture background;
 	
 	@Override
 	public void create () {
+		background = new Texture("background.png");
 		gameSettings = new Settings();
 		player = new Player(PLAYER_HP);
 		batch = new SpriteBatch();
@@ -80,7 +83,7 @@ public class RpgGame extends ApplicationAdapter {
 		createTiles();
 		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
 		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
-		overlay = new Overlay(clickHandler, summoner, player);
+		overlay = new Overlay(clickHandler, summoner, player, gemHandler);
 		inputMultiplexer.addProcessor(overlay.getStage());
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(zoom);
@@ -96,6 +99,9 @@ public class RpgGame extends ApplicationAdapter {
 			cam.update();
 			batch.setProjectionMatrix(cam.combined);
 			renderer.setProjectionMatrix(cam.combined);
+			batch.begin();
+			batch.draw(background, -500, -300);
+			batch.end();
 			stage.act();
 			renderTiles();
 			gemHandler.render();
@@ -171,17 +177,17 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 		
-		if(Gdx.input.getX() <= 20 && (cam.position.x - effectiveViewportWidth/2) > -50) {
-			cam.position.x -= 10;
+		if(Gdx.input.getX() <= 40 && (cam.position.x - effectiveViewportWidth/2) > -50) {
+			cam.position.x -= 5;
 		}
-		if(Gdx.input.getX() >= 980 && (cam.position.x + effectiveViewportWidth/2) < WIDTH + 50) {
-			cam.position.x += 10;
+		if(Gdx.input.getX() >= 960 && (cam.position.x + effectiveViewportWidth/2) < WIDTH + 50) {
+			cam.position.x += 5;
 		}
-		if(Gdx.input.getY() <= 20 && (cam.position.y + effectiveViewportHeight/2) < HEIGHT + 50) {
-			cam.position.y += 10;
+		if(Gdx.input.getY() <= 40 && (cam.position.y + effectiveViewportHeight/2) < HEIGHT + 50) {
+			cam.position.y += 5;
 		}
-		if(Gdx.input.getY() >= 580 && (cam.position.y - effectiveViewportHeight/2) > -50) {
-			cam.position.y -= 10;
+		if(Gdx.input.getY() >= 560 && (cam.position.y - effectiveViewportHeight/2) > -50) {
+			cam.position.y -= 5;
 		}
 	}
 	

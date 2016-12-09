@@ -31,6 +31,7 @@ public class GreenGem extends Gem {
 	private String type;
 	private String description;
 	private List<IBullet> bullets;
+	private int level;
 
 	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
@@ -45,7 +46,8 @@ public class GreenGem extends Gem {
 		delay = Settings.gemSettings.get("green").get(level).delay;
 		name = "Green gem";
 		type = "green";
-		description = "The green gem fires single bullets \nbut its range increases substantially.";
+		description = "The green gem poisons enemies.";
+		this.level = level;
 	}
 	
 	public List<IBullet> getBullets() {
@@ -104,6 +106,10 @@ public class GreenGem extends Gem {
 	
 	public int getRange() {
 		return range;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 	
 	public String getDescription() {

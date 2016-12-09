@@ -19,7 +19,7 @@ public class BlueBullet implements IBullet {
 		this.posY = posY;
 		this.toHit = m;
 		hasArrived = false;
-		speed = 5;
+		speed = 10;
 	}
 	
 	public void update() {

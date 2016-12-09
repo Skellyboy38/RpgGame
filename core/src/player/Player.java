@@ -4,11 +4,13 @@ public class Player {
 	private int hp;
 	private int money;
 	private int currentHp;
+	private int gemChancesLevel;
 	
 	public Player(int hp) {
 		this.hp = hp;
 		this.currentHp = hp;
 		this.money = 0;
+		this.gemChancesLevel = 1;
 	}
 	
 	public void reset() {

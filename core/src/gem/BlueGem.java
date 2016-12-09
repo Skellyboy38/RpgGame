@@ -30,6 +30,7 @@ public class BlueGem extends Gem {
 	private String type;
 	private String description;
 	private List<IBullet> bullets;
+	private int level;
 
 	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
@@ -45,6 +46,7 @@ public class BlueGem extends Gem {
 		name = "Blue gem";
 		type = "blue";
 		description = "The blue gem slows enemies hit.";
+		this.level = level;
 	}
 	
 	public List<IBullet> getBullets() {
@@ -103,6 +105,10 @@ public class BlueGem extends Gem {
 	
 	public int getRange() {
 		return range;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 	
 	public String getDescription() {
