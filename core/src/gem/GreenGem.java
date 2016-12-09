@@ -61,6 +61,7 @@ public class GreenGem extends Gem {
 			elapsedTime = 0;
 			canHit = false;
 			bullets.add(new GreenBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
+			m.poison(1, 3000);
 		}
 	}
 	

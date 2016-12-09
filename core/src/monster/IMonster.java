@@ -37,4 +37,6 @@ public interface IMonster {
 	public void slow(int amount, int duration);
 	
 	public boolean isSlowed();
+	
+	public void poison(int damage, int duration);
 }

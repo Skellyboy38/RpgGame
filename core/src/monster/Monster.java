@@ -39,8 +39,14 @@ public class Monster implements IMonster {
 	private boolean canDamagePlayer;
 	private int originalSpeed;
 	private boolean isSlowed;
+	private boolean isPoisoned;
 	private int slowTimer;
 	private int slowDuration;
+	private int poisonTimer;
+	private int poisonDamageTimer;
+	private int poisonDuration;
+	private int poisonDamage;
+	private int poisonDelay;
 	
 	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp) {
 		this.batch = batch;
@@ -66,6 +72,12 @@ public class Monster implements IMonster {
 		this.isSlowed = false;
 		this.slowTimer = 0;
 		this.slowDuration = 0;
+		this.isPoisoned = false;
+		this.poisonTimer = 0;
+		this.poisonDamageTimer = 0;
+		this.poisonDuration = 0;
+		this.poisonDamage = 0;
+		this.poisonDelay = 500;
 	}
 	
 	public void updateCollisionBox() {
@@ -81,6 +93,12 @@ public class Monster implements IMonster {
 		}
 		slowTimer = 0;
 		slowDuration = duration;
+	}
+	
+	public void poison(int amount, int duration) {
+		isPoisoned = true;
+		poisonDamage = amount;
+		poisonDuration = duration;
 	}
 	
 	public Rectangle getCollisionBox() {
@@ -110,6 +128,19 @@ public class Monster implements IMonster {
 			if((slowTimer/slowDuration) >= 1) {
 				isSlowed = false;
 				speed = originalSpeed;
+			}
+		}
+		if(isPoisoned) {
+			poisonTimer += Gdx.graphics.getDeltaTime()*1000;
+			poisonDamageTimer += Gdx.graphics.getDeltaTime()*1000;
+			if((poisonTimer/poisonDuration) >= 1) {
+				isPoisoned = false;
+				poisonTimer = 0;
+				poisonDamageTimer = 0;
+			}
+			if((poisonDamageTimer/poisonDelay) >= 1) {
+				poisonDamageTimer = 0;
+				hit(poisonDamage);
 			}
 		}
 		updateCollisionBox();
