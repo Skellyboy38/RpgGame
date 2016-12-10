@@ -74,27 +74,27 @@ public class Settings {
 	
 	public void populateGemSettings() {
 		Map<Integer, GemSettings> Green = new HashMap<Integer, GemSettings>();
-		Green.put(1, new GemSettings(100, 3, 200));
-		Green.put(2, new GemSettings(150, 4, 200));
-		Green.put(3, new GemSettings(200, 5, 200));
-		Green.put(4, new GemSettings(250, 8, 200));
-		Green.put(5, new GemSettings(300, 10, 200));
+		Green.put(1, new GemSettings(100, 3, 200, 0, 0, 1, 3000, 0));
+		Green.put(2, new GemSettings(150, 4, 200, 0, 0, 3, 3000, 0));
+		Green.put(3, new GemSettings(200, 5, 200, 0, 0, 8, 4000, 0));
+		Green.put(4, new GemSettings(250, 8, 200, 0, 0, 20, 6000, 0));
+		Green.put(5, new GemSettings(300, 10, 200, 0, 0, 40, 8000, 0));
 		gemSettings.put("green", Green);
 		
 		Map<Integer, GemSettings> Yellow = new HashMap<Integer, GemSettings>();
-		Yellow.put(1, new GemSettings(100, 1, 300));
-		Yellow.put(2, new GemSettings(100, 2, 300));
-		Yellow.put(3, new GemSettings(100, 3, 300));
-		Yellow.put(4, new GemSettings(100, 4, 300));
-		Yellow.put(5, new GemSettings(100, 5, 300));
+		Yellow.put(1, new GemSettings(100, 1, 300, 0, 0, 0, 0, 0));
+		Yellow.put(2, new GemSettings(100, 2, 300, 0, 0, 0, 0, 0));
+		Yellow.put(3, new GemSettings(200, 4, 300, 0, 0, 0, 0, 0));
+		Yellow.put(4, new GemSettings(200, 6, 300, 0, 0, 0, 0, 0));
+		Yellow.put(5, new GemSettings(200, 8, 300, 0, 0, 0, 0, 0));
 		gemSettings.put("yellow", Yellow);
 		
 		Map<Integer, GemSettings> Blue = new HashMap<Integer, GemSettings>();
-		Blue.put(1, new GemSettings(150, 2, 400));
-		Blue.put(2, new GemSettings(150, 3, 400));
-		Blue.put(3, new GemSettings(150, 4, 400));
-		Blue.put(4, new GemSettings(150, 6, 400));
-		Blue.put(5, new GemSettings(150, 8, 400));
+		Blue.put(1, new GemSettings(150, 2, 400, 1, 1000, 0, 0, 0));
+		Blue.put(2, new GemSettings(150, 3, 400, 1, 1500, 0, 0, 0));
+		Blue.put(3, new GemSettings(150, 4, 400, 2, 1500, 0, 0, 0));
+		Blue.put(4, new GemSettings(150, 6, 400, 2, 2000, 0, 0, 0));
+		Blue.put(5, new GemSettings(150, 8, 400, 2, 3000, 0, 0, 0));
 		gemSettings.put("blue", Blue);
 	}
 	
@@ -141,11 +141,21 @@ public class Settings {
 		public int range;
 		public int damage;
 		public int delay;
+		public int slowAmount;
+		public int slowDuration;
+		public float increaseSpeedAmount;
+		public int poisonAmount;
+		public int poisonDuration;
 		
-		public GemSettings(int range, int damage, int delay) {
+		public GemSettings(int range, int damage, int delay, int slowAmount, int slowDuration, int poisonAmount, int poisonDuration, float increaseSpeedAmount) {
 			this.range = range;
 			this.damage = damage;
 			this.delay = delay;
+			this.slowAmount = slowAmount;
+			this.increaseSpeedAmount = increaseSpeedAmount;
+			this.poisonAmount = poisonAmount;
+			this.poisonDuration = poisonDuration;
+			this.slowDuration = slowDuration;
 		}
 	}
 }

@@ -30,6 +30,8 @@ public class BlueGem extends Gem {
 	private String type;
 	private String description;
 	private List<IBullet> bullets;
+	private int slowAmount;
+	private int slowDuration;
 	private int level;
 
 	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
@@ -43,6 +45,8 @@ public class BlueGem extends Gem {
 		damage = Settings.gemSettings.get("blue").get(level).damage;
 		elapsedTime = 0;
 		delay = Settings.gemSettings.get("blue").get(level).delay;
+		slowAmount = Settings.gemSettings.get("blue").get(level).slowAmount;
+		slowDuration = Settings.gemSettings.get("blue").get(level).slowDuration;
 		name = "Blue gem";
 		type = "blue";
 		description = "The blue gem slows enemies hit.";

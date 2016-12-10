@@ -90,6 +90,10 @@ public class GemHandler {
 		return currentGems.size() == 5;
 	}
 	
+	public boolean canIncreaseGemChances() {
+		return creator.canIncreaseGemChances();
+	}
+	
 	public void reset() {
 		for(IGem gem : gems) {
 			gem.removeListeners();
@@ -99,6 +103,7 @@ public class GemHandler {
 			r.removeListeners();
 		}
 		rocks.clear();
+		creator.reset();
 	}
 	
 	public void increaseGemChances() {
@@ -128,11 +133,20 @@ public class GemHandler {
 			return gemLevelChances;
 		}
 		
+		public void reset() {
+			chancesLevel= 1;
+			gemLevelChances = Settings.gemChances.get(chancesLevel);
+		}
+		
 		public void increaseChances() {
 			if(chancesLevel != 10) {
 				chancesLevel++;
 			}
 			gemLevelChances = Settings.gemChances.get(chancesLevel);
+		}
+		
+		public boolean canIncreaseGemChances() {
+			return chancesLevel < 10;
 		}
 		
 		public IGem createGem(int posX, int posY) {

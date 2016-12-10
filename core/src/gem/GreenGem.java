@@ -31,6 +31,8 @@ public class GreenGem extends Gem {
 	private String type;
 	private String description;
 	private List<IBullet> bullets;
+	private int poisonDamage;
+	private int poisonDuration;
 	private int level;
 
 	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
@@ -44,6 +46,8 @@ public class GreenGem extends Gem {
 		damage = Settings.gemSettings.get("green").get(level).damage;
 		elapsedTime = 0;
 		delay = Settings.gemSettings.get("green").get(level).delay;
+		poisonDamage = Settings.gemSettings.get("green").get(level).poisonAmount;
+		poisonDuration = Settings.gemSettings.get("green").get(level).poisonDuration;
 		name = "Green gem";
 		type = "green";
 		description = "The green gem poisons enemies.";
@@ -63,7 +67,7 @@ public class GreenGem extends Gem {
 			elapsedTime = 0;
 			canHit = false;
 			bullets.add(new GreenBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
-			m.poison(1, 3000);
+			m.poison(poisonDamage, poisonDuration);
 		}
 	}
 	
