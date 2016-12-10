@@ -96,6 +96,14 @@ public class Settings {
 		Blue.put(4, new GemSettings(150, 6, 400, 2, 2000, 0, 0, 0));
 		Blue.put(5, new GemSettings(150, 8, 400, 2, 3000, 0, 0, 0));
 		gemSettings.put("blue", Blue);
+		
+		Map<Integer, GemSettings> Black = new HashMap<Integer, GemSettings>();
+		Black.put(1, new GemSettings(150, 2, 200, 0, 0, 0, 0, 0.1f));
+		Black.put(2, new GemSettings(150, 3, 200, 0, 0, 0, 0, 0.2f));
+		Black.put(3, new GemSettings(150, 4, 200, 0, 0, 0, 0, 0.4f));
+		Black.put(4, new GemSettings(150, 6, 150, 0, 0, 0, 0, 0.7f));
+		Black.put(5, new GemSettings(150, 8, 150, 0, 0, 0, 0, 1f));
+		gemSettings.put("black", Black);
 	}
 	
 	public void populateGemChances() {
@@ -105,10 +113,10 @@ public class Settings {
 		Float[] chancesLevel4 = {0.4f, 0.4f, 0.2f, 0f, 0f};
 		Float[] chancesLevel5 = {0.2f, 0.5f, 0.2f, 0.1f, 0f};
 		Float[] chancesLevel6 = {0.1f, 0.5f, 0.3f, 0.1f, 0f};
-		Float[] chancesLevel7 = {0f, 0.5f, 0.4f, 0.2f, 0f};
-		Float[] chancesLevel8 = {0f, 0.3f, 0.4f, 0.3f, 0f};
-		Float[] chancesLevel9 = {0f, 0.1f, 0.3f, 0.5f, 0.1f};
-		Float[] chancesLevel10 = {0f, 0f, 0.2f, 0.5f, 0.3f};
+		Float[] chancesLevel7 = {0.1f, 0.3f, 0.4f, 0.2f, 0f};
+		Float[] chancesLevel8 = {0.1f, 0.2f, 0.4f, 0.3f, 0f};
+		Float[] chancesLevel9 = {0.1f, 0.1f, 0.3f, 0.4f, 0.1f};
+		Float[] chancesLevel10 = {0.1f, 0.1f, 0.1f, 0.5f, 0.2f};
 		gemChances.put(1, chancesLevel1);
 		gemChances.put(2, chancesLevel2);
 		gemChances.put(3, chancesLevel3);

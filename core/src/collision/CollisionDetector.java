@@ -33,6 +33,10 @@ public class CollisionDetector {
 						g.hit(m);
 						m.hit(g.getDamage());
 					}
+					if(type.equals("black") && g.canHit()) {
+						g.hit(m);
+						m.hit(g.getDamage());
+					}
 				}
 			}
 			if(type.equals("yellow") && g.canHit() && !allMonstersInRange.isEmpty()) {
@@ -53,6 +57,13 @@ public class CollisionDetector {
 							m.hit(g.getDamage());
 							break;
 						}
+					}
+				}
+			}
+			if(type.equals("black")) {
+				for(IGem other : gems) {
+					if(!g.equals(other) && Intersector.overlaps(g.getCollisionBox(), other.getBody())) {
+						other.speedUp(g.getSpeedUpAmount());
 					}
 				}
 			}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 import bullets.IBullet;
 import monster.IMonster;
@@ -50,4 +51,10 @@ public interface IGem {
 	public void removeListeners();
 	
 	public int getLevel();
+	
+	public void speedUp(float speed);
+	
+	public Rectangle getBody();
+	
+	public float getSpeedUpAmount();
 }

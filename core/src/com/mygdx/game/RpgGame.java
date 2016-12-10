@@ -146,16 +146,28 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public void checkInputs() {
 		boolean isEnterPressed = false;
+		boolean isCPressed = false;
 		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
-			gemHandler.commitGem(clickHandler.getClickedGem());
+			gemHandler.commitGem(clickHandler.getClickedGem(), false);
 			clickHandler.unclickGem();
 			gemHandler.nextStage();
 			summoner.nextStage();
 			summoner.start();
 			isEnterPressed = true;
 		}
+		if(Gdx.input.isKeyPressed(31) && gemHandler.isReady() && gemHandler.isCombination(clickHandler.getClickedGem()) && !isCPressed) {
+			gemHandler.commitGem(clickHandler.getClickedGem(), true);
+			clickHandler.unclickGem();
+			gemHandler.nextStage();
+			summoner.nextStage();
+			summoner.start();
+			isCPressed = true;
+		}
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
+		}
+		if(!Gdx.input.isKeyPressed(31)) {
+			isCPressed = false;
 		}
 		if(Gdx.input.isKeyPressed(62) && (clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
 			if(clickHandler.getClickedTile() != null) {

@@ -23,6 +23,7 @@ public class BlueGem extends Gem {
 	private boolean canHit;
 	private int damage;
 	private int delay; // delay between hits in milliseconds
+	private int originalDelay;
 	private ShapeRenderer renderer;
 	private int elapsedTime;
 	private int range;
@@ -33,6 +34,7 @@ public class BlueGem extends Gem {
 	private int slowAmount;
 	private int slowDuration;
 	private int level;
+	private boolean isSpedUp;
 
 	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
@@ -44,13 +46,30 @@ public class BlueGem extends Gem {
 		canHit = true;
 		damage = Settings.gemSettings.get("blue").get(level).damage;
 		elapsedTime = 0;
-		delay = Settings.gemSettings.get("blue").get(level).delay;
+		originalDelay = Settings.gemSettings.get("blue").get(level).delay;
+		delay = originalDelay;
 		slowAmount = Settings.gemSettings.get("blue").get(level).slowAmount;
 		slowDuration = Settings.gemSettings.get("blue").get(level).slowDuration;
 		name = "Blue gem";
 		type = "blue";
 		description = "The blue gem slows enemies hit.";
 		this.level = level;
+		isSpedUp = false;
+	}
+	
+	public void speedUp(float amount) {
+		if(!isSpedUp) {
+			isSpedUp = true;
+			delay = (int)(originalDelay/amount);
+		}
+		else if((int)(originalDelay/amount) < delay) {
+			delay = (int)(originalDelay/amount);
+		}
+	}
+	
+	@Override
+	public float getSpeedUpAmount() {
+		return 1f;
 	}
 	
 	public List<IBullet> getBullets() {
@@ -62,7 +81,7 @@ public class BlueGem extends Gem {
 			elapsedTime = 0;
 			canHit = false;
 			bullets.add(new BlueBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
-			m.slow(1, 1000);
+			m.slow(slowAmount, slowDuration);
 		}
 	}
 	

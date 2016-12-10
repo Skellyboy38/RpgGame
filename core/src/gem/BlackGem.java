@@ -12,14 +12,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import bullets.GreenBullet;
+import bullets.BlackBullet;
 import bullets.IBullet;
 import monster.IMonster;
 import settings.Settings;
 import tile.TileClickHandler;
 
-public class GreenGem extends Gem {
-	
+public class BlackGem extends Gem {
 	private Circle collisionBox;
 	private boolean canHit;
 	private int damage;
@@ -32,30 +31,32 @@ public class GreenGem extends Gem {
 	private String type;
 	private String description;
 	private List<IBullet> bullets;
-	private int poisonDamage;
-	private int poisonDuration;
 	private int level;
+	private float increaseSpeedAmount;
 	private boolean isSpedUp;
 
-	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
+	public BlackGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
 		this.renderer = renderer;
 		bullets = new ArrayList<IBullet>();
 		collisionBox = new Circle();
-		range = Settings.gemSettings.get("green").get(level).range;
+		range = Settings.gemSettings.get("black").get(level).range;
 		collisionBox.set(posX, posY, range);
 		canHit = true;
-		damage = Settings.gemSettings.get("green").get(level).damage;
+		damage = Settings.gemSettings.get("black").get(level).damage;
 		elapsedTime = 0;
-		originalDelay = Settings.gemSettings.get("green").get(level).delay;
+		originalDelay = Settings.gemSettings.get("black").get(level).delay;
 		delay = originalDelay;
-		poisonDamage = Settings.gemSettings.get("green").get(level).poisonAmount;
-		poisonDuration = Settings.gemSettings.get("green").get(level).poisonDuration;
-		name = "Green gem";
-		type = "green";
-		description = "The green gem poisons enemies.";
+		increaseSpeedAmount = Settings.gemSettings.get("black").get(level).increaseSpeedAmount + 1;
+		name = "Black gem";
+		type = "black";
+		description = "The black gem speeds up gems.";
 		this.level = level;
 		isSpedUp = false;
+	}
+	
+	public float getSpeedUpAmount() {
+		return increaseSpeedAmount;
 	}
 	
 	public void speedUp(float amount) {
@@ -72,16 +73,11 @@ public class GreenGem extends Gem {
 		return bullets;
 	}
 	
-	public String getType() {
-		return type;
-	}
-	
 	public void hit(IMonster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new GreenBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
-			m.poison(poisonDamage, poisonDuration);
+			bullets.add(new BlackBullet(posX + texture.getRegionWidth()/2, posY + texture.getRegionHeight()/2, m));
 		}
 	}
 	
@@ -93,11 +89,6 @@ public class GreenGem extends Gem {
 		for(IBullet b : bullets) {
 			b.update();
 		}
-	}
-	
-	@Override
-	public float getSpeedUpAmount() {
-		return 1f;
 	}
 	
 	public void drawCollisionBox() {
@@ -127,6 +118,10 @@ public class GreenGem extends Gem {
 		return name;
 	}
 	
+	public String getType() {
+		return type;
+	}
+	
 	public int getRange() {
 		return range;
 	}
@@ -138,5 +133,4 @@ public class GreenGem extends Gem {
 	public String getDescription() {
 		return description;
 	}
-
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +24,7 @@ public abstract class Gem implements IGem {
 	public static final int GEM_HEIGHT = RpgGame.HEIGHT/30;
 
 	private SpriteBatch batch;
+	private Rectangle body;
 	protected TextureRegion texture;
 	private TileClickHandler clickHandler;
 	protected int posX;
@@ -34,6 +36,11 @@ public abstract class Gem implements IGem {
 
 	public Gem(SpriteBatch batch, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY) {
 		this.texture = new TextureRegion(texture);
+		this.body = new Rectangle();
+		body.setWidth(20);
+		body.setHeight(20);
+		body.setX(posX);
+		body.setY(posY);
 		this.texture.setRegionWidth(GEM_WIDTH);
 		this.texture.setRegionHeight(GEM_HEIGHT);
 		this.batch = batch;
@@ -45,6 +52,10 @@ public abstract class Gem implements IGem {
 		this.coordinates = new Coordinate(posX, posY);
 		isTemporary = true;
 		instance = this;
+	}
+	
+	public Rectangle getBody() {
+		return body;
 	}
 	
 	public TextureRegion getTexture() {

@@ -23,6 +23,7 @@ public class YellowGem extends Gem {
 	private boolean canHit;
 	private int damage;
 	private int delay; // delay between hits in milliseconds
+	private int originalDelay;
 	private ShapeRenderer renderer;
 	private int elapsedTime;
 	private int range;
@@ -31,6 +32,7 @@ public class YellowGem extends Gem {
 	private String description;
 	private List<IBullet> bullets;
 	private int level;
+	private boolean isSpedUp;
 
 	public YellowGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
 		super(batch, stage, clickHandler, texture, posX, posY);
@@ -42,11 +44,23 @@ public class YellowGem extends Gem {
 		canHit = true;
 		damage = Settings.gemSettings.get("yellow").get(level).damage;
 		elapsedTime = 0;
-		delay = Settings.gemSettings.get("yellow").get(level).delay;
+		originalDelay = Settings.gemSettings.get("yellow").get(level).delay;
+		delay = originalDelay;
 		name = "Yellow gem";
 		type = "yellow";
 		description = "The yellow gem hits all enemies around it, but slower.";
 		this.level = level;
+		isSpedUp = false;
+	}
+	
+	public void speedUp(float amount) {
+		if(!isSpedUp) {
+			isSpedUp = true;
+			delay = (int)(originalDelay/amount);
+		}
+		else if((int)(originalDelay/amount) < delay) {
+			delay = (int)(originalDelay/amount);
+		}
 	}
 	
 	public List<IBullet> getBullets() {
@@ -61,6 +75,11 @@ public class YellowGem extends Gem {
 				hit(m);
 			}
 		}
+	}
+	
+	@Override
+	public float getSpeedUpAmount() {
+		return 1f;
 	}
 	
 	public void hit(IMonster m) {

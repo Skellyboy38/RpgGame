@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -24,6 +26,9 @@ public class GemHandler {
 	private GemCreator creator;
 	private ShapeRenderer renderer;
 	private TextureRegion newGem;
+	private Texture enhanceSheet;
+	private Animation animation;
+	private float animationCounter;
 	
 	private SpriteBatch batch;
 	
@@ -37,13 +42,38 @@ public class GemHandler {
 		currentGems = new ArrayList<IGem>();
 		rocks = new ArrayList<Rock>();
 		newGem = new TextureRegion(new Texture("temporaryGem.png"));
+		enhanceSheet = new Texture("enhance.png");
+		TextureRegion[][] temp = TextureRegion.split(enhanceSheet, 20, 20);
+		TextureRegion[] frames = new TextureRegion[10];
+		for(int i = 0; i < 10; i++) {
+			frames[i] = temp[0][i];
+		}
+		animation = new Animation(0.1f, frames);
+		animationCounter = 0;
 	}
 	
 	public List<IGem> getFinalizedGems() {
 		return gems;
 	}
+	
+	public List<IGem> checkCombinations() {
+		List<IGem> toRet = new ArrayList<IGem>();
+		for(int i = 0; i < currentGems.size(); i++) {
+			for(int j = 0; j < currentGems.size(); j++) {
+				if(i == j) {
+					continue;
+				}
+				if(currentGems.get(i).getLevel() < 5 && currentGems.get(i).getType().equals(currentGems.get(j).getType()) &&
+						currentGems.get(i).getLevel() == currentGems.get(j).getLevel()) {
+					toRet.add(currentGems.get(i));
+				}
+			}
+		}
+		return toRet;
+	}
 
 	public void render() {
+		animationCounter += Gdx.graphics.getDeltaTime();
 		for(Rock r : rocks) {
 			r.render();
 		}
@@ -56,11 +86,53 @@ public class GemHandler {
 			batch.draw(newGem, gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			batch.end();
 		}
+		for(IGem gem : checkCombinations()) {
+			batch.begin();
+			TextureRegion currentFrame = animation.getKeyFrame(animationCounter, true);
+			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			batch.end();
+		}
 	}
 	
-	public void commitGem(IGem gem) {
-		gem.setPermanent();
-		gems.add(gem);
+	public boolean isCombination(IGem gem) {
+		return checkCombinations().contains(gem);
+	}
+	
+	public void commitGem(IGem gem, boolean upgrade) {
+		if(upgrade) {
+			String type = gem.getType();
+			IGem newGem;
+			if(type.equals("green")) {
+				newGem = new GreenGem(batch, renderer, stage, clickHandler, 
+						new Texture("green_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else if(type.equals("blue")) {
+				newGem = new BlueGem(batch, renderer, stage, clickHandler, 
+						new Texture("blue_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else if(type.equals("yellow")) {
+				newGem = new YellowGem(batch, renderer, stage, clickHandler, 
+						new Texture("yellow_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else {
+				newGem = new BlackGem(batch, renderer, stage, clickHandler, 
+						new Texture("black_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			newGem.setPermanent();
+			gems.add(newGem);
+		}
+		else {
+			gem.setPermanent();
+			gems.add(gem);
+		}
 		currentGems.remove(gem);
 		for(IGem g : currentGems) {
 			rocks.add(new Rock(batch, stage, clickHandler, new Texture("rock.png"), g.getCoordinates().getX(), g.getCoordinates().getY()));
@@ -150,7 +222,7 @@ public class GemHandler {
 		}
 		
 		public IGem createGem(int posX, int posY) {
-			int type = random.nextInt(3);
+			int type = random.nextInt(4);
 			float gemLevelChance = random.nextFloat();
 			int gemLevel;
 			if(gemLevelChance <= gemLevelChances[0]) {
@@ -177,6 +249,9 @@ public class GemHandler {
 			}
 			else if(type == 2) {
 				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue_"+gemLevel+".png"), posX, posY, gemLevel);
+			}
+			else if(type == 3) {
+				return new BlackGem(batch, renderer, stage, clickHandler, new Texture("black_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;
