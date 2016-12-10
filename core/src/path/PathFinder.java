@@ -11,7 +11,7 @@ import tile.ITile;
 
 public class PathFinder {
 
-	public Path findPathBetweenTwoTiles(ITile start, ITile end) {
+	public static Path findPathBetweenTwoTiles(ITile start, ITile end) {
 		Map<ITile, ITile> cameFrom = new HashMap<ITile, ITile>();
 		List<Integer> visited = new ArrayList<Integer>();
 		Path path = new Path();
@@ -48,7 +48,7 @@ public class PathFinder {
 		return path;
 	}
 	
-	public boolean pathExists(ITile start, ITile end) {
+	public static boolean pathExists(ITile start, ITile end) {
 		boolean exists = false;
 		Map<ITile, ITile> cameFrom = new HashMap<ITile, ITile>();
 		List<Integer> visited = new ArrayList<Integer>();
@@ -74,9 +74,5 @@ public class PathFinder {
 			}
 		}
 		return exists;
-	}
-	
-	public void drawPath(List<Path> paths) {
-		
 	}
 }

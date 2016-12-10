@@ -15,20 +15,24 @@ public class TileClickHandler {
 	
 	private Map<Coordinate, ITile> tileMap;
 	private Coordinate[][] coordinates;
-	private ITile clickedTile;
-	private IGem clickedGem;
-	private Rock clickedRock;
 	private SpriteBatch batch;
 	private TextureRegion clickedTexture;
 	private Summoner summoner;
+	
+	private ITile clickedTile;
+	private IGem clickedGem;
+	private Rock clickedRock;
 	
 	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch, Summoner summoner) {
 		this.tileMap = tileMap;
 		this.batch = batch;
 		this.summoner = summoner;
 		this.coordinates = coordinates;
-		this.clickedTile = null;
 		this.clickedTexture = new TextureRegion(new Texture("clickedGem.png"));
+		
+		this.clickedTile = null;
+		this.clickedGem = null;
+		this.clickedRock = null;
 	}
 	
 	public void render() {
@@ -51,8 +55,8 @@ public class TileClickHandler {
 			clickedTile.hardReset();
 		}
 		
-		int x = posX/(RpgGame.WIDTH/50);
-		int y = posY/(RpgGame.HEIGHT/30);
+		int x = posX/RpgGame.TILE_WIDTH;
+		int y = posY/RpgGame.TILE_WIDTH;
 		
 		Coordinate c = coordinates[x][y];
 		clickedTile = tileMap.get(c);
@@ -66,7 +70,7 @@ public class TileClickHandler {
 	
 	public void buryTile() {
 		if(clickedTile != null) {
-			clickedTile.reset();
+			clickedTile.softReset();
 		}
 		clickedTile = null;
 	}
@@ -78,13 +82,13 @@ public class TileClickHandler {
 		clickedTile = null;
 	}
 	
-	public void registerClickedGem(IGem gem) {
+	public void clickGem(IGem gem) {
 		this.clickedGem = gem;
 		unclickTile();
 		unclickRock();
 	}
 	
-	public void registerClickedRock(Rock rock) {
+	public void clickRock(Rock rock) {
 		this.clickedRock = rock;
 		unclickTile();
 		unclickGem();
@@ -100,10 +104,6 @@ public class TileClickHandler {
 	
 	public Rock getClickedRock() {
 		return clickedRock;
-	}
-	
-	public void clickRock(Rock r) {
-		clickedRock = r;
 	}
 	
 	public void unclickRock() {

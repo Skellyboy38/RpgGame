@@ -3,73 +3,103 @@ package settings;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.RpgGame;
+
 public class Settings {
 	
 	public static Map<Integer, Entity> levels;
 	public static Map<String, Map<Integer, GemSettings>> gemSettings;
 	public static Map<Integer, Float[]> gemChances;
+	public static Map<Integer, Texture> animationSheets;
+	public static Map<Integer, Integer> upgradePrices;
+	public static Map<String, Texture> ailmentAnimationSheets;
 
 	public Settings() {
 		levels = new HashMap<Integer, Entity>();
 		gemSettings = new HashMap<String, Map<Integer, GemSettings>>();
 		gemChances = new HashMap<Integer, Float[]>();
+		animationSheets = new HashMap<Integer, Texture>();
+		upgradePrices = new HashMap<Integer, Integer>();
+		ailmentAnimationSheets = new HashMap<String, Texture>();
 		
+		addAnimationSheets();
+		addUpgradePrices();
 		populateLevels();
 		populateGemSettings();
 		populateGemChances();
 	}
 	
+	public void addUpgradePrices() {
+		upgradePrices.put(1, 50);
+		upgradePrices.put(2, 80);
+		upgradePrices.put(3, 100);
+		upgradePrices.put(4, 100);
+		upgradePrices.put(5, 120);
+		upgradePrices.put(6, 120);
+		upgradePrices.put(7, 150);
+		upgradePrices.put(8, 150);
+		upgradePrices.put(9, 180);
+	}
+	
+	public void addAnimationSheets() {
+		animationSheets.put(1, new Texture("monsterSheet1.png"));
+		
+		ailmentAnimationSheets.put("slow", new Texture("slowAnimation.png"));
+		ailmentAnimationSheets.put("poison", new Texture("poisonAnimation.png"));
+	}
+	
 	public void populateLevels() {
-		levels.put(1, new Entity(2, 5, 10, 300, 2));
-		levels.put(2, new Entity(2, 10, 10, 300, 2));
-		levels.put(3, new Entity(2, 20, 10, 300, 2));
-		levels.put(4, new Entity(2, 40, 10, 300, 2));
-		levels.put(5, new Entity(2, 60, 10, 300, 2));
-		levels.put(6, new Entity(2, 80, 10, 300, 3));
-		levels.put(7, new Entity(2, 100, 10, 300, 3));
-		levels.put(8, new Entity(2, 120, 10, 300, 3));
-		levels.put(9, new Entity(2, 140, 10, 300, 3));
-		levels.put(10, new Entity(4, 160, 10, 270, 3));
-		levels.put(11, new Entity(4, 200, 10, 270, 4));
-		levels.put(12, new Entity(4, 240, 10, 270, 4));
-		levels.put(13, new Entity(4, 280, 10, 250, 4));
-		levels.put(14, new Entity(4, 320, 10, 250, 4));
-		levels.put(15, new Entity(4, 400, 10, 200, 4));
-		levels.put(16, new Entity(4, 480, 10, 200, 4));
-		levels.put(17, new Entity(4, 560, 10, 200, 4));
-		levels.put(18, new Entity(4, 640, 10, 200, 4));
-		levels.put(19, new Entity(4, 720, 10, 200, 4));
-		levels.put(20, new Entity(4, 900, 10, 200, 5));
-		levels.put(21, new Entity(4, 1050, 10, 200, 5));
-		levels.put(22, new Entity(4, 1200, 10, 200, 5));
-		levels.put(23, new Entity(4, 1350, 10, 200, 5));
-		levels.put(24, new Entity(4, 1500, 10, 200, 5));
-		levels.put(25, new Entity(4, 2000, 15, 200, 5));
-		levels.put(26, new Entity(4, 2500, 15, 200, 5));
-		levels.put(27, new Entity(4, 3000, 15, 200, 5));
-		levels.put(28, new Entity(4, 3500, 15, 200, 5));
-		levels.put(29, new Entity(4, 4000, 15, 200, 5));
-		levels.put(30, new Entity(4, 5000, 20, 200, 6));
-		levels.put(31, new Entity(4, 6000, 20, 200, 6));
-		levels.put(32, new Entity(4, 7000, 20, 200, 6));
-		levels.put(33, new Entity(4, 8000, 20, 200, 6));
-		levels.put(34, new Entity(4, 9000, 20, 200, 6));
-		levels.put(35, new Entity(4, 10000, 20, 200, 6));
-		levels.put(36, new Entity(4, 11000, 20, 200, 6));
-		levels.put(37, new Entity(4, 12000, 20, 200, 6));
-		levels.put(38, new Entity(4, 13000, 20, 200, 6));
-		levels.put(39, new Entity(4, 14000, 20, 200, 6));
-		levels.put(40, new Entity(4, 17000, 30, 200, 7));
-		levels.put(41, new Entity(4, 20000, 30, 200, 7));
-		levels.put(42, new Entity(4, 23000, 30, 200, 7));
-		levels.put(43, new Entity(4, 26000, 30, 200, 7));
-		levels.put(44, new Entity(4, 29000, 30, 200, 7));
-		levels.put(45, new Entity(4, 35000, 30, 200, 8));
-		levels.put(46, new Entity(4, 41000, 30, 200, 8));
-		levels.put(47, new Entity(4, 47000, 30, 200, 8));
-		levels.put(48, new Entity(4, 60000, 30, 200, 8));
-		levels.put(49, new Entity(4, 80000, 30, 200, 8));
-		levels.put(50, new Entity(4, 100000, 30, 200, 8));
+		levels.put(1, new Entity(2, 5, 10, 300, 2, animationSheets.get(1)));
+		levels.put(2, new Entity(2, 10, 10, 300, 2, animationSheets.get(1)));
+		levels.put(3, new Entity(2, 20, 10, 300, 2, animationSheets.get(1)));
+		levels.put(4, new Entity(2, 40, 10, 300, 2, animationSheets.get(1)));
+		levels.put(5, new Entity(2, 60, 10, 300, 2, animationSheets.get(1)));
+		levels.put(6, new Entity(2, 80, 10, 300, 3, animationSheets.get(1)));
+		levels.put(7, new Entity(2, 100, 10, 300, 3, animationSheets.get(1)));
+		levels.put(8, new Entity(2, 120, 10, 300, 3, animationSheets.get(1)));
+		levels.put(9, new Entity(2, 140, 10, 300, 3, animationSheets.get(1)));
+		levels.put(10, new Entity(4, 160, 10, 270, 3, animationSheets.get(1)));
+		levels.put(11, new Entity(4, 200, 10, 270, 4, animationSheets.get(1)));
+		levels.put(12, new Entity(4, 240, 10, 270, 4, animationSheets.get(1)));
+		levels.put(13, new Entity(4, 280, 10, 250, 4, animationSheets.get(1)));
+		levels.put(14, new Entity(4, 320, 10, 250, 4, animationSheets.get(1)));
+		levels.put(15, new Entity(4, 400, 10, 200, 4, animationSheets.get(1)));
+		levels.put(16, new Entity(4, 480, 10, 200, 4, animationSheets.get(1)));
+		levels.put(17, new Entity(4, 560, 10, 200, 4, animationSheets.get(1)));
+		levels.put(18, new Entity(4, 640, 10, 200, 4, animationSheets.get(1)));
+		levels.put(19, new Entity(4, 720, 10, 200, 4, animationSheets.get(1)));
+		levels.put(20, new Entity(4, 900, 10, 200, 5, animationSheets.get(1)));
+		levels.put(21, new Entity(4, 1050, 10, 200, 5, animationSheets.get(1)));
+		levels.put(22, new Entity(4, 1200, 10, 200, 5, animationSheets.get(1)));
+		levels.put(23, new Entity(4, 1350, 10, 200, 5, animationSheets.get(1)));
+		levels.put(24, new Entity(4, 1500, 10, 200, 5, animationSheets.get(1)));
+		levels.put(25, new Entity(4, 2000, 15, 200, 5, animationSheets.get(1)));
+		levels.put(26, new Entity(4, 2500, 15, 200, 5, animationSheets.get(1)));
+		levels.put(27, new Entity(4, 3000, 15, 200, 5, animationSheets.get(1)));
+		levels.put(28, new Entity(4, 3500, 15, 200, 5, animationSheets.get(1)));
+		levels.put(29, new Entity(4, 4000, 15, 200, 5, animationSheets.get(1)));
+		levels.put(30, new Entity(4, 5000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(31, new Entity(4, 6000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(32, new Entity(4, 7000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(33, new Entity(4, 8000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(34, new Entity(4, 9000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(35, new Entity(4, 10000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(36, new Entity(4, 11000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(37, new Entity(4, 12000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(38, new Entity(4, 13000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(39, new Entity(4, 14000, 20, 200, 6, animationSheets.get(1)));
+		levels.put(40, new Entity(4, 17000, 30, 200, 7, animationSheets.get(1)));
+		levels.put(41, new Entity(4, 20000, 30, 200, 7, animationSheets.get(1)));
+		levels.put(42, new Entity(4, 23000, 30, 200, 7, animationSheets.get(1)));
+		levels.put(43, new Entity(4, 26000, 30, 200, 7, animationSheets.get(1)));
+		levels.put(44, new Entity(4, 29000, 30, 200, 7, animationSheets.get(1)));
+		levels.put(45, new Entity(4, 35000, 30, 200, 8, animationSheets.get(1)));
+		levels.put(46, new Entity(4, 41000, 30, 200, 8, animationSheets.get(1)));
+		levels.put(47, new Entity(4, 47000, 30, 200, 8, animationSheets.get(1)));
+		levels.put(48, new Entity(4, 60000, 30, 200, 8, animationSheets.get(1)));
+		levels.put(49, new Entity(4, 80000, 30, 200, 8, animationSheets.get(1)));
+		levels.put(50, new Entity(4, 100000, 30, 200, 8, animationSheets.get(1)));
 	}
 	
 	public void populateGemSettings() {
@@ -135,8 +165,12 @@ public class Settings {
 		public int number;
 		public int delay;
 		public int value;
+		public int numberFrames;
+		public Texture animationSheet;
 		
-		public Entity(int speed, int hp, int number, int delay, int value) {
+		public Entity(int speed, int hp, int number, int delay, int value, Texture animationSheet) {
+			this.animationSheet = animationSheet;
+			this.numberFrames = animationSheet.getWidth()/RpgGame.TILE_WIDTH;
 			this.speed = speed;
 			this.hp = hp;
 			this.number = number;

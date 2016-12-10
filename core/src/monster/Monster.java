@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.RpgGame;
 
 import path.Path;
+import settings.Settings;
 import tile.Coordinate;
 import tile.ITile;
 
@@ -51,6 +52,8 @@ public class Monster implements IMonster {
 	private int poisonDamage;
 	private int poisonDelay;
 	private Animation animation;
+	private Animation poisonAnimation;
+	private Animation slowAnimation;
 	private float animationCounter;
 	
 	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value) {
@@ -60,12 +63,9 @@ public class Monster implements IMonster {
 		this.speed = speed;
 		this.value = value;
 		this.animationSheet = texture;
-		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, 20);
-		TextureRegion[] frames = new TextureRegion[6];
-		for(int i = 0; i < 6; i++) {
-			frames[i] = temp[0][i];
-		}
-		animation = new Animation(0.1f, frames);
+		this.animation = createAnimation(animationSheet);
+		this.poisonAnimation = createAnimation(Settings.ailmentAnimationSheets.get("poison"));
+		this.slowAnimation = createAnimation(Settings.ailmentAnimationSheets.get("slow"));
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
 		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
@@ -92,6 +92,15 @@ public class Monster implements IMonster {
 		this.poisonDamage = 0;
 		this.poisonDelay = 500;
 		this.animationCounter = 0;
+	}
+	
+	public Animation createAnimation(Texture animationSheet) {
+		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, 20);
+		TextureRegion[] frames = new TextureRegion[animationSheet.getWidth()/20];
+		for(int i = 0; i < animationSheet.getWidth()/20; i++) {
+			frames[i] = temp[0][i];
+		}
+		return new Animation(0.1f, frames);
 	}
 	
 	public void updateCollisionBox() {
@@ -176,7 +185,6 @@ public class Monster implements IMonster {
 	public void kill() {
 		isDead = true;
 		canDamagePlayer = false;
-		animationSheet.dispose();
 	}
 	
 	public void render() {
@@ -185,7 +193,19 @@ public class Monster implements IMonster {
 			TextureRegion currentFrame;
 			currentFrame = animation.getKeyFrame(animationCounter, true);
 			batch.begin();
+			Color c = batch.getColor();
 			batch.draw(currentFrame, posX, posY);
+			if(isSlowed) {
+				TextureRegion currentSlowFrame = slowAnimation.getKeyFrame(animationCounter, true);
+				batch.setColor(c.r, c.g, c.b, 0.5f);
+				batch.draw(currentSlowFrame, posX, posY + 35);
+			}
+			if(isPoisoned) {
+				TextureRegion currentSlowFrame = poisonAnimation.getKeyFrame(animationCounter, true);
+				batch.setColor(c.r, c.g, c.b, 0.5f);
+				batch.draw(currentSlowFrame, posX, posY);
+			}
+			batch.setColor(c.r, c.g, c.b, 1f);
 			batch.end();
 			renderer.begin(ShapeType.Filled);
 			renderer.setColor(getHpColor());

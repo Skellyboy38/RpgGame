@@ -12,9 +12,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import collision.CollisionDetector;
@@ -35,6 +37,8 @@ public class RpgGame extends ApplicationAdapter {
 	public static int HEIGHT = 600;
 	public static int PLAYER_HP = 20;
 	public static final float ZOOM_FACTOR = 0.05f;
+	public static final int TILE_WIDTH = 20;
+	public static TextButtonStyle BUTTON_STYLE = new TextButtonStyle();
 	
 	SpriteBatch batch;
 	ShapeRenderer renderer;
@@ -60,6 +64,7 @@ public class RpgGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		BUTTON_STYLE.font = new BitmapFont();
 		background = new Texture("background.png");
 		gameSettings = new Settings();
 		player = new Player(PLAYER_HP);
@@ -128,7 +133,7 @@ public class RpgGame extends ApplicationAdapter {
 		for(int y = 0; y < 30; y++) {
 			for(int x = 0; x < 50; x++) {
 				if(!tileMap.get(coordinates[x][y]).isCheckpoint()) {
-					tileMap.get(coordinates[x][y]).reset();
+					tileMap.get(coordinates[x][y]).softReset();
 				}
 			}
 		}

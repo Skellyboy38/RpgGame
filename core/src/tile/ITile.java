@@ -10,11 +10,7 @@ public interface ITile {
 	
 	public void addNeighbor(ITile tile);
 	
-	public List<Coordinate> getCoordinates();
-	
 	public boolean isOccupied();
-	
-	public void update();
 	
 	public void render();
 	
@@ -44,9 +40,7 @@ public interface ITile {
 	
 	public Coordinate getPosition();
 	
-	public void setClicked(boolean isClicked);
-	
-	public void reset();
+	public void softReset();
 	
 	public void hardReset();
 }

@@ -166,6 +166,10 @@ public class GemHandler {
 		return creator.canIncreaseGemChances();
 	}
 	
+	public int getGemChancesLevel() {
+		return creator.getGemChancesLevel();
+	}
+	
 	public void reset() {
 		for(IGem gem : gems) {
 			gem.removeListeners();
@@ -203,6 +207,10 @@ public class GemHandler {
 		
 		public Float[] getGemChances() {
 			return gemLevelChances;
+		}
+		
+		public int getGemChancesLevel() {
+			return chancesLevel;
 		}
 		
 		public void reset() {

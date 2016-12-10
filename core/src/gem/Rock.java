@@ -53,7 +53,7 @@ public class Rock {
 
 		button.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				clickHandler.registerClickedRock(instance);
+				clickHandler.clickRock(instance);
 				return false;
 			}
 		});

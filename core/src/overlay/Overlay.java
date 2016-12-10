@@ -1,4 +1,7 @@
 package overlay;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,80 +13,113 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.mygdx.game.RpgGame;
 
 import gem.GemHandler;
 import gem.IGem;
 import monster.Summoner;
 import player.Player;
+import settings.Settings;
+import tile.Coordinate;
 import tile.TileClickHandler;
 
 public class Overlay {
+	
+	public static final int BUTTON_TEXT_PADDING_WIDTH = 6;
+	public static final int BUTTON_TEXT_PADDING_HEIGHT = 40;
+	public static final int BUTTON_HEIGHT = 50;
+	public static final int BUTTON_WIDTH = 100;
+	public static final int MINIMIZE_BUTTON_WIDTH = 20;
+	public static final int MINIMIZE_BUTTON_HEIGHT = 20;
+	public static final int GEM_DISPLAY_WIDTH = 50;
+	public static final Coordinate UPGRADE_GEM_CHANCES = new Coordinate(50, 350);
+	public static final Coordinate SHOP = new Coordinate(780, 30);
+	public static final Coordinate PATH = new Coordinate(660, 30);
+	public static final Coordinate GEM_CHANCES = new Coordinate(540, 30);
+	public static final Coordinate MINIMIZE_BUTTON_COORDINATE = new Coordinate(900, 70);
+	public static final Coordinate INFO_CORNER = new Coordinate(10, 590);
+	public static final Coordinate GEM_INFO_AREA = new Coordinate(10, 10);
+	public static final Coordinate GEM_INFO_TEXT = new Coordinate(16, 84);
+	public static final Coordinate GEM = new Coordinate(400, 25);
+	public static final Coordinate GEM_CHANCES_IMAGE = new Coordinate(350, 110);
+	public static final Coordinate GEM_CHANCES_1 = new Coordinate(490, 480);
+	public static final Coordinate GEM_CHANCES_2 = new Coordinate(490, 414);
+	public static final Coordinate GEM_CHANCES_3 = new Coordinate(490, 348);
+	public static final Coordinate GEM_CHANCES_4 = new Coordinate(490, 282);
+	public static final Coordinate GEM_CHANCES_5 = new Coordinate(490, 216);
 
 	private Texture background;
 	private Texture infoArea;
+	private Texture buttonTexture;
+	private Texture gemChancesTexture;
+	private Texture shopTexture;
+	private Texture minimizeTexture;
+	private Texture maximizeTexture;
+	
 	private TileClickHandler clickHandler;
 	private Summoner summoner;
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Player player;
+	private Stage stage;
+	private GemHandler gemHandler;
+	private NumberFormat formatter;
+	
 	private TextButton shopButton;
 	private TextButton monsterPathButton;
 	private TextButton gemChancesButton;
 	private TextButton minimizeButton;
 	private TextButton maximizeButton;
 	private TextButton upgradeGemChancesButton;
-	private Texture shopButtonTexture;
-	private Texture gemChancesTexture;
-	private Texture shopTexture;
-	private Texture minimizeTexture;
-	private Texture maximizeTexture;
-	private Stage stage;
+	
 	private boolean showGemChances;
 	private boolean showShop;
 	private boolean isMinimized;
-	private GemHandler gemHandler;
 	private String purchaseMessage;
 
 	public Overlay(TileClickHandler clickHandler, Summoner summoner, Player player, GemHandler gemHandler) {
+		
 		this.clickHandler = clickHandler;
 		this.gemHandler = gemHandler;
 		this.summoner = summoner;
 		this.showGemChances = false;
 		this.showShop = false;
 		this.isMinimized = false;
-		batch = new SpriteBatch();
-		background = new Texture("overlay.png");
-		infoArea = new Texture("infoArea.png");
-		shopButtonTexture = new Texture("shopButton.png");
-		gemChancesTexture = new Texture("gemChances.png");
-		shopTexture = new Texture("shop.png");
-		minimizeTexture = new Texture("minimizeButton.png");
-		maximizeTexture = new Texture("maximizeButton.png");
-		font = new BitmapFont();
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		this.batch = new SpriteBatch();
+		this.background = new Texture("overlay.png");
+		this.infoArea = new Texture("infoArea.png");
+		this.buttonTexture = new Texture("shopButton.png");
+		this.gemChancesTexture = new Texture("gemChances.png");
+		this.shopTexture = new Texture("shop.png");
+		this.minimizeTexture = new Texture("minimizeButton.png");
+		this.maximizeTexture = new Texture("maximizeButton.png");
 		this.player = player;
 		this.stage = new Stage();
+		this.font = new BitmapFont();
+		this.formatter = new DecimalFormat("#0.0");
+		
+		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
 		createShopButton();
 		createMonsterPathButton();
 		createGemChancesButton();
 		createUpgradeGemChancesButton();
 		createMinimizeButton();
 		createMaximizeButton();
+		
 		stage.addActor(shopButton);
 		stage.addActor(monsterPathButton);
 		stage.addActor(gemChancesButton);
 		stage.addActor(minimizeButton);
+		
 		purchaseMessage = "";
 	}
 
 	public void createMinimizeButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		minimizeButton = new TextButton("", style);
-		minimizeButton.setHeight(20);
-		minimizeButton.setWidth(20);
-		minimizeButton.setPosition(900, 70);
+		minimizeButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		minimizeButton.setHeight(MINIMIZE_BUTTON_HEIGHT);
+		minimizeButton.setWidth(MINIMIZE_BUTTON_WIDTH);
+		minimizeButton.setPosition(MINIMIZE_BUTTON_COORDINATE.getX(), MINIMIZE_BUTTON_COORDINATE.getY());
 
 		minimizeButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -96,12 +132,10 @@ public class Overlay {
 	}
 
 	public void createMaximizeButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		maximizeButton = new TextButton("", style);
-		maximizeButton.setHeight(20);
-		maximizeButton.setWidth(20);
-		maximizeButton.setPosition(900, 70);
+		maximizeButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		maximizeButton.setHeight(MINIMIZE_BUTTON_HEIGHT);
+		maximizeButton.setWidth(MINIMIZE_BUTTON_WIDTH);
+		maximizeButton.setPosition(MINIMIZE_BUTTON_COORDINATE.getX(), MINIMIZE_BUTTON_COORDINATE.getY());
 
 		maximizeButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -143,12 +177,10 @@ public class Overlay {
 	}
 
 	public void createGemChancesButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		gemChancesButton = new TextButton("", style);
-		gemChancesButton.setHeight(50);
-		gemChancesButton.setWidth(100);
-		gemChancesButton.setPosition(540, 30);
+		gemChancesButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		gemChancesButton.setHeight(BUTTON_HEIGHT);
+		gemChancesButton.setWidth(BUTTON_WIDTH);
+		gemChancesButton.setPosition(GEM_CHANCES.getX(), GEM_CHANCES.getY());
 
 		gemChancesButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -160,27 +192,23 @@ public class Overlay {
 	}
 	
 	public void createUpgradeGemChancesButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		upgradeGemChancesButton = new TextButton("", style);
-		upgradeGemChancesButton.setHeight(50);
-		upgradeGemChancesButton.setWidth(100);
-		upgradeGemChancesButton.setPosition(50, 350);
+		upgradeGemChancesButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		upgradeGemChancesButton.setHeight(BUTTON_HEIGHT);
+		upgradeGemChancesButton.setWidth(BUTTON_WIDTH);
+		upgradeGemChancesButton.setPosition(UPGRADE_GEM_CHANCES.getX(), UPGRADE_GEM_CHANCES.getY());
 
 		upgradeGemChancesButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if(player.canBuy(50)) {
-					if(gemHandler.canIncreaseGemChances()) {
+				if(gemHandler.canIncreaseGemChances()) {
+					int price = Settings.upgradePrices.get(gemHandler.getGemChancesLevel());
+					if(player.canBuy(price)) {
 						purchaseMessage = "Purchase successful.";
-						player.spendMoney(50);
+						player.spendMoney(price);
 						gemHandler.increaseGemChances();
 					}
 					else {
-						purchaseMessage = "MAX gem chances level.";
+						purchaseMessage = "Not enough money.";
 					}
-				}
-				else {
-					purchaseMessage = "Not enough money.";
 				}
 				return false;
 			}
@@ -188,12 +216,10 @@ public class Overlay {
 	}
 
 	public void createShopButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		shopButton = new TextButton("", style);
-		shopButton.setHeight(50);
-		shopButton.setWidth(100);
-		shopButton.setPosition(780, 30);
+		shopButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		shopButton.setHeight(BUTTON_HEIGHT);
+		shopButton.setWidth(BUTTON_WIDTH);
+		shopButton.setPosition(SHOP.getX(), SHOP.getY());
 
 		shopButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -209,12 +235,10 @@ public class Overlay {
 	}
 
 	public void createMonsterPathButton() {
-		TextButtonStyle style = new TextButtonStyle();
-		style.font = new BitmapFont();
-		monsterPathButton = new TextButton("", style);
-		monsterPathButton.setHeight(50);
-		monsterPathButton.setWidth(100);
-		monsterPathButton.setPosition(660, 30);
+		monsterPathButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		monsterPathButton.setHeight(BUTTON_HEIGHT);
+		monsterPathButton.setWidth(BUTTON_WIDTH);
+		monsterPathButton.setPosition(PATH.getX(), PATH.getY());
 
 		monsterPathButton.addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -229,13 +253,15 @@ public class Overlay {
 	}
 
 	public void render() {
+		
 		String shopMessage = "Shop" + "\nGold: " + player.getMoney() + "g";
 		String pathMessage = "Show \nMonster Path";
 		String gemChancesMessage = "Show Gem \nChances (%)";
+		
 		batch.begin();
 		font.setColor(Color.YELLOW);
 		font.getData().setScale(1f);
-		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth() + "\nFPS: " + Gdx.graphics.getFramesPerSecond(), 10, 590);
+		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth() + "\nFPS: " + Gdx.graphics.getFramesPerSecond(), INFO_CORNER.getX(), INFO_CORNER.getY());
 		if(isMinimized) {
 			batch.draw(maximizeTexture, maximizeButton.getX(), maximizeButton.getY());
 		}
@@ -245,17 +271,17 @@ public class Overlay {
 			batch.draw(background, 0, 0);
 			batch.setColor(c.r, c.g, c.b, 1f);
 			batch.draw(minimizeTexture, minimizeButton.getX(), minimizeButton.getY());
-			batch.draw(shopButtonTexture, 780, 30);
-			batch.draw(shopButtonTexture, 660, 30);
-			batch.draw(shopButtonTexture, 540, 30);
-			font.draw(batch, shopMessage, 786, 70);
-			font.draw(batch, pathMessage, 666, 70);
-			font.draw(batch, gemChancesMessage, 548, 70);
+			batch.draw(buttonTexture, SHOP.getX(), SHOP.getY());
+			batch.draw(buttonTexture, PATH.getX(), PATH.getY());
+			batch.draw(buttonTexture, GEM_CHANCES.getX(), GEM_CHANCES.getY());
+			font.draw(batch, shopMessage, SHOP.getX() + BUTTON_TEXT_PADDING_WIDTH, SHOP.getY() + BUTTON_TEXT_PADDING_HEIGHT);
+			font.draw(batch, pathMessage, PATH.getX() + BUTTON_TEXT_PADDING_WIDTH, PATH.getY() + BUTTON_TEXT_PADDING_HEIGHT);
+			font.draw(batch, gemChancesMessage, GEM_CHANCES.getX() + BUTTON_TEXT_PADDING_WIDTH, GEM_CHANCES.getY() + BUTTON_TEXT_PADDING_HEIGHT);
 			if(clickHandler.getClickedGem() != null) {
 				IGem gem = clickHandler.getClickedGem();
 				TextureRegion texture = new TextureRegion(gem.getTexture());
-				texture.setRegionWidth(50);
-				texture.setRegionHeight(50);
+				texture.setRegionWidth(GEM_DISPLAY_WIDTH);
+				texture.setRegionHeight(GEM_DISPLAY_WIDTH);
 				int damage = gem.getDamage();
 				int speed = gem.getSpeed();
 				int range = gem.getRange();
@@ -263,44 +289,48 @@ public class Overlay {
 				String name = gem.getName();
 				String description = gem.getDescription();
 				String info = "Name: " + name + "\nLevel: " + level + "\nDescription: " + description + "\nDamage: " + damage + "\nSpeed: " + speed + "\nRange: " + range;
-				batch.draw(infoArea, 10, 10);
-				batch.draw(texture, 400, 25);
+				batch.draw(infoArea, GEM_INFO_AREA.getX(), GEM_INFO_AREA.getY());
+				batch.draw(texture, GEM.getX(), GEM.getY());
 				font.setColor(Color.BLACK);
 				font.getData().setScale(0.7f);
-				font.draw(batch, info, 16, 84);
+				font.draw(batch, info, GEM_INFO_TEXT.getX(), GEM_INFO_TEXT.getY());
 			}
 			else if(clickHandler.getClickedRock() != null) {
 				String info = "I am a rock.";
 				TextureRegion texture = new TextureRegion(clickHandler.getClickedRock().getTexture());
-				texture.setRegionWidth(50);
-				texture.setRegionHeight(50);
-				batch.draw(infoArea, 10, 10);
-				batch.draw(texture, 400, 25);
+				texture.setRegionWidth(GEM_DISPLAY_WIDTH);
+				texture.setRegionHeight(GEM_DISPLAY_WIDTH);
+				batch.draw(infoArea, GEM_INFO_AREA.getX(), GEM_INFO_AREA.getY());
+				batch.draw(texture, GEM.getX(), GEM.getY());
 				font.setColor(Color.BLACK);
 				font.getData().setScale(0.7f);
-				font.draw(batch, info, 30, 80);
+				font.draw(batch, info, GEM_INFO_TEXT.getX(), GEM_INFO_TEXT.getY());
 			}
 			if(showGemChances) {
 				Float[] gemChances = gemHandler.getGemChances();
-				batch.draw(gemChancesTexture, 350, 110);
+				batch.draw(gemChancesTexture, GEM_CHANCES_IMAGE.getX(), GEM_CHANCES_IMAGE.getY());
 				font.setColor(Color.RED);
 				font.getData().setScale(1.2f);
-				font.draw(batch, gemChances[4]*100 + "%", 490, 216);
-				font.draw(batch, gemChances[3]*100 + "%", 490, 282);
-				font.draw(batch, gemChances[2]*100 + "%", 490, 348);
-				font.draw(batch, gemChances[1]*100 + "%", 490, 414);
-				font.draw(batch, gemChances[0]*100 + "%", 490, 480);
+				font.draw(batch, formatter.format(gemChances[4]*100) + "%", GEM_CHANCES_5.getX(), GEM_CHANCES_5.getY());
+				font.draw(batch, formatter.format(gemChances[3]*100) + "%", GEM_CHANCES_4.getX(), GEM_CHANCES_4.getY());
+				font.draw(batch, formatter.format(gemChances[2]*100) + "%", GEM_CHANCES_3.getX(), GEM_CHANCES_3.getY());
+				font.draw(batch, formatter.format(gemChances[1]*100) + "%", GEM_CHANCES_2.getX(), GEM_CHANCES_2.getY());
+				font.draw(batch, formatter.format(gemChances[0]*100) + "%", GEM_CHANCES_1.getX(), GEM_CHANCES_1.getY());
 			}
 			if(showShop) {
 				batch.draw(shopTexture, 0, 100);
-				batch.draw(shopButtonTexture, upgradeGemChancesButton.getX(), upgradeGemChancesButton.getY());
+				batch.draw(buttonTexture, upgradeGemChancesButton.getX(), upgradeGemChancesButton.getY());
 				font.setColor(Color.WHITE);
 				font.getData().setScale(2f);
-				font.draw(batch, "Upgrade Gem chances! Only 50g!", 50, 450);
+				font.draw(batch, "Upgrade Gem chances! Only " + Settings.upgradePrices.get(gemHandler.getGemChancesLevel()) + "g!", 50, 450);
 				font.setColor(Color.YELLOW);
 				font.getData().setScale(1f);
-				font.draw(batch, "Purchase \n(50g)", upgradeGemChancesButton.getX() + 6, upgradeGemChancesButton.getY() + 40);
-				if(purchaseMessage.contains("success")) {
+				font.draw(batch, "Purchase?\n" + Settings.upgradePrices.get(gemHandler.getGemChancesLevel()) + "g", upgradeGemChancesButton.getX() + 6, upgradeGemChancesButton.getY() + 40);
+				if(!gemHandler.canIncreaseGemChances()) {
+					purchaseMessage = "Max level gem chances reached.";
+					font.setColor(Color.YELLOW);
+				}
+				else if(purchaseMessage.contains("success")) {
 					font.setColor(Color.GREEN);
 				}
 				else {
