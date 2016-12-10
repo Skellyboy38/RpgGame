@@ -2,6 +2,7 @@ package monster;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -32,6 +33,7 @@ public class Summoner {
 	private boolean isSummoning;
 	private int level;
 	private boolean canIncrementLevel;
+	private Random random;
 	private boolean showPath;
 	private Player player;
 	private List<Path> temporaryPath;
@@ -51,6 +53,7 @@ public class Summoner {
 		showPath = false;
 		this.player = player;
 		this.temporaryPath = new ArrayList<Path>();
+		random = new Random();
 	}
 	
 	public void toggleDisplayPath() {
@@ -90,6 +93,7 @@ public class Summoner {
 	}
 	
 	public void nextStage() {
+		String monsterType = Settings.elementIntToType.get(random.nextInt(3));
 		setNumberOfMonsters(Settings.levels.get(level).number);
 		paths = findAllPaths();
 		for(int i = 0; i < startTimes.length; i++) {
@@ -98,7 +102,7 @@ public class Summoner {
 		timeElapsed = 0;
 		clearMonsters();
 		for(int i = 0; i < numberOfMonsters; i++) {
-			createMonster();
+			createMonster(monsterType);
 		}
 	}
 	
@@ -106,8 +110,8 @@ public class Summoner {
 		monsters.clear();
 	}
 	
-	public void createMonster() {
-		Monster m = new Monster(batch, renderer, Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value);
+	public void createMonster(String type) {
+		Monster m = new Monster(batch, renderer, Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value, type);
 		m.setPath(paths);
 		monsters.add(m);
 	}

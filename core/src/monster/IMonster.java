@@ -20,7 +20,7 @@ public interface IMonster {
 	
 	public Rectangle getCollisionBox();
 	
-	public void hit(int damage);
+	public void hit(int damage, String type);
 	
 	public int getX();
 	

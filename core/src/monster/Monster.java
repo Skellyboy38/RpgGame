@@ -21,10 +21,14 @@ import tile.ITile;
 
 public class Monster implements IMonster {
 	
+	public static final float DAMAGE_MULTIPLIER = 2f/3f;
+	public static final Coordinate TYPE_LOCATION = new Coordinate(-15, 0);
+	
 	private int posX;
 	private int posY;
 	private int speed;
 	private int value;
+	private String type;
 	private boolean isDead;
 	private Texture animationSheet;
 	private TextureRegion texture;
@@ -55,23 +59,25 @@ public class Monster implements IMonster {
 	private Animation poisonAnimation;
 	private Animation slowAnimation;
 	private float animationCounter;
+	private Texture typeTexture;
 	
-	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value) {
+	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value, String type) {
 		this.batch = batch;
 		this.renderer = renderer;
 		this.path = new ArrayList<ITile>();
 		this.speed = speed;
 		this.value = value;
+		this.type = type;
 		this.animationSheet = texture;
+		this.texture = new TextureRegion(texture);
+		this.texture.setRegionWidth(RpgGame.TILE_WIDTH);
 		this.animation = createAnimation(animationSheet);
 		this.poisonAnimation = createAnimation(Settings.ailmentAnimationSheets.get("poison"));
 		this.slowAnimation = createAnimation(Settings.ailmentAnimationSheets.get("slow"));
-		this.texture = new TextureRegion(texture);
-		this.texture.setRegionWidth(RpgGame.WIDTH/50);
-		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
 		this.collisionBox = new Rectangle(posX, posY, this.texture.getRegionWidth(), this.texture.getRegionHeight());
-		this.hpFrame = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), this.texture.getRegionHeight()*0.4f);
-		this.hpFill = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), this.texture.getRegionHeight()*0.4f);
+		this.hpFrame = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
+		this.hpFill = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
+		this.typeTexture = Settings.elementTypes.get(type);
 		this.posX = posX;
 		this.posY = posY;
 		isDead = false;
@@ -95,12 +101,12 @@ public class Monster implements IMonster {
 	}
 	
 	public Animation createAnimation(Texture animationSheet) {
-		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, 20);
+		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, animationSheet.getHeight());
 		TextureRegion[] frames = new TextureRegion[animationSheet.getWidth()/20];
 		for(int i = 0; i < animationSheet.getWidth()/20; i++) {
 			frames[i] = temp[0][i];
 		}
-		return new Animation(0.1f, frames);
+		return new Animation(0.05f, frames);
 	}
 	
 	public void updateCollisionBox() {
@@ -175,7 +181,7 @@ public class Monster implements IMonster {
 			}
 			if((poisonDamageTimer/poisonDelay) >= 1) {
 				poisonDamageTimer = 0;
-				hit(poisonDamage);
+				hit(poisonDamage, type);
 			}
 		}
 		updateCollisionBox();
@@ -195,10 +201,11 @@ public class Monster implements IMonster {
 			batch.begin();
 			Color c = batch.getColor();
 			batch.draw(currentFrame, posX, posY);
+			batch.draw(typeTexture, posX + TYPE_LOCATION.getX(), posY + texture.getRegionHeight() + TYPE_LOCATION.getY());
 			if(isSlowed) {
 				TextureRegion currentSlowFrame = slowAnimation.getKeyFrame(animationCounter, true);
-				batch.setColor(c.r, c.g, c.b, 0.5f);
-				batch.draw(currentSlowFrame, posX, posY + 35);
+				batch.setColor(c.r, c.g, c.b, 0.6f);
+				batch.draw(currentSlowFrame, posX, posY);
 			}
 			if(isPoisoned) {
 				TextureRegion currentSlowFrame = poisonAnimation.getKeyFrame(animationCounter, true);
@@ -338,7 +345,15 @@ public class Monster implements IMonster {
 		return maxHp;
 	}
 	
-	public void hit(int damage) {
-		currentHp -= damage;
+	public void hit(int damage, String type) {
+		if(type.equals(Settings.elementWeaknesses.get(this.type))) {
+			currentHp -= damage*(1/DAMAGE_MULTIPLIER) == 0 ? damage : damage*(1/DAMAGE_MULTIPLIER);
+		}
+		else if(type.equals(Settings.elementStrengths.get(this.type))) {
+			currentHp -= damage*DAMAGE_MULTIPLIER == 0 ? damage : damage*DAMAGE_MULTIPLIER;
+		}
+		else {
+			currentHp -= damage;
+		}
 	}
 }
