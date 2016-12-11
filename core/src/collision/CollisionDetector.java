@@ -31,30 +31,29 @@ public class CollisionDetector {
 					}
 					if(type.equals("green") && g.canHit()) {
 						g.hit(m);
-						m.hit(g.getDamage(), type);
 					}
 					if(type.equals("black") && g.canHit()) {
 						g.hit(m);
-						m.hit(g.getDamage(), type);
+					}
+					if(type.equals("white") && g.canHit()) {
+						g.hit(m);
+					}
+					if(type.equals("pink") && g.canHit()) {
+						g.hit(m);
 					}
 				}
 			}
 			if(type.equals("yellow") && g.canHit() && !allMonstersInRange.isEmpty()) {
 				g.hit(allMonstersInRange);
-				for(IMonster m : allMonstersInRange) {
-					m.hit(g.getDamage(), type);
-				}
 			}
 			if(type.equals("blue") && g.canHit()) {
 				if(areAllMonstersSlowed && !allMonstersInRange.isEmpty()) {
 					g.hit(allMonstersInRange.get(0));
-					allMonstersInRange.get(0).hit(g.getDamage(), type);
 				}
 				else {
 					for(IMonster m : allMonstersInRange) {
 						if(!m.isSlowed()) {
 							g.hit(m);
-							m.hit(g.getDamage(), type);
 							break;
 						}
 					}

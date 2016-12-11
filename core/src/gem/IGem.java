@@ -57,4 +57,12 @@ public interface IGem {
 	public Rectangle getBody();
 	
 	public float getSpeedUpAmount();
+	
+	public int getPoisonDamage();
+	
+	public int getPoisonDuration();
+	
+	public int getSlowAmount();
+	
+	public int getSlowDuration();
 }

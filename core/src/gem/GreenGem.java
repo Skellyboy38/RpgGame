@@ -32,9 +32,18 @@ public class GreenGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new GreenBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m));
-			m.poison(poisonDamage, poisonDuration);
+			bullets.add(new GreenBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
 		}
+	}
+	
+	@Override
+	public int getPoisonDamage() {
+		return poisonDamage;
+	}
+	
+	@Override
+	public int getPoisonDuration() {
+		return poisonDuration;
 	}
 	
 	public String getName() {

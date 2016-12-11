@@ -32,7 +32,7 @@ public class BlueGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new BlueBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m));
+			bullets.add(new BlueBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
 			m.slow(slowAmount, slowDuration);
 		}
 	}
@@ -48,5 +48,15 @@ public class BlueGem extends Gem {
 	@Override
 	public void hit(List<IMonster> monsters) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public int getSlowAmount() {
+		return slowAmount;
+	}
+	
+	@Override
+	public int getSlowDuration() {
+		return slowDuration;
 	}
 }

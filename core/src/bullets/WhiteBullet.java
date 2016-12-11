@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import gem.IGem;
 import monster.IMonster;
 
-public class GreenBullet implements IBullet {
+public class WhiteBullet implements IBullet {
 
 	private Texture bullet;
 	private int speed;
@@ -16,8 +16,8 @@ public class GreenBullet implements IBullet {
 	private IMonster toHit;
 	private IGem gem;
 	
-	public GreenBullet(int posX, int posY, IMonster m, IGem gem) {
-		bullet = new Texture("greenBullet.png");
+	public WhiteBullet(int posX, int posY, IMonster m, IGem gem) {
+		bullet = new Texture("whiteBullet.png");
 		this.posX = posX;
 		this.posY = posY;
 		this.toHit = m;
@@ -30,7 +30,6 @@ public class GreenBullet implements IBullet {
 	public void update() {
 		if(hasArrived && !alreadyHit) {
 			toHit.hit(gem.getDamage(), gem.getType());
-			toHit.poison(gem.getPoisonDamage(), gem.getPoisonDuration());
 			alreadyHit = true;
 		}
 		if(posX > toHit.getCenter().getX() - 10 && posX < toHit.getCenter().getX() + 10 && posY > toHit.getCenter().getY() - 10 && posY < toHit.getCenter().getY() + 10) {

@@ -30,6 +30,7 @@ public class Summoner {
 	private int timeElapsed;
 	private int numberOfMonsters;
 	private List<Path> paths;
+	private List<Path> flyingPaths;
 	private boolean isSummoning;
 	private int level;
 	private boolean canIncrementLevel;
@@ -54,6 +55,10 @@ public class Summoner {
 		this.player = player;
 		this.temporaryPath = new ArrayList<Path>();
 		random = new Random();
+	}
+	
+	public void getFlyingPaths() {
+		flyingPaths = findAllPaths();
 	}
 	
 	public void toggleDisplayPath() {
@@ -111,8 +116,13 @@ public class Summoner {
 	}
 	
 	public void createMonster(String type) {
-		Monster m = new Monster(batch, renderer, Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value, type);
-		m.setPath(paths);
+		Monster m = new Monster(batch, renderer, Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value, type, Settings.levels.get(level).isFlying);
+		if(Settings.levels.get(level).isFlying) {
+			m.setPath(flyingPaths);
+		}
+		else {
+			m.setPath(paths);
+		}
 		monsters.add(m);
 	}
 	

@@ -2,6 +2,7 @@ package bullets;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import gem.IGem;
 import monster.IMonster;
 
 public class BlackBullet implements IBullet {
@@ -10,18 +11,26 @@ public class BlackBullet implements IBullet {
 	private int posX;
 	private int posY;
 	private boolean hasArrived;
+	private boolean alreadyHit;
 	private IMonster toHit;
+	private IGem gem;
 	
-	public BlackBullet(int posX, int posY, IMonster m) {
+	public BlackBullet(int posX, int posY, IMonster m, IGem gem) {
 		bullet = new Texture("blackBullet.png");
 		this.posX = posX;
 		this.posY = posY;
 		this.toHit = m;
+		this.gem = gem;
 		hasArrived = false;
+		alreadyHit = false;
 		speed = 10;
 	}
 	
 	public void update() {
+		if(hasArrived && !alreadyHit) {
+			toHit.hit(gem.getDamage(), gem.getType());
+			alreadyHit = true;
+		}
 		if(posX > toHit.getCenter().getX() - 10 && posX < toHit.getCenter().getX() + 10 && posY > toHit.getCenter().getY() - 10 && posY < toHit.getCenter().getY() + 10) {
 			hasArrived = true;
 			return;

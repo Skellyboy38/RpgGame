@@ -45,4 +45,6 @@ public interface IMonster {
 	public boolean canGiveGold();
 	
 	public void giveGold();
+	
+	public boolean isFlying();
 }

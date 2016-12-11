@@ -93,6 +93,7 @@ public class RpgGame extends ApplicationAdapter {
 		inputMultiplexer.addProcessor(stage);
 		inputMultiplexer.addProcessor(zoom);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		summoner.getFlyingPaths();
 	}
 
 	@Override

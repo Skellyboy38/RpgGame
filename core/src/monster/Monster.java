@@ -60,8 +60,9 @@ public class Monster implements IMonster {
 	private Animation slowAnimation;
 	private float animationCounter;
 	private Texture typeTexture;
+	private boolean isFlying;
 	
-	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value, String type) {
+	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value, String type, boolean isFlying) {
 		this.batch = batch;
 		this.renderer = renderer;
 		this.path = new ArrayList<ITile>();
@@ -98,6 +99,7 @@ public class Monster implements IMonster {
 		this.poisonDamage = 0;
 		this.poisonDelay = 500;
 		this.animationCounter = 0;
+		this.isFlying = isFlying;
 	}
 	
 	public Animation createAnimation(Texture animationSheet) {
@@ -253,6 +255,10 @@ public class Monster implements IMonster {
 	public void jump(int posX, int posY) {
 		this.posX = posX;
 		this.posY = posY;
+	}
+	
+	public boolean isFlying() {
+		return isFlying;
 	}
 	
 	public void moveTo(Coordinate c, boolean moveHorizontally) {

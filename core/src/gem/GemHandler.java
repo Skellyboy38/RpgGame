@@ -63,7 +63,7 @@ public class GemHandler {
 				if(i == j) {
 					continue;
 				}
-				if(currentGems.get(i).getLevel() < 5 && currentGems.get(i).getType().equals(currentGems.get(j).getType()) &&
+				if(currentGems.get(i).getLevel() < 6 && currentGems.get(i).getType().equals(currentGems.get(j).getType()) &&
 						currentGems.get(i).getLevel() == currentGems.get(j).getLevel()) {
 					toRet.add(currentGems.get(i));
 				}
@@ -117,6 +117,18 @@ public class GemHandler {
 			else if(type.equals("yellow")) {
 				newGem = new YellowGem(batch, renderer, stage, clickHandler, 
 						new Texture("yellow_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else if(type.equals("white")) {
+				newGem = new WhiteGem(batch, renderer, stage, clickHandler, 
+						new Texture("white_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else if(type.equals("pink")) {
+				newGem = new PinkGem(batch, renderer, stage, clickHandler, 
+						new Texture("pink_"+(gem.getLevel()+1)+".png"), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
 						gem.getLevel()+1);
 			}
@@ -230,7 +242,7 @@ public class GemHandler {
 		}
 		
 		public IGem createGem(int posX, int posY) {
-			int type = random.nextInt(4);
+			int type = random.nextInt(6);
 			float gemLevelChance = random.nextFloat();
 			int gemLevel;
 			if(gemLevelChance <= gemLevelChances[0]) {
@@ -260,6 +272,12 @@ public class GemHandler {
 			}
 			else if(type == 3) {
 				return new BlackGem(batch, renderer, stage, clickHandler, new Texture("black_"+gemLevel+".png"), posX, posY, gemLevel);
+			}
+			else if(type == 4) {
+				return new WhiteGem(batch, renderer, stage, clickHandler, new Texture("white_"+gemLevel+".png"), posX, posY, gemLevel);
+			}
+			else if(type == 5) {
+				return new PinkGem(batch, renderer, stage, clickHandler, new Texture("pink_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;

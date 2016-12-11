@@ -25,6 +25,8 @@ import tile.TileClickHandler;
 
 public abstract class Gem implements IGem {
 	
+	public static final float CRIT_CHANCE = 0.02f;
+	
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 	private Circle collisionBox;
@@ -44,6 +46,7 @@ public abstract class Gem implements IGem {
 	protected int posX;
 	protected int posY;
 	protected int level;
+	protected float currentCritChance;
 	
 	private boolean isSpedUp;
 	private boolean isTemporary;
@@ -73,6 +76,7 @@ public abstract class Gem implements IGem {
 		this.type = type;
 		this.posX = posX;
 		this.posY = posY;
+		this.currentCritChance = CRIT_CHANCE;
 		createButton();
 		this.coordinates = new Coordinate(posX, posY);
 		this.isTemporary = true;
@@ -93,6 +97,22 @@ public abstract class Gem implements IGem {
 		for(IBullet b : bullets) {
 			b.update();
 		}
+	}
+	
+	public int getPoisonDamage() {
+		return 0;
+	}
+	
+	public int getPoisonDuration() {
+		return 0;
+	}
+	
+	public int getSlowAmount() {
+		return 0;
+	}
+	
+	public int getSlowDuration() {
+		return 0;
 	}
 	
 	public void drawCollisionBox() {

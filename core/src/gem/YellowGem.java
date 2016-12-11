@@ -34,7 +34,7 @@ public class YellowGem extends Gem {
 	}
 	
 	public void hit(IMonster m) {
-		bullets.add(new YellowBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m));
+		bullets.add(new YellowBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
 	}
 	
 	public String getName() {

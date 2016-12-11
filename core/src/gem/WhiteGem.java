@@ -7,23 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import bullets.BlackBullet;
+import bullets.WhiteBullet;
 import monster.IMonster;
-import settings.Settings;
 import tile.TileClickHandler;
 
-public class BlackGem extends Gem {
-
+public class WhiteGem extends Gem {
+	
 	private String name;
 	private String description;
 	private float increaseSpeedAmount;
 
-	public BlackGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "black", level);
+	public WhiteGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "white", level);
 		
-		this.increaseSpeedAmount = Settings.gemSettings.get("black").get(level).increaseSpeedAmount + 1;
-		this.name = "Black gem";
-		this.description = "The black gem speeds up gems.";
+		this.name = "White gem";
+		this.description = "The white gem only attacks ground units.";
 	}
 	
 	public float getSpeedUpAmount() {
@@ -31,10 +29,10 @@ public class BlackGem extends Gem {
 	}
 	
 	public void hit(IMonster m) {
-		if(!m.isDead()) {
+		if(!m.isDead() && !m.isFlying()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new BlackBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new WhiteBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
 		}
 	}
 	
