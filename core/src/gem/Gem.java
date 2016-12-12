@@ -17,6 +17,7 @@ import com.mygdx.game.RpgGame;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import bullets.IBullet;
 import settings.Settings;
@@ -25,7 +26,8 @@ import tile.TileClickHandler;
 
 public abstract class Gem implements IGem {
 	
-	public static final float CRIT_CHANCE = 0.02f;
+	public static final float CRIT_CHANCE = 0.1f;
+	public static final int CRIT_TEXTURE_DURATION = 500;
 	
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
@@ -34,11 +36,15 @@ public abstract class Gem implements IGem {
 	private TileClickHandler clickHandler;
 	private TextButton button;
 	private IGem instance;
+	private IBullet toRemove;
 	private Coordinate coordinates;
 	protected List<IBullet> bullets;
 	protected TextureRegion textureRegion;
+	private Texture critTexture;
+	private Random random;
 	
 	protected int elapsedTime;
+	private int critTime;
 	protected int range;
 	protected int delay;
 	protected int originalDelay;
@@ -46,6 +52,7 @@ public abstract class Gem implements IGem {
 	protected int posX;
 	protected int posY;
 	protected int level;
+	private float critMultiplier;
 	protected float currentCritChance;
 	
 	private boolean isSpedUp;
@@ -62,9 +69,11 @@ public abstract class Gem implements IGem {
 		this.batch = batch;
 		this.clickHandler = clickHandler;
 		this.textureRegion = new TextureRegion(texture);
+		this.critTexture = new Texture("crit.png");
 		this.bullets = new ArrayList<IBullet>();
 		this.renderer = renderer;
 		this.body = new Rectangle();
+		this.random = new Random();
 		body.setWidth(20);
 		body.setHeight(20);
 		body.setX(posX);
@@ -76,17 +85,23 @@ public abstract class Gem implements IGem {
 		this.type = type;
 		this.posX = posX;
 		this.posY = posY;
+		this.critMultiplier = 3f;
 		this.currentCritChance = CRIT_CHANCE;
 		createButton();
 		this.coordinates = new Coordinate(posX, posY);
 		this.isTemporary = true;
 		this.instance = this;
 		this.elapsedTime = 0;
+		this.critTime = 0;
 		this.canHit = true;
 		this.isSpedUp = false;
 		this.level = level;
 		
 		stage.addActor(button);
+	}
+	
+	public float getCrit() {
+		return critMultiplier;
 	}
 	
 	public void update() {
@@ -120,6 +135,10 @@ public abstract class Gem implements IGem {
 		renderer.setColor(Color.RED);
 		renderer.circle(collisionBox.x + RpgGame.TILE_WIDTH/2, collisionBox.y + RpgGame.TILE_WIDTH/2, collisionBox.radius);
 		renderer.end();
+	}
+	
+	public boolean isCrit() {
+		return random.nextFloat() <= CRIT_CHANCE;
 	}
 	
 	public float getSpeedUpAmount() {
@@ -173,6 +192,16 @@ public abstract class Gem implements IGem {
 	public Coordinate getCoordinates() {
 		return coordinates;
 	}
+	
+	public boolean allBulletsArrived() {
+		boolean toRet = true;
+		for(IBullet b : bullets) {
+			if(!b.hasArrived()) {
+				toRet = false;
+			}
+		}
+		return toRet;
+	}
 
 	@Override
 	public void render() {
@@ -183,6 +212,17 @@ public abstract class Gem implements IGem {
 			if(!b.hasArrived()) {
 				batch.draw(b.getTexture(), b.getX(), b.getY());
 			}
+			else {
+				if(b.isCrit() && critTime <= CRIT_TEXTURE_DURATION) {
+					batch.draw(critTexture, b.getX(), b.getY());
+					critTime += Gdx.graphics.getDeltaTime();
+				}
+				toRemove = b;
+			}
+		}
+		if(toRemove != null) {
+			bullets.remove(toRemove);
+			toRemove = null;
 		}
 		batch.end();
 	}

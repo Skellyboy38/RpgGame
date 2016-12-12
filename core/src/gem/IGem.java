@@ -65,4 +65,8 @@ public interface IGem {
 	public int getSlowAmount();
 	
 	public int getSlowDuration();
+	
+	public boolean isCrit();
+	
+	public float getCrit();
 }

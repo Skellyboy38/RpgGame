@@ -13,4 +13,6 @@ public interface IBullet {
 	public boolean hasArrived();
 	
 	public void update();
+	
+	public boolean isCrit();
 }
