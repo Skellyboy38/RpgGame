@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +63,9 @@ public class RpgGame extends ApplicationAdapter {
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
 	Texture background;
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int screenWidth;
+	int screenHeight;
 	
 	@Override
 	public void create () {
@@ -94,6 +99,8 @@ public class RpgGame extends ApplicationAdapter {
 		inputMultiplexer.addProcessor(zoom);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		summoner.getFlyingPaths();
+		screenWidth = (int)screenSize.getWidth();
+		screenHeight = (int)screenSize.getHeight();
 	}
 
 	@Override
@@ -431,6 +438,7 @@ public class RpgGame extends ApplicationAdapter {
 	
 	public void resize(int width, int height) {
         viewport.update(width, height);
+        overlay.getStage().getViewport().update(width, height);
         cam.update();
     }
 }
