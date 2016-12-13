@@ -18,6 +18,7 @@ public class Settings {
 	public static Map<String, Texture> elementTypes;
 	public static Map<String, String> elementWeaknesses;
 	public static Map<String, String> elementStrengths;
+	public static Map<String, SpecialCombination> specialGemRecipes;
 
 	public Settings() {
 		levels = new HashMap<Integer, Entity>();
@@ -30,6 +31,7 @@ public class Settings {
 		elementWeaknesses = new HashMap<String, String>();
 		elementStrengths = new HashMap<String, String>();
 		elementIntToType = new HashMap<Integer, String>();
+		specialGemRecipes = new HashMap<String, SpecialCombination>();
 		
 		addAnimationSheets();
 		addUpgradePrices();
@@ -37,6 +39,62 @@ public class Settings {
 		populateGemSettings();
 		populateGemChances();
 		populateElements();
+		createSpecialGemRecipes();
+	}
+	
+	public void createSpecialGemRecipes() {
+		specialGemRecipes.put("jade", new SpecialCombination(
+				"green", 4,
+				"blue", 2,
+				"black", 3));
+		specialGemRecipes.put("black_opal", new SpecialCombination(
+				"black", 5,
+				"purple", 3,
+				"white", 4));
+		specialGemRecipes.put("blood_stone", new SpecialCombination(
+				"red", 5,
+				"purple", 4,
+				"pink", 3));
+		specialGemRecipes.put("dark_emerald", new SpecialCombination(
+				"green", 5,
+				"blue", 4,
+				"yellow", 2));
+		specialGemRecipes.put("gold", new SpecialCombination(
+				"pink", 5,
+				"pink", 4,
+				"white", 2));
+		specialGemRecipes.put("malachite", new SpecialCombination(
+				"black", 1,
+				"green", 1,
+				"purple", 1));
+		specialGemRecipes.put("pink_diamond", new SpecialCombination(
+				"white", 5,
+				"yellow", 3,
+				"white", 3));
+		specialGemRecipes.put("red_crystal", new SpecialCombination(
+				"red", 3,
+				"green", 2,
+				"pink", 1));
+		specialGemRecipes.put("silver", new SpecialCombination(
+				"yellow", 1,
+				"white", 1,
+				"blue", 1));
+		specialGemRecipes.put("star_ruby", new SpecialCombination(
+				"red", 2,
+				"red", 1,
+				"pink", 1));
+		specialGemRecipes.put("uranium", new SpecialCombination(
+				"yellow", 5,
+				"blue", 3,
+				"black", 2));
+		specialGemRecipes.put("yellow_sapphire", new SpecialCombination(
+				"blue", 5,
+				"yellow", 4,
+				"red", 4));
+		specialGemRecipes.put("paraiba_tourmaline", new SpecialCombination(
+				"purple", 5,
+				"black", 4,
+				"green", 2));
 	}
 	
 	public void populateElements() {
@@ -294,6 +352,26 @@ public class Settings {
 			this.poisonDuration = poisonDuration;
 			this.slowDuration = slowDuration;
 			this.critChanceIncrease = critChanceIncrease;
+		}
+	}
+	
+	public class SpecialCombination {
+		public int level1;
+		public int level2;
+		public int level3;
+		public String type1;
+		public String type2;
+		public String type3;
+		
+		public SpecialCombination(String type1, int level1,
+				String type2, int level2,
+				String type3, int level3) {
+			this.level1 = level1;
+			this.level2 = level2;
+			this.level3 = level3;
+			this.type1 = type1;
+			this.type2 = type2;
+			this.type3 = type3;
 		}
 	}
 }
