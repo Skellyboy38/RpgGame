@@ -46,12 +46,14 @@ public class Settings {
 		elementTypes.put("yellow", new Texture("yellowPower.png"));
 		elementTypes.put("red", new Texture("redPower.png"));
 		elementTypes.put("white", new Texture("whitePower.png"));
+		elementTypes.put("purple", new Texture("purplePower.png"));
 		
 		elementWeaknesses.put("blue", "green");
 		elementWeaknesses.put("red", "blue");
-		elementWeaknesses.put("yellow", "black");
-		elementWeaknesses.put("black", "white");
 		elementWeaknesses.put("green", "red");
+		elementWeaknesses.put("yellow", "purple");
+		elementWeaknesses.put("purple", "yellow");
+		elementWeaknesses.put("black", "white");
 		elementWeaknesses.put("white", "black");
 		
 		elementStrengths.put("blue", "red");
@@ -59,13 +61,16 @@ public class Settings {
 		elementStrengths.put("green", "blue");
 		elementStrengths.put("black", "white");
 		elementStrengths.put("white", "black");
-		elementStrengths.put("yellow", "black");
+		elementStrengths.put("yellow", "purple");
+		elementStrengths.put("purple", "yellow");
 		
 		elementIntToType.put(0, "blue");
 		elementIntToType.put(1, "black");
 		elementIntToType.put(2, "yellow");
 		elementIntToType.put(3, "green");
 		elementIntToType.put(4, "white");
+		elementIntToType.put(5, "red");
+		elementIntToType.put(6, "purple");
 	}
 	
 	public void addUpgradePrices() {
@@ -78,6 +83,7 @@ public class Settings {
 		upgradePrices.put(7, 150);
 		upgradePrices.put(8, 150);
 		upgradePrices.put(9, 180);
+		upgradePrices.put(10, 200);
 	}
 	
 	public void addAnimationSheets() {
@@ -145,58 +151,76 @@ public class Settings {
 	
 	public void populateGemSettings() {
 		Map<Integer, GemSettings> Green = new HashMap<Integer, GemSettings>();
-		Green.put(1, new GemSettings(100, 90, 600, 0, 0, 10, 3000, 0));
-		Green.put(2, new GemSettings(120, 120, 600, 0, 0, 30, 3000, 0));
-		Green.put(3, new GemSettings(150, 150, 600, 0, 0, 80, 4000, 0));
-		Green.put(4, new GemSettings(170, 240, 600, 0, 0, 200, 6000, 0));
-		Green.put(5, new GemSettings(200, 300, 600, 0, 0, 400, 8000, 0));
-		Green.put(6, new GemSettings(250, 450, 600, 0, 0, 600, 10000, 0));
+		Green.put(1, new GemSettings(100, 90, 600, 0, 0, 10, 3000, 0f, 0f));
+		Green.put(2, new GemSettings(120, 120, 600, 0, 0, 30, 3000, 0f, 0f));
+		Green.put(3, new GemSettings(150, 150, 600, 0, 0, 80, 4000, 0f, 0f));
+		Green.put(4, new GemSettings(170, 240, 600, 0, 0, 200, 6000, 0f, 0f));
+		Green.put(5, new GemSettings(200, 300, 600, 0, 0, 400, 8000, 0f, 0f));
+		Green.put(6, new GemSettings(250, 450, 600, 0, 0, 600, 10000, 0f, 0f));
 		gemSettings.put("green", Green);
 		
 		Map<Integer, GemSettings> Yellow = new HashMap<Integer, GemSettings>();
-		Yellow.put(1, new GemSettings(100, 30, 900, 0, 0, 0, 0, 0));
-		Yellow.put(2, new GemSettings(100, 60, 900, 0, 0, 0, 0, 0));
-		Yellow.put(3, new GemSettings(200, 120, 900, 0, 0, 0, 0, 0));
-		Yellow.put(4, new GemSettings(200, 180, 900, 0, 0, 0, 0, 0));
-		Yellow.put(5, new GemSettings(200, 240, 900, 0, 0, 0, 0, 0));
-		Yellow.put(6, new GemSettings(250, 600, 900, 0, 0, 0, 0, 0));
+		Yellow.put(1, new GemSettings(100, 30, 900, 0, 0, 0, 0, 0, 0f));
+		Yellow.put(2, new GemSettings(100, 60, 900, 0, 0, 0, 0, 0, 0f));
+		Yellow.put(3, new GemSettings(200, 120, 900, 0, 0, 0, 0, 0, 0f));
+		Yellow.put(4, new GemSettings(200, 180, 900, 0, 0, 0, 0, 0, 0f));
+		Yellow.put(5, new GemSettings(200, 240, 900, 0, 0, 0, 0, 0, 0f));
+		Yellow.put(6, new GemSettings(250, 600, 900, 0, 0, 0, 0, 0, 0f));
 		gemSettings.put("yellow", Yellow);
 		
 		Map<Integer, GemSettings> Blue = new HashMap<Integer, GemSettings>();
-		Blue.put(1, new GemSettings(150, 60, 1200, 1, 1000, 0, 0, 0));
-		Blue.put(2, new GemSettings(150, 90, 1200, 1, 1500, 0, 0, 0));
-		Blue.put(3, new GemSettings(150, 120, 1200, 2, 1500, 0, 0, 0));
-		Blue.put(4, new GemSettings(150, 180, 1200, 2, 2000, 0, 0, 0));
-		Blue.put(5, new GemSettings(150, 240, 1200, 2, 3000, 0, 0, 0));
-		Blue.put(6, new GemSettings(200, 450, 1200, 3, 4000, 0, 0, 0));
+		Blue.put(1, new GemSettings(150, 60, 1200, 1, 1000, 0, 0, 0, 0f));
+		Blue.put(2, new GemSettings(150, 90, 1200, 1, 1500, 0, 0, 0, 0f));
+		Blue.put(3, new GemSettings(150, 120, 1200, 2, 1500, 0, 0, 0, 0f));
+		Blue.put(4, new GemSettings(150, 180, 1200, 2, 2000, 0, 0, 0, 0f));
+		Blue.put(5, new GemSettings(150, 240, 1200, 2, 3000, 0, 0, 0, 0f));
+		Blue.put(6, new GemSettings(200, 450, 1200, 3, 4000, 0, 0, 0, 0f));
 		gemSettings.put("blue", Blue);
 		
 		Map<Integer, GemSettings> Black = new HashMap<Integer, GemSettings>();
-		Black.put(1, new GemSettings(150, 60, 600, 0, 0, 0, 0, 0.1f));
-		Black.put(2, new GemSettings(150, 90, 600, 0, 0, 0, 0, 0.2f));
-		Black.put(3, new GemSettings(150, 120, 600, 0, 0, 0, 0, 0.3f));
-		Black.put(4, new GemSettings(150, 180, 450, 0, 0, 0, 0, 0.4f));
-		Black.put(5, new GemSettings(150, 240, 450, 0, 0, 0, 0, 0.5f));
-		Black.put(6, new GemSettings(200, 600, 450, 0, 0, 0, 0, 1f));
+		Black.put(1, new GemSettings(150, 60, 600, 0, 0, 0, 0, 0.1f, 0f));
+		Black.put(2, new GemSettings(150, 90, 600, 0, 0, 0, 0, 0.2f, 0f));
+		Black.put(3, new GemSettings(150, 120, 600, 0, 0, 0, 0, 0.3f, 0f));
+		Black.put(4, new GemSettings(150, 180, 450, 0, 0, 0, 0, 0.4f, 0f));
+		Black.put(5, new GemSettings(150, 240, 450, 0, 0, 0, 0, 0.5f, 0f));
+		Black.put(6, new GemSettings(200, 600, 450, 0, 0, 0, 0, 1f, 0f));
 		gemSettings.put("black", Black);
 		
 		Map<Integer, GemSettings> White = new HashMap<Integer, GemSettings>();
-		White.put(1, new GemSettings(120, 120, 600, 0, 0, 0, 0, 0f));
-		White.put(2, new GemSettings(120, 180, 600, 0, 0, 0, 0, 0f));
-		White.put(3, new GemSettings(120, 300, 600, 0, 0, 0, 0, 0f));
-		White.put(4, new GemSettings(150, 420, 600, 0, 0, 0, 0, 0f));
-		White.put(5, new GemSettings(150, 600, 600, 0, 0, 0, 0, 0f));
-		White.put(6, new GemSettings(150, 1500, 300, 0, 0, 0, 0, 0f));
+		White.put(1, new GemSettings(120, 120, 600, 0, 0, 0, 0, 0f, 0f));
+		White.put(2, new GemSettings(120, 180, 600, 0, 0, 0, 0, 0f, 0f));
+		White.put(3, new GemSettings(120, 300, 600, 0, 0, 0, 0, 0f, 0f));
+		White.put(4, new GemSettings(150, 420, 600, 0, 0, 0, 0, 0f, 0f));
+		White.put(5, new GemSettings(150, 600, 600, 0, 0, 0, 0, 0f, 0f));
+		White.put(6, new GemSettings(150, 1500, 300, 0, 0, 0, 0, 0f, 0f));
 		gemSettings.put("white", White);
 		
 		Map<Integer, GemSettings> Pink = new HashMap<Integer, GemSettings>();
-		Pink.put(1, new GemSettings(150, 150, 600, 0, 0, 0, 0, 0f));
-		Pink.put(2, new GemSettings(170, 210, 600, 0, 0, 0, 0, 0f));
-		Pink.put(3, new GemSettings(190, 360, 600, 0, 0, 0, 0, 0f));
-		Pink.put(4, new GemSettings(210, 450, 600, 0, 0, 0, 0, 0f));
-		Pink.put(5, new GemSettings(250, 750, 600, 0, 0, 0, 0, 0f));
-		Pink.put(6, new GemSettings(300, 3000, 600, 0, 0, 0, 0, 0f));
+		Pink.put(1, new GemSettings(150, 150, 600, 0, 0, 0, 0, 0f, 0f));
+		Pink.put(2, new GemSettings(170, 210, 600, 0, 0, 0, 0, 0f, 0f));
+		Pink.put(3, new GemSettings(190, 360, 600, 0, 0, 0, 0, 0f, 0f));
+		Pink.put(4, new GemSettings(210, 450, 600, 0, 0, 0, 0, 0f, 0f));
+		Pink.put(5, new GemSettings(250, 750, 600, 0, 0, 0, 0, 0f, 0f));
+		Pink.put(6, new GemSettings(300, 3000, 600, 0, 0, 0, 0, 0f, 0f));
 		gemSettings.put("pink", Pink);
+		
+		Map<Integer, GemSettings> Red = new HashMap<Integer, GemSettings>();
+		Red.put(1, new GemSettings(150, 60, 600, 0, 0, 0, 0, 0f, 0f));
+		Red.put(2, new GemSettings(150, 120, 600, 0, 0, 0, 0, 0f, 0f));
+		Red.put(3, new GemSettings(150, 180, 600, 0, 0, 0, 0, 0f, 0f));
+		Red.put(4, new GemSettings(150, 240, 600, 0, 0, 0, 0, 0f, 0f));
+		Red.put(5, new GemSettings(150, 300, 600, 0, 0, 0, 0, 0f, 0f));
+		Red.put(6, new GemSettings(150, 1000, 600, 0, 0, 0, 0, 0f, 0f));
+		gemSettings.put("red", Red);
+		
+		Map<Integer, GemSettings> Purple = new HashMap<Integer, GemSettings>();
+		Purple.put(1, new GemSettings(150, 60, 600, 0, 0, 0, 0, 0f, 0.03f));
+		Purple.put(2, new GemSettings(150, 120, 600, 0, 0, 0, 0, 0f, 0.06f));
+		Purple.put(3, new GemSettings(150, 180, 600, 0, 0, 0, 0, 0f, 0.09f));
+		Purple.put(4, new GemSettings(150, 240, 450, 0, 0, 0, 0, 0f, 0.12f));
+		Purple.put(5, new GemSettings(150, 300, 450, 0, 0, 0, 0, 0f, 0.15f));
+		Purple.put(6, new GemSettings(200, 600, 450, 0, 0, 0, 0, 0f, 0.3f));
+		gemSettings.put("purple", Purple);
 	}
 	
 	public void populateGemChances() {
@@ -210,6 +234,7 @@ public class Settings {
 		Float[] chancesLevel8 = {0.1f, 0.2f, 0.4f, 0.3f, 0f};
 		Float[] chancesLevel9 = {0.1f, 0.1f, 0.3f, 0.4f, 0.1f};
 		Float[] chancesLevel10 = {0.1f, 0.1f, 0.1f, 0.5f, 0.2f};
+		Float[] chancesLevel11 = {0.1f, 0.1f, 0.1f, 0.3f, 0.4f};
 		gemChances.put(1, chancesLevel1);
 		gemChances.put(2, chancesLevel2);
 		gemChances.put(3, chancesLevel3);
@@ -220,6 +245,7 @@ public class Settings {
 		gemChances.put(8, chancesLevel8);
 		gemChances.put(9, chancesLevel9);
 		gemChances.put(10, chancesLevel10);
+		gemChances.put(11,  chancesLevel11);
 	}
 	
 	public class Entity {
@@ -253,8 +279,12 @@ public class Settings {
 		public float increaseSpeedAmount;
 		public int poisonAmount;
 		public int poisonDuration;
+		public float critChanceIncrease;
 		
-		public GemSettings(int range, int damage, int delay, int slowAmount, int slowDuration, int poisonAmount, int poisonDuration, float increaseSpeedAmount) {
+		public GemSettings(int range, int damage, int delay, 
+				int slowAmount, int slowDuration, int poisonAmount, 
+				int poisonDuration, float increaseSpeedAmount, 
+				float critChanceIncrease) {
 			this.range = range;
 			this.damage = damage;
 			this.delay = delay;
@@ -263,6 +293,7 @@ public class Settings {
 			this.poisonAmount = poisonAmount;
 			this.poisonDuration = poisonDuration;
 			this.slowDuration = slowDuration;
+			this.critChanceIncrease = critChanceIncrease;
 		}
 	}
 }

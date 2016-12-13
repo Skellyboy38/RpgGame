@@ -35,11 +35,17 @@ public class CollisionDetector {
 					if(type.equals("black") && g.canHit()) {
 						g.hit(m);
 					}
+					if(type.equals("purple") && g.canHit()) {
+						g.hit(m);
+					}
 					if(type.equals("white") && g.canHit()) {
 						g.hit(m);
 					}
 					if(type.equals("pink") && g.canHit()) {
 						g.hit(m);
+					}
+					if(type.equals("red") && g.canHit()) {
+						g.hit(m, monsters);
 					}
 				}
 			}
@@ -63,6 +69,13 @@ public class CollisionDetector {
 				for(IGem other : gems) {
 					if(!g.equals(other) && Intersector.overlaps(g.getCollisionBox(), other.getBody())) {
 						other.speedUp(g.getSpeedUpAmount());
+					}
+				}
+			}
+			if(type.equals("purple")) {
+				for(IGem other : gems) {
+					if(!g.equals(other) && Intersector.overlaps(g.getCollisionBox(), other.getBody())) {
+						other.increaseCrit(g.getCritAmount());
 					}
 				}
 			}

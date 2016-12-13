@@ -28,6 +28,8 @@ public interface IGem {
 	
 	public void hit(List<IMonster> monsters);
 	
+	public void hit(IMonster m, List<IMonster> monsters);
+	
 	public int getDamage();
 	
 	public boolean canHit();
@@ -68,5 +70,11 @@ public interface IGem {
 	
 	public boolean isCrit();
 	
-	public float getCrit();
+	public float getCritDamage();
+	
+	public float getCritAmount();
+	
+	public float getCritChance();
+	
+	public void increaseCrit(float amount);
 }

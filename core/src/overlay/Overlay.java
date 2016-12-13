@@ -287,8 +287,13 @@ public class Overlay {
 				int range = gem.getRange();
 				int level = gem.getLevel();
 				String name = gem.getName();
+				float critChance = gem.getCritChance();
 				String description = gem.getDescription();
-				String info = "Name: " + name + "\nLevel: " + level + "\nDescription: " + description + "\nDamage: " + damage + "\nSpeed: " + speed + "\nRange: " + range;
+				String info = "Name: " + name + 
+						"\nDescription: " + description +
+						"\nLevel: " + level + "          Damage: " + damage + 
+						"\nSpeed: " + speed + "        Range: " + range +
+						"\nCrit Chance: " + critChance;
 				batch.draw(infoArea, GEM_INFO_AREA.getX(), GEM_INFO_AREA.getY());
 				batch.draw(texture, GEM.getX(), GEM.getY());
 				font.setColor(Color.BLACK);

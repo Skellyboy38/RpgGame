@@ -7,15 +7,15 @@ import monster.IMonster;
 
 public abstract class Bullet implements IBullet {
 	
-	private Texture bulletTexture;
-	private int speed;
-	private int posX;
-	private int posY;
-	private boolean hasArrived;
-	private boolean alreadyHit;
-	private IMonster toHit;
-	private IGem gem;
-	private boolean isCrit;
+	protected Texture bulletTexture;
+	protected int speed;
+	protected int posX;
+	protected int posY;
+	protected boolean hasArrived;
+	protected boolean alreadyHit;
+	protected IMonster toHit;
+	protected IGem gem;
+	protected boolean isCrit;
 	
 	public Bullet(int posX, int posY, IMonster m, IGem gem, Texture texture) {
 		this.bulletTexture = texture;
@@ -38,7 +38,7 @@ public abstract class Bullet implements IBullet {
 			hasArrived = true;
 			if(!alreadyHit) {
 				if(isCrit) {
-					toHit.hit((int)(gem.getDamage()*gem.getCrit()), gem.getType());
+					toHit.hit((int)(gem.getDamage()*gem.getCritDamage()), gem.getType());
 				}
 				else {
 					toHit.hit(gem.getDamage(), gem.getType());

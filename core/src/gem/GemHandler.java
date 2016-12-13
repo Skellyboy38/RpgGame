@@ -132,6 +132,18 @@ public class GemHandler {
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
 						gem.getLevel()+1);
 			}
+			else if(type.equals("red")) {
+				newGem = new RedGem(batch, renderer, stage, clickHandler, 
+						new Texture("red_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
+			else if(type.equals("purple")) {
+				newGem = new RedGem(batch, renderer, stage, clickHandler, 
+						new Texture("purple_"+(gem.getLevel()+1)+".png"), 
+						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+						gem.getLevel()+1);
+			}
 			else {
 				newGem = new BlackGem(batch, renderer, stage, clickHandler, 
 						new Texture("black_"+(gem.getLevel()+1)+".png"), 
@@ -242,7 +254,7 @@ public class GemHandler {
 		}
 		
 		public IGem createGem(int posX, int posY) {
-			int type = random.nextInt(6);
+			int type = random.nextInt(8);
 			float gemLevelChance = random.nextFloat();
 			int gemLevel;
 			if(gemLevelChance <= gemLevelChances[0]) {
@@ -278,6 +290,12 @@ public class GemHandler {
 			}
 			else if(type == 5) {
 				return new PinkGem(batch, renderer, stage, clickHandler, new Texture("pink_"+gemLevel+".png"), posX, posY, gemLevel);
+			}
+			else if(type == 6) {
+				return new RedGem(batch, renderer, stage, clickHandler, new Texture("red_"+gemLevel+".png"), posX, posY, gemLevel);
+			}
+			else if(type == 7) {
+				return new PurpleGem(batch, renderer, stage, clickHandler, new Texture("purple_"+gemLevel+".png"), posX, posY, gemLevel);
 			}
 			else {
 				return null;

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import bullets.IBullet;
+import monster.IMonster;
 import settings.Settings;
 import tile.Coordinate;
 import tile.TileClickHandler;
@@ -56,6 +57,7 @@ public abstract class Gem implements IGem {
 	protected float currentCritChance;
 	
 	private boolean isSpedUp;
+	private boolean isCritUp;
 	private boolean isTemporary;
 	protected boolean canHit;
 	
@@ -95,13 +97,18 @@ public abstract class Gem implements IGem {
 		this.critTime = 0;
 		this.canHit = true;
 		this.isSpedUp = false;
+		this.isCritUp = false;
 		this.level = level;
 		
 		stage.addActor(button);
 	}
 	
-	public float getCrit() {
+	public float getCritDamage() {
 		return critMultiplier;
+	}
+	
+	public float getCritChance() {
+		return currentCritChance;
 	}
 	
 	public void update() {
@@ -145,6 +152,10 @@ public abstract class Gem implements IGem {
 		return 0f;
 	}
 	
+	public float getCritAmount() {
+		return 0f;
+	}
+	
 	public List<IBullet> getBullets() {
 		return bullets;
 	}
@@ -156,6 +167,16 @@ public abstract class Gem implements IGem {
 		}
 		else if((int)(originalDelay/amount) < delay) {
 			delay = (int)(originalDelay/amount);
+		}
+	}
+	
+	public void increaseCrit(float amount) {
+		if(!isCritUp) {
+			isCritUp = true;
+			currentCritChance = CRIT_CHANCE + amount;
+		}
+		else if(CRIT_CHANCE + amount > currentCritChance) {
+			currentCritChance = CRIT_CHANCE + amount;
 		}
 	}
 	
@@ -257,5 +278,20 @@ public abstract class Gem implements IGem {
 	
 	public int getLevel() {
 		return level;
+	}
+	
+	@Override
+	public void hit(IMonster m) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void hit(List<IMonster> monsters) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void hit(IMonster m, List<IMonster> monsters) {
+		// TODO Auto-generated method stub
 	}
 }

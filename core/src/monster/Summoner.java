@@ -98,7 +98,7 @@ public class Summoner {
 	}
 	
 	public void nextStage() {
-		String monsterType = Settings.elementIntToType.get(random.nextInt(3));
+		String monsterType = Settings.elementIntToType.get(random.nextInt(7));
 		setNumberOfMonsters(Settings.levels.get(level).number);
 		paths = findAllPaths();
 		for(int i = 0; i < startTimes.length; i++) {
