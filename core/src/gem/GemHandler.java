@@ -71,6 +71,11 @@ public class GemHandler {
 		}
 		return toRet;
 	}
+	
+	// TO DO !!!!!!!!!!!!!!!!!
+	public List<IGem> checkSpecialCombinations() {
+		return null;
+	}
 
 	public void render() {
 		animationCounter += Gdx.graphics.getDeltaTime();
@@ -139,7 +144,7 @@ public class GemHandler {
 						gem.getLevel()+1);
 			}
 			else if(type.equals("purple")) {
-				newGem = new RedGem(batch, renderer, stage, clickHandler, 
+				newGem = new PurpleGem(batch, renderer, stage, clickHandler, 
 						new Texture("purple_"+(gem.getLevel()+1)+".png"), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
 						gem.getLevel()+1);

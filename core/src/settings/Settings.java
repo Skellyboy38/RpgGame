@@ -279,6 +279,12 @@ public class Settings {
 		Purple.put(5, new GemSettings(150, 300, 450, 0, 0, 0, 0, 0f, 0.15f));
 		Purple.put(6, new GemSettings(200, 600, 450, 0, 0, 0, 0, 0f, 0.3f));
 		gemSettings.put("purple", Purple);
+		
+		Map<Integer, GemSettings> Jade = new HashMap<Integer, GemSettings>();
+		Jade.put(1, new GemSettings(150, 300, 600, 0, 0, 20, 3000, 0f, 0f));
+		Jade.put(2, new GemSettings(180, 600, 600, 0, 0, 100, 5000, 0f, 0f));
+		Jade.put(3, new GemSettings(180, 1200, 600, 0, 0, 200, 7000, 0f, 0f));
+		gemSettings.put("jade", Jade);
 	}
 	
 	public void populateGemChances() {

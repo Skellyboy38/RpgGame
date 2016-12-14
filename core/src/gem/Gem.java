@@ -30,22 +30,22 @@ public abstract class Gem implements IGem {
 	public static final float CRIT_CHANCE = 0.1f;
 	public static final int CRIT_TEXTURE_DURATION = 500;
 	
-	private SpriteBatch batch;
+	protected SpriteBatch batch;
 	private ShapeRenderer renderer;
 	private Circle collisionBox;
 	private Rectangle body;
 	private TileClickHandler clickHandler;
 	private TextButton button;
 	private IGem instance;
-	private IBullet toRemove;
+	protected IBullet toRemove;
 	private Coordinate coordinates;
 	protected List<IBullet> bullets;
 	protected TextureRegion textureRegion;
-	private Texture critTexture;
+	protected Texture critTexture;
 	private Random random;
 	
 	protected int elapsedTime;
-	private int critTime;
+	protected int critTime;
 	protected int range;
 	protected int delay;
 	protected int originalDelay;
