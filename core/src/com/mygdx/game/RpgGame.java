@@ -69,12 +69,12 @@ public class RpgGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		batch = new SpriteBatch();
+		renderer = new ShapeRenderer();
 		BUTTON_STYLE.font = new BitmapFont();
 		background = new Texture("background.png");
 		gameSettings = new Settings();
 		player = new Player(PLAYER_HP);
-		batch = new SpriteBatch();
-		renderer = new ShapeRenderer();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		effectiveViewportWidth = WIDTH;
 		effectiveViewportHeight = HEIGHT;
@@ -142,7 +142,7 @@ public class RpgGame extends ApplicationAdapter {
 //		player.reset();
 //		clickHandler.reset();
 //		gemHandler.reset();
-//		summoner.reset();
+		summoner.reset();
 		create();
 	}
 	

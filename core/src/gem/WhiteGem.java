@@ -1,14 +1,12 @@
 package gem;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.WhiteBullet;
-import monster.IMonster;
+import monster.Monster;
 import tile.TileClickHandler;
 
 public class WhiteGem extends Gem {
@@ -28,7 +26,8 @@ public class WhiteGem extends Gem {
 		return increaseSpeedAmount;
 	}
 	
-	public void hit(IMonster m) {
+	@Override
+	public void hit(Monster m) {
 		if(!m.isDead() && !m.isFlying()) {
 			elapsedTime = 0;
 			canHit = false;
@@ -42,10 +41,5 @@ public class WhiteGem extends Gem {
 	
 	public String getDescription() {
 		return description;
-	}
-
-	@Override
-	public void hit(List<IMonster> monsters) {
-		// TODO Auto-generated method stub
 	}
 }

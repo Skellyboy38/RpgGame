@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.RedBullet;
-import monster.IMonster;
+import monster.Monster;
 import tile.TileClickHandler;
 
 public class RedGem extends Gem {
@@ -32,7 +32,7 @@ public class RedGem extends Gem {
 	}
 	
 	@Override
-	public void hit(IMonster m, List<IMonster> monsters) {
+	public void hit(Monster m, List<Monster> monsters) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;

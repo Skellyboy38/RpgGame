@@ -24,30 +24,27 @@ public class Monster implements IMonster {
 	public static final float DAMAGE_MULTIPLIER = 2f/3f;
 	public static final Coordinate TYPE_LOCATION = new Coordinate(-15, 0);
 	
-	private int posX;
-	private int posY;
-	private int speed;
-	private int value;
-	private String type;
-	private boolean isDead;
+	private Animation animation;
+	private Animation poisonAnimation;
+	private Animation slowAnimation;
+	private Texture typeTexture;
 	private Texture animationSheet;
 	private TextureRegion texture;
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
-	private List<ITile> path;
-	private int tileCounter;
+	
 	private ITile lastTile;
 	private Rectangle collisionBox;
 	private Rectangle hpFrame;
 	private Rectangle hpFill;
+	
+	private int posX;
+	private int posY;
+	private int speed;
+	private int value;
+	private int tileCounter;
 	private int maxHp;
-	private boolean canFly;
 	private int currentHp;
-	private boolean canDamagePlayer;
-	private boolean canGiveGold;
-	private int originalSpeed;
-	private boolean isSlowed;
-	private boolean isPoisoned;
 	private int slowTimer;
 	private int slowDuration;
 	private int poisonTimer;
@@ -55,51 +52,65 @@ public class Monster implements IMonster {
 	private int poisonDuration;
 	private int poisonDamage;
 	private int poisonDelay;
-	private Animation animation;
-	private Animation poisonAnimation;
-	private Animation slowAnimation;
-	private float animationCounter;
-	private Texture typeTexture;
+	private int originalSpeed;
+	
+	private String type;
+	
+	private List<ITile> path;
+	
+	private boolean canFly;
+	private boolean canDamagePlayer;
+	private boolean canGiveGold;
+	private boolean isSlowed;
+	private boolean isPoisoned;
 	private boolean isFlying;
 	
-	public Monster(SpriteBatch batch, ShapeRenderer renderer, Texture texture, int posX, int posY, int speed, int maxHp, int value, String type, boolean isFlying) {
+	private float animationCounter;
+	
+	public Monster(SpriteBatch batch, ShapeRenderer renderer) {
 		this.batch = batch;
 		this.renderer = renderer;
 		this.path = new ArrayList<ITile>();
-		this.speed = speed;
-		this.value = value;
-		this.type = type;
-		this.animationSheet = texture;
-		this.texture = new TextureRegion(texture);
-		this.texture.setRegionWidth(RpgGame.TILE_WIDTH);
-		this.animation = createAnimation(animationSheet);
+		
 		this.poisonAnimation = createAnimation(Settings.ailmentAnimationSheets.get("poison"));
 		this.slowAnimation = createAnimation(Settings.ailmentAnimationSheets.get("slow"));
-		this.collisionBox = new Rectangle(posX, posY, this.texture.getRegionWidth(), this.texture.getRegionHeight());
-		this.hpFrame = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
-		this.hpFill = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
-		this.typeTexture = Settings.elementTypes.get(type);
-		this.posX = posX;
-		this.posY = posY;
-		isDead = false;
-		this.tileCounter = -1;
-		canFly = false;
-		canDamagePlayer = true;
-		canGiveGold = true;
-		this.maxHp = maxHp;
-		this.currentHp = maxHp; 
-		this.originalSpeed = speed;
+		
+		this.canFly = false;
+		this.canDamagePlayer = true;
+		this.canGiveGold = true;
 		this.isSlowed = false;
+		this.isPoisoned = false;
+		
 		this.slowTimer = 0;
 		this.slowDuration = 0;
-		this.isPoisoned = false;
 		this.poisonTimer = 0;
 		this.poisonDamageTimer = 0;
 		this.poisonDuration = 0;
 		this.poisonDamage = 0;
 		this.poisonDelay = 500;
 		this.animationCounter = 0;
+		this.tileCounter = -1;
+	}
+	
+	public void setInformation(Texture texture, int posX, int posY, int speed, int maxHp, int value, String type, boolean isFlying) {
+		this.animationSheet = texture;
+		this.speed = speed;
+		this.value = value;
+		this.type = type;
 		this.isFlying = isFlying;
+		this.maxHp = maxHp;
+		this.posX = posX;
+		this.posY = posY;
+		
+		this.texture = new TextureRegion(texture);
+		this.texture.setRegionWidth(RpgGame.TILE_WIDTH);
+		this.animation = createAnimation(animationSheet);
+		this.collisionBox = new Rectangle(posX, posY, this.texture.getRegionWidth(), this.texture.getRegionHeight());
+		this.hpFrame = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
+		this.hpFill = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
+		this.typeTexture = Settings.elementTypes.get(type);
+		this.currentHp = maxHp; 
+		this.originalSpeed = speed;
 	}
 
 	public void dispose() {
@@ -157,7 +168,7 @@ public class Monster implements IMonster {
 	}
 	
 	public boolean isDead() {
-		return getHp() <= 0 || isDead;
+		return getHp() <= 0;
 	}
 	
 	public void update() {
@@ -195,14 +206,12 @@ public class Monster implements IMonster {
 	}
 	
 	public void kill() {
-		isDead = true;
+		currentHp = 0;
 		canDamagePlayer = false;
-
-
 	}
 	
 	public void render() {
-		if(!isDead) {
+		if(!isDead()) {
 			animationCounter += Gdx.graphics.getDeltaTime();
 			TextureRegion currentFrame;
 			currentFrame = animation.getKeyFrame(animationCounter, true);
@@ -367,5 +376,19 @@ public class Monster implements IMonster {
 		else {
 			currentHp -= damage;
 		}
+	}
+
+	@Override
+	public void reset() {
+		this.canDamagePlayer = true;
+		this.canGiveGold = true;
+		this.isSlowed = false;
+		this.isPoisoned = false;
+		
+		this.slowTimer = 0;
+		this.poisonTimer = 0;
+		this.poisonDamageTimer = 0;
+		this.animationCounter = 0;
+		this.tileCounter = -1;
 	}
 }

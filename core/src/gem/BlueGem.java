@@ -1,14 +1,12 @@
 package gem;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.BlueBullet;
-import monster.IMonster;
+import monster.Monster;
 import settings.Settings;
 import tile.TileClickHandler;
 
@@ -28,7 +26,8 @@ public class BlueGem extends Gem {
 		this.description = "The blue gem slows enemies hit.";
 	}
 	
-	public void hit(IMonster m) {
+	@Override
+	public void hit(Monster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
@@ -43,11 +42,6 @@ public class BlueGem extends Gem {
 	
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public void hit(List<IMonster> monsters) {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override

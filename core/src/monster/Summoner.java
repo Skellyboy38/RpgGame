@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.RpgGame;
 
 import path.Path;
@@ -21,14 +22,14 @@ public class Summoner {
 	public static final int START_X = 0 - RpgGame.WIDTH/50;
 	public static final int START_Y = 27*(RpgGame.HEIGHT/30);
 	
-	private List<IMonster> monsters;
+	private List<Monster> monsters;
 	private List<Path> paths;
 	private List<Path> flyingPaths;
 	private List<ITile> checkpoints;
 	private List<Path> temporaryPath;
+	private final Pool<Monster> monsterPool;
 
 	private SpriteBatch batch;
-	private ShapeRenderer renderer;
 	private boolean canStart;
 	private Boolean[] startTimes;
 	private int timeElapsed;
@@ -41,12 +42,11 @@ public class Summoner {
 	private Player player;
 	private Texture temporaryPathTexture;
 
-	public Summoner(SpriteBatch batch, ShapeRenderer renderer, List<ITile> checkpoints, Player player) {
+	public Summoner(final SpriteBatch batch, final ShapeRenderer renderer, List<ITile> checkpoints, Player player) {
 		this.level = 1;
 		this.batch = batch;
-		this.renderer = renderer;
 		this.temporaryPathTexture = new Texture("temporaryPath.png");
-		monsters = new ArrayList<IMonster>();
+		monsters = new ArrayList<Monster>();
 		canStart = false;
 		this.checkpoints = checkpoints;
 		this.timeElapsed = 0;
@@ -56,6 +56,13 @@ public class Summoner {
 		this.player = player;
 		this.temporaryPath = new ArrayList<Path>();
 		random = new Random();
+
+		monsterPool = new Pool<Monster>() {
+			@Override
+			protected Monster newObject() {
+				return new Monster(batch, renderer);
+			}
+		};
 	}
 	
 	public void getFlyingPaths() {
@@ -69,7 +76,7 @@ public class Summoner {
 		}
 	}
 	
-	public List<IMonster> getMonsters() {
+	public List<Monster> getMonsters() {
 		return monsters;
 	}
 	
@@ -116,8 +123,14 @@ public class Summoner {
 	}
 	
 	public void reset() {
+		int numberOfMonstersInPool = monsterPool.getFree();
 		level = 1;
-		monsters.clear();
+		clearMonsters();
+		for(int i = 0; i < numberOfMonstersInPool; i++) {
+			Monster m = monsterPool.obtain();
+			m.dispose();
+			System.out.println("Disposed of monster: " + i);
+		}
 		canStart = false;
 		isSummoning = false;
 		canIncrementLevel = false;
@@ -132,6 +145,9 @@ public class Summoner {
 			startTimes[i] = false;
 		}
 		timeElapsed = 0;
+		for(Monster m : monsters) {
+			monsterPool.free(m);
+		}
 		clearMonsters();
 		for(int i = 0; i < numberOfMonsters; i++) {
 			createMonster(monsterType);
@@ -139,14 +155,12 @@ public class Summoner {
 	}
 	
 	public void clearMonsters() {
-		for(IMonster m : monsters) {
-			m.dispose();
-		}
 		monsters.clear();
 	}
 	
 	public void createMonster(String type) {
-		Monster m = new Monster(batch, renderer, Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value, type, Settings.levels.get(level).isFlying);
+		Monster m = monsterPool.obtain();
+		m.setInformation(Settings.levels.get(level).animationSheet, START_X, START_Y, Settings.levels.get(level).speed, Settings.levels.get(level).hp, Settings.levels.get(level).value, type, Settings.levels.get(level).isFlying);
 		if(Settings.levels.get(level).isFlying) {
 			m.setPath(flyingPaths);
 		}
@@ -157,25 +171,21 @@ public class Summoner {
 	}
 	
 	public void checkStatus() {
-		for(int i = 0; i < monsters.size(); i++) {
-			if(monsters.get(i).donePath()) {
-				if(monsters.get(i).canDamagePlayer()) {
+		for(Monster m : monsters) {
+			if(m.donePath()) {
+				if(m.canDamagePlayer()) {
 					player.damage(1);
+					killMonster(m);
 				}
-				killMonster(monsters.get(i));
-				startTimes[i] = false;
 			}
-			else if(monsters.get(i).isDead()) {
-				if(monsters.get(i).canGiveGold()) {
-					player.addMoney(monsters.get(i).getValue());
-					monsters.get(i).giveGold();
-				}
-				killMonster(monsters.get(i));
-				startTimes[i] = false;
+			else if(m.isDead() && m.canGiveGold()) {
+				player.addMoney(m.getValue());
+				m.giveGold();
+				killMonster(m);
 			}
 		}
 		boolean isDoneSummoning = true;
-		for(IMonster m : monsters) {
+		for(Monster m : monsters) {
 			if(!m.isDead()) {
 				isDoneSummoning = false;
 			}
@@ -186,16 +196,17 @@ public class Summoner {
 				canIncrementLevel = false;
 			}
 			isSummoning = false;
+			canStart = false;
 		}
 	}
 	
-	public void killMonster(IMonster m) {
+	public void killMonster(Monster m) {
 		m.kill();
 	}
 	
 	public void render() {
-		checkStatus();
 		if(canStart) {
+			checkStatus();
 			timeElapsed += (int)(Gdx.graphics.getDeltaTime()*1000);
 			for(int i = 0; i < monsters.size(); i++) {
 				if(startTimes[i]) {
@@ -250,11 +261,6 @@ public class Summoner {
 	}
 	
 	public void drawPath() {
-		for(Path p : temporaryPath) {
-			for(ITile tile : p.getPath()) {
-				tile.dispose();
-			}
-		}
 		if(showPath) {
 			this.temporaryPath = findAllPaths();
 		}

@@ -6,24 +6,24 @@ import java.util.List;
 import com.badlogic.gdx.math.Intersector;
 
 import gem.IGem;
-import monster.IMonster;
+import monster.Monster;
 
 public class CollisionDetector {
 	
 	List<IGem> gems;
-	List<IMonster> monsters;
+	List<Monster> monsters;
 	
-	public CollisionDetector(List<IGem> gems, List<IMonster> monsters) {
+	public CollisionDetector(List<IGem> gems, List<Monster> monsters) {
 		this.gems = gems;
 		this.monsters = monsters;
 	}
 	
 	public void detectCollisions() {
 		for(IGem g : gems) {
-			List<IMonster> allMonstersInRange = new ArrayList<IMonster>();
+			List<Monster> allMonstersInRange = new ArrayList<Monster>();
 			boolean areAllMonstersSlowed = true;
 			String type = g.getType();
-			for(IMonster m : monsters) {
+			for(Monster m : monsters) {
 				if(Intersector.overlaps(g.getCollisionBox(), m.getCollisionBox()) && !m.isDead()) {
 					allMonstersInRange.add(m);
 					if(!m.isSlowed()) {
@@ -57,7 +57,7 @@ public class CollisionDetector {
 					g.hit(allMonstersInRange.get(0));
 				}
 				else {
-					for(IMonster m : allMonstersInRange) {
+					for(Monster m : allMonstersInRange) {
 						if(!m.isSlowed()) {
 							g.hit(m);
 							break;

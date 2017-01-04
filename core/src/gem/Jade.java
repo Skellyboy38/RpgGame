@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.JadeBullet;
-import monster.IMonster;
+import monster.Monster;
 import player.Player;
 import tile.TileClickHandler;
 
@@ -38,7 +38,7 @@ public class Jade extends SpecialGem {
 	}
 	
 	@Override
-	public void hit(IMonster m) {
+	public void hit(Monster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;

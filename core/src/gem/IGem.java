@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
 import bullets.IBullet;
-import monster.IMonster;
+import monster.Monster;
 import tile.Coordinate;
 
 public interface IGem {
@@ -24,11 +24,11 @@ public interface IGem {
 	
 	public Circle getCollisionBox();
 	
-	public void hit(IMonster m);
+	public void hit(Monster m);
 	
-	public void hit(List<IMonster> monsters);
+	public void hit(List<Monster> monsters);
 	
-	public void hit(IMonster m, List<IMonster> monsters);
+	public void hit(Monster m, List<Monster> monsters);
 	
 	public int getDamage();
 	

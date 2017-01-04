@@ -1,10 +1,11 @@
 package monster;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Pool.Poolable;
 
 import tile.Coordinate;
 
-public interface IMonster {
+public interface IMonster extends Poolable {
 	
 	public void update();
 	

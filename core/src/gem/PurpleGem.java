@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.PurpleBullet;
-import monster.IMonster;
+import monster.Monster;
 import settings.Settings;
 import tile.TileClickHandler;
 
@@ -24,7 +24,8 @@ public class PurpleGem extends Gem {
 		this.critIncreaseAmount = Settings.gemSettings.get("purple").get(level).critChanceIncrease;
 	}
 	
-	public void hit(IMonster m) {
+	@Override
+	public void hit(Monster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;

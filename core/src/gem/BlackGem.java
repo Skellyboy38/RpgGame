@@ -1,14 +1,12 @@
 package gem;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.BlackBullet;
-import monster.IMonster;
+import monster.Monster;
 import settings.Settings;
 import tile.TileClickHandler;
 
@@ -30,7 +28,8 @@ public class BlackGem extends Gem {
 		return increaseSpeedAmount;
 	}
 	
-	public void hit(IMonster m) {
+	@Override
+	public void hit(Monster m) {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
@@ -44,10 +43,5 @@ public class BlackGem extends Gem {
 	
 	public String getDescription() {
 		return description;
-	}
-
-	@Override
-	public void hit(List<IMonster> monsters) {
-		// TODO Auto-generated method stub
 	}
 }

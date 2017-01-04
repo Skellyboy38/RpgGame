@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import bullets.IBullet;
-import monster.IMonster;
+import monster.Monster;
 import settings.Settings;
 import tile.Coordinate;
 import tile.TileClickHandler;
@@ -288,17 +288,17 @@ public abstract class Gem implements IGem {
 	}
 	
 	@Override
-	public void hit(IMonster m) {
+	public void hit(Monster m) {
 		// TODO Auto-generated method stub
 	}
 	
 	@Override
-	public void hit(List<IMonster> monsters) {
+	public void hit(List<Monster> monsters) {
 		// TODO Auto-generated method stub
 	}
 	
 	@Override
-	public void hit(IMonster m, List<IMonster> monsters) {
+	public void hit(Monster m, List<Monster> monsters) {
 		// TODO Auto-generated method stub
 	}
 }

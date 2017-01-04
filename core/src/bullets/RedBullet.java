@@ -8,15 +8,16 @@ import com.badlogic.gdx.math.Intersector;
 
 import gem.IGem;
 import monster.IMonster;
+import monster.Monster;
 
 public class RedBullet extends Bullet {
 	
 	public static final int BURST_RADIUS = 60;
 	
 	private Circle burstCircle;
-	private List<IMonster> monsters;
+	private List<Monster> monsters;
 
-	public RedBullet(int posX, int posY, IMonster m, IGem gem, List<IMonster> monsters) {
+	public RedBullet(int posX, int posY, IMonster m, IGem gem, List<Monster> monsters) {
 		super(posX, posY, m, gem, new Texture("redBullet.png"));
 		
 		this.burstCircle = new Circle(posX, posY, BURST_RADIUS);

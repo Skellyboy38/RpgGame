@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.YellowBullet;
-import monster.IMonster;
+import monster.Monster;
 import tile.TileClickHandler;
 
 public class YellowGem extends Gem {
@@ -23,17 +23,19 @@ public class YellowGem extends Gem {
 		this.description = "The yellow gem hits all enemies around it, but slower.";
 	}
 
-	public void hit(List<IMonster> monsters) {
+	@Override
+	public void hit(List<Monster> monsters) {
 		elapsedTime = 0;
 		canHit = false;
-		for(IMonster m : monsters) {
+		for(Monster m : monsters) {
 			if(!m.isDead()) {
 				hit(m);
 			}
 		}
 	}
 	
-	public void hit(IMonster m) {
+	@Override
+	public void hit(Monster m) {
 		bullets.add(new YellowBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
 	}
 	
