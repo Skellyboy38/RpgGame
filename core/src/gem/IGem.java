@@ -77,4 +77,6 @@ public interface IGem {
 	public float getCritChance();
 	
 	public void increaseCrit(float amount);
+
+	public void dispose();
 }

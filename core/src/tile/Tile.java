@@ -126,6 +126,10 @@ public class Tile implements ITile {
 		disableHover();
 		disableClick();
 	}
+
+	public void dispose() {
+		originalTexture.dispose();
+	}
 	
 	public void enableHover() {
 		isHoverable = true;

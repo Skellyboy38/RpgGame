@@ -22,22 +22,23 @@ public class Summoner {
 	public static final int START_Y = 27*(RpgGame.HEIGHT/30);
 	
 	private List<IMonster> monsters;
+	private List<Path> paths;
+	private List<Path> flyingPaths;
+	private List<ITile> checkpoints;
+	private List<Path> temporaryPath;
+
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 	private boolean canStart;
-	private List<ITile> checkpoints;
 	private Boolean[] startTimes;
 	private int timeElapsed;
 	private int numberOfMonsters;
-	private List<Path> paths;
-	private List<Path> flyingPaths;
 	private boolean isSummoning;
 	private int level;
 	private boolean canIncrementLevel;
 	private Random random;
 	private boolean showPath;
 	private Player player;
-	private List<Path> temporaryPath;
 	private Texture temporaryPathTexture;
 
 	public Summoner(SpriteBatch batch, ShapeRenderer renderer, List<ITile> checkpoints, Player player) {
@@ -87,6 +88,32 @@ public class Summoner {
 			startTimes[i] = false;
 		}
 	}
+
+	public void dispose() {
+		temporaryPathTexture.dispose();
+		disposePaths();
+		for(Path p : flyingPaths) {
+			for(ITile tile : p.getPath()) {
+				tile.dispose();
+			}
+		}
+		for(Path p : temporaryPath) {
+			for(ITile tile : p.getPath()) {
+				tile.dispose();
+			}
+		}
+		for(IMonster m : monsters) {
+			m.dispose();
+		}
+	}
+
+	public void disposePaths() {
+		for(Path p : paths) {
+			for(ITile tile : p.getPath()) {
+				tile.dispose();
+			}
+		}
+	}
 	
 	public void reset() {
 		level = 1;
@@ -112,6 +139,9 @@ public class Summoner {
 	}
 	
 	public void clearMonsters() {
+		for(IMonster m : monsters) {
+			m.dispose();
+		}
 		monsters.clear();
 	}
 	
@@ -220,6 +250,11 @@ public class Summoner {
 	}
 	
 	public void drawPath() {
+		for(Path p : temporaryPath) {
+			for(ITile tile : p.getPath()) {
+				tile.dispose();
+			}
+		}
 		if(showPath) {
 			this.temporaryPath = findAllPaths();
 		}

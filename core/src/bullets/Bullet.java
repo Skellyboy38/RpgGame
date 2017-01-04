@@ -28,6 +28,10 @@ public abstract class Bullet implements IBullet {
 		this.isCrit = gem.isCrit();
 		speed = 10;
 	}
+
+	public void dispose() {
+		bulletTexture.dispose();
+	}
 	
 	public boolean isCrit() {
 		return isCrit;
@@ -45,6 +49,7 @@ public abstract class Bullet implements IBullet {
 				}
 				alreadyHit = true;
 			}
+			dispose();
 			return;
 		}
 		if(posX < toHit.getCenter().getX()) {

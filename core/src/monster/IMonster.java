@@ -47,4 +47,6 @@ public interface IMonster {
 	public void giveGold();
 	
 	public boolean isFlying();
+
+	public void dispose();
 }

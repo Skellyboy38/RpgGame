@@ -101,6 +101,10 @@ public class Monster implements IMonster {
 		this.animationCounter = 0;
 		this.isFlying = isFlying;
 	}
+
+	public void dispose() {
+
+	}
 	
 	public Animation createAnimation(Texture animationSheet) {
 		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, animationSheet.getHeight());
@@ -193,6 +197,8 @@ public class Monster implements IMonster {
 	public void kill() {
 		isDead = true;
 		canDamagePlayer = false;
+
+
 	}
 	
 	public void render() {

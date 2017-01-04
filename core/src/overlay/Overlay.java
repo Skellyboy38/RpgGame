@@ -348,4 +348,17 @@ public class Overlay {
 		batch.end();
 		stage.act();
 	}
+
+	public void dispose() {
+		background.dispose();
+		infoArea.dispose();
+		buttonTexture.dispose();
+		gemChancesTexture.dispose();
+		shopTexture.dispose();
+		minimizeTexture.dispose();
+		maximizeTexture.dispose();
+		font.dispose();
+		stage.dispose();
+		batch.dispose();
+	}
 }

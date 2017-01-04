@@ -102,6 +102,13 @@ public abstract class Gem implements IGem {
 		
 		stage.addActor(button);
 	}
+
+	public void dispose() {
+		critTexture.dispose();
+		for(IBullet b : bullets) {
+			b.dispose();
+		}
+	}
 	
 	public float getCritDamage() {
 		return critMultiplier;

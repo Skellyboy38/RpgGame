@@ -43,4 +43,6 @@ public interface ITile {
 	public void softReset();
 	
 	public void hardReset();
+
+	public void dispose();
 }

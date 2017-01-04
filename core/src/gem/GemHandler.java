@@ -51,6 +51,16 @@ public class GemHandler {
 		animation = new Animation(0.1f, frames);
 		animationCounter = 0;
 	}
+
+	public void dispose() {
+		for(IGem gem : gems) {
+			gem.dispose();
+		}
+		for(Rock rock : rocks) {
+			rock.dispose();
+		}
+		enhanceSheet.dispose();
+	}
 	
 	public List<IGem> getFinalizedGems() {
 		return gems;
@@ -169,6 +179,9 @@ public class GemHandler {
 		for(IGem g : currentGems) {
 			g.removeListeners();
 		}
+		for(IGem g : currentGems) {
+			g.dispose();
+		}
 		currentGems.clear();
 	}
 	
@@ -179,16 +192,17 @@ public class GemHandler {
 	
 	public void replaceRock(Rock rock, int posX, int posY) {
 		rock.removeListeners();
+		rock.dispose();
 		rocks.remove(rock);
 		addTemporaryGem(posX, posY);
 	}
 	
 	public boolean isReady() {
-		return currentGems.size() == 5 && clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isTemporary();
+		return currentGems.size() <= NUMBER_GEMS && clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isTemporary();
 	}
 	
 	public boolean hasFiveGems() {
-		return currentGems.size() == 5;
+		return currentGems.size() == NUMBER_GEMS;
 	}
 	
 	public boolean canIncreaseGemChances() {

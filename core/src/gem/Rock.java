@@ -17,7 +17,8 @@ import tile.TileClickHandler;
 public class Rock {
 	
 	private SpriteBatch batch;
-	private TextureRegion texture;
+	private TextureRegion textureRegion;
+	private Texture texture;
 	private TileClickHandler clickHandler;
 	private int posX;
 	private int posY;
@@ -26,9 +27,10 @@ public class Rock {
 	private Coordinate coordinates;
 
 	public Rock (SpriteBatch batch, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY) {
-		this.texture = new TextureRegion(texture);
-		this.texture.setRegionWidth(RpgGame.WIDTH/50);
-		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
+		this.texture = texture;
+		this.textureRegion = new TextureRegion(texture);
+		this.textureRegion.setRegionWidth(RpgGame.WIDTH/50);
+		this.textureRegion.setRegionHeight(RpgGame.HEIGHT/30);
 		this.batch = batch;
 		this.clickHandler = clickHandler;
 		this.posX = posX;
@@ -37,6 +39,10 @@ public class Rock {
 		stage.addActor(button);
 		this.coordinates = new Coordinate(posX, posY);
 		instance = this;
+	}
+
+	public void dispose() {
+		texture.dispose();
 	}
 	
 	public void removeListeners() {
@@ -47,8 +53,8 @@ public class Rock {
 		TextButtonStyle style = new TextButtonStyle();
 		style.font = new BitmapFont();
 		button = new TextButton("", style);
-		button.setHeight(texture.getRegionHeight());
-		button.setWidth(texture.getRegionWidth());
+		button.setHeight(textureRegion.getRegionHeight());
+		button.setWidth(textureRegion.getRegionWidth());
 		button.setPosition(posX, posY);
 
 		button.addListener(new InputListener() {
@@ -60,7 +66,7 @@ public class Rock {
 	}
 	
 	public TextureRegion getTexture() {
-		return texture;
+		return textureRegion;
 	}
 	
 	public Coordinate getCoordinates() {

@@ -7,7 +7,7 @@ import tile.ITile;
 
 public class Path {
 	
-	List<ITile> path;
+	private List<ITile> path;
 	
 	public Path() {
 		path = new ArrayList<ITile>();

@@ -41,6 +41,18 @@ public class Settings {
 		populateElements();
 		createSpecialGemRecipes();
 	}
+
+	public void dispose() {
+		for(Texture t : animationSheets.values()) {
+			t.dispose();
+		}
+		for(Texture t : ailmentAnimationSheets.values()) {
+			t.dispose();
+		}
+		for(Texture t : elementTypes.values()) {
+			t.dispose();
+		}
+	}
 	
 	public void createSpecialGemRecipes() {
 		specialGemRecipes.put("jade", new SpecialCombination(

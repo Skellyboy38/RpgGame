@@ -130,20 +130,33 @@ public class RpgGame extends ApplicationAdapter {
 	}
 	
 	public void restart() {
+		background.dispose();
+		stage.dispose();
+		batch.dispose();
+		renderer.dispose();
+		summoner.dispose();
+		overlay.dispose();
+		gameSettings.dispose();
+		gemHandler.dispose();
 		resetTiles();
-		player.reset();
-		clickHandler.reset();
-		gemHandler.reset();
-		summoner.reset();
+//		player.reset();
+//		clickHandler.reset();
+//		gemHandler.reset();
+//		summoner.reset();
+		create();
 	}
 	
 	public void resetTiles() {
 		for(int y = 0; y < 30; y++) {
 			for(int x = 0; x < 50; x++) {
-				if(!tileMap.get(coordinates[x][y]).isCheckpoint()) {
-					tileMap.get(coordinates[x][y]).softReset();
-				}
+				tileMap.get(coordinates[x][y]).dispose();
 			}
+		}
+		for(ITile tile : tiles) {
+			tile.dispose();
+		}
+		for(ITile tile : checkpoints) {
+			tile.dispose();
 		}
 	}
 	
