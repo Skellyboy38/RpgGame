@@ -40,10 +40,6 @@ public class Rock {
 		this.coordinates = new Coordinate(posX, posY);
 		instance = this;
 	}
-
-	public void dispose() {
-		texture.dispose();
-	}
 	
 	public void removeListeners() {
 		button.remove();

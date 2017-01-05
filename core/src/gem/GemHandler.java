@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,44 +23,38 @@ public class GemHandler {
 	private List<Rock> rocks;
 	private List<IGem> currentGems;
 	private Stage stage;
+	private AssetManager manager;
 	private TileClickHandler clickHandler;
 	private GemCreator creator;
 	private ShapeRenderer renderer;
 	private TextureRegion newGem;
 	private Texture enhanceSheet;
+	private Texture temporaryGem;
 	private Animation animation;
 	private float animationCounter;
 	
 	private SpriteBatch batch;
 	
-	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler) {
+	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, AssetManager manager) {
 		this.clickHandler = clickHandler;
+		this.manager = manager;
 		this.renderer = renderer;
 		this.batch = batch;
 		this.stage = stage;
 		this.creator = new GemCreator();
-		gems = new ArrayList<IGem>();
-		currentGems = new ArrayList<IGem>();
-		rocks = new ArrayList<Rock>();
-		newGem = new TextureRegion(new Texture("temporaryGem.png"));
-		enhanceSheet = new Texture("enhance.png");
+		this.gems = new ArrayList<IGem>();
+		this.currentGems = new ArrayList<IGem>();
+		this.rocks = new ArrayList<Rock>();
+		this.temporaryGem = manager.get("temporaryGem.png", Texture.class);
+		this.newGem = new TextureRegion(temporaryGem);
+		this.enhanceSheet = manager.get("enhance.png", Texture.class);
 		TextureRegion[][] temp = TextureRegion.split(enhanceSheet, 20, 20);
 		TextureRegion[] frames = new TextureRegion[10];
 		for(int i = 0; i < 10; i++) {
 			frames[i] = temp[0][i];
 		}
-		animation = new Animation(0.1f, frames);
-		animationCounter = 0;
-	}
-
-	public void dispose() {
-		for(IGem gem : gems) {
-			gem.dispose();
-		}
-		for(Rock rock : rocks) {
-			rock.dispose();
-		}
-		enhanceSheet.dispose();
+		this.animation = new Animation(0.1f, frames);
+		this.animationCounter = 0;
 	}
 	
 	public List<IGem> getFinalizedGems() {
@@ -119,51 +114,51 @@ public class GemHandler {
 			IGem newGem;
 			if(type.equals("green")) {
 				newGem = new GreenGem(batch, renderer, stage, clickHandler, 
-						new Texture("green_"+(gem.getLevel()+1)+".png"), 
+						manager.get("green_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("blue")) {
 				newGem = new BlueGem(batch, renderer, stage, clickHandler, 
-						new Texture("blue_"+(gem.getLevel()+1)+".png"), 
+						manager.get("blue_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("yellow")) {
 				newGem = new YellowGem(batch, renderer, stage, clickHandler, 
-						new Texture("yellow_"+(gem.getLevel()+1)+".png"), 
+						manager.get("yellow_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("white")) {
 				newGem = new WhiteGem(batch, renderer, stage, clickHandler, 
-						new Texture("white_"+(gem.getLevel()+1)+".png"), 
+						manager.get("white_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("pink")) {
 				newGem = new PinkGem(batch, renderer, stage, clickHandler, 
-						new Texture("pink_"+(gem.getLevel()+1)+".png"), 
+						manager.get("pink_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("red")) {
 				newGem = new RedGem(batch, renderer, stage, clickHandler, 
-						new Texture("red_"+(gem.getLevel()+1)+".png"), 
+						manager.get("red_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else if(type.equals("purple")) {
 				newGem = new PurpleGem(batch, renderer, stage, clickHandler, 
-						new Texture("purple_"+(gem.getLevel()+1)+".png"), 
+						manager.get("purple_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			else {
 				newGem = new BlackGem(batch, renderer, stage, clickHandler, 
-						new Texture("black_"+(gem.getLevel()+1)+".png"), 
+						manager.get("black_"+(gem.getLevel()+1)+".png", Texture.class), 
 						gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-						gem.getLevel()+1);
+						gem.getLevel()+1, manager);
 			}
 			newGem.setPermanent();
 			gems.add(newGem);
@@ -174,13 +169,10 @@ public class GemHandler {
 		}
 		currentGems.remove(gem);
 		for(IGem g : currentGems) {
-			rocks.add(new Rock(batch, stage, clickHandler, new Texture("rock.png"), g.getCoordinates().getX(), g.getCoordinates().getY()));
+			rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
 		}
 		for(IGem g : currentGems) {
 			g.removeListeners();
-		}
-		for(IGem g : currentGems) {
-			g.dispose();
 		}
 		currentGems.clear();
 	}
@@ -192,7 +184,6 @@ public class GemHandler {
 	
 	public void replaceRock(Rock rock, int posX, int posY) {
 		rock.removeListeners();
-		rock.dispose();
 		rocks.remove(rock);
 		addTemporaryGem(posX, posY);
 	}
@@ -257,7 +248,7 @@ public class GemHandler {
 		}
 		
 		public void reset() {
-			chancesLevel= 1;
+			chancesLevel = 1;
 			gemLevelChances = Settings.gemChances.get(chancesLevel);
 		}
 		
@@ -293,28 +284,28 @@ public class GemHandler {
 			}
 			
 			if(type == 0) {
-				return new GreenGem(batch, renderer, stage, clickHandler, new Texture("green_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new GreenGem(batch, renderer, stage, clickHandler, manager.get("green_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 1) {
-				return new YellowGem(batch, renderer, stage, clickHandler, new Texture("yellow_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new YellowGem(batch, renderer, stage, clickHandler, manager.get("yellow_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 2) {
-				return new BlueGem(batch, renderer, stage, clickHandler, new Texture("blue_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new BlueGem(batch, renderer, stage, clickHandler, manager.get("blue_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 3) {
-				return new BlackGem(batch, renderer, stage, clickHandler, new Texture("black_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new BlackGem(batch, renderer, stage, clickHandler, manager.get("black_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 4) {
-				return new WhiteGem(batch, renderer, stage, clickHandler, new Texture("white_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new WhiteGem(batch, renderer, stage, clickHandler, manager.get("white_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 5) {
-				return new PinkGem(batch, renderer, stage, clickHandler, new Texture("pink_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new PinkGem(batch, renderer, stage, clickHandler, manager.get("pink_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 6) {
-				return new RedGem(batch, renderer, stage, clickHandler, new Texture("red_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new RedGem(batch, renderer, stage, clickHandler, manager.get("red_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else if(type == 7) {
-				return new PurpleGem(batch, renderer, stage, clickHandler, new Texture("purple_"+gemLevel+".png"), posX, posY, gemLevel);
+				return new PurpleGem(batch, renderer, stage, clickHandler, manager.get("purple_"+gemLevel+".png", Texture.class), posX, posY, gemLevel, manager);
 			}
 			else {
 				return null;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,10 +43,10 @@ public class Summoner {
 	private Player player;
 	private Texture temporaryPathTexture;
 
-	public Summoner(final SpriteBatch batch, final ShapeRenderer renderer, List<ITile> checkpoints, Player player) {
+	public Summoner(final SpriteBatch batch, final ShapeRenderer renderer, List<ITile> checkpoints, Player player, AssetManager manager) {
 		this.level = 1;
 		this.batch = batch;
-		this.temporaryPathTexture = new Texture("temporaryPath.png");
+		this.temporaryPathTexture = manager.get("temporaryPath.png", Texture.class);
 		monsters = new ArrayList<Monster>();
 		canStart = false;
 		this.checkpoints = checkpoints;

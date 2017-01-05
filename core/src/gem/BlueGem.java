@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,8 +18,8 @@ public class BlueGem extends Gem {
 	private int slowAmount;
 	private int slowDuration;
 
-	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "blue", level);
+	public BlueGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "blue", level, manager);
 		
 		this.slowAmount = Settings.gemSettings.get("blue").get(level).slowAmount;
 		this.slowDuration = Settings.gemSettings.get("blue").get(level).slowDuration;
@@ -31,7 +32,7 @@ public class BlueGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new BlueBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new BlueBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
 			m.slow(slowAmount, slowDuration);
 		}
 	}

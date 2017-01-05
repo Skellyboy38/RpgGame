@@ -2,6 +2,8 @@ package tile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -31,7 +33,7 @@ public class Tile implements ITile {
 	private int posY;
 	private int id;
 	
-	public Tile(int id, SpriteBatch batch, Stage stage, TileClickHandler clickHandler, String texture, int x, int y, boolean isCheckpoint) {
+	public Tile(int id, SpriteBatch batch, Stage stage, TileClickHandler clickHandler, Texture texture, int x, int y, boolean isCheckpoint, AssetManager manager) {
 		
 		this.isOccupied = false;
 		this.isClicked = false;
@@ -43,14 +45,14 @@ public class Tile implements ITile {
 		this.posY = y;
 		this.id = id;
 		
-		this.originalTexture = new Texture(texture);
+		this.originalTexture = texture;
 		this.texture = new TextureRegion(originalTexture);
 		this.texture.setRegionWidth(RpgGame.WIDTH/50);
 		this.texture.setRegionHeight(RpgGame.HEIGHT/30);
 		this.batch = batch;
 		this.clickHandler = clickHandler;
 		this.neighbors = new ArrayList<ITile>();
-		createButton();
+		createButton(manager);
 		stage.addActor(button);
 	}
 	
@@ -62,7 +64,7 @@ public class Tile implements ITile {
 		this.isClicked = isClicked;
 	}
 	
-	public void createButton() {
+	public void createButton(final AssetManager manager) {
 		button = new TextButton("", RpgGame.BUTTON_STYLE);
 		button.setHeight(texture.getRegionHeight());
 		button.setWidth(texture.getRegionWidth());
@@ -80,7 +82,7 @@ public class Tile implements ITile {
 						}
 						else {
 							clickHandler.clickTile(posX, posY);
-							texture.setTexture(new Texture("tilePressed.png"));
+							texture.setTexture(manager.get("tilePressed.png", Texture.class));
 							setClicked(true);
 							occupy();
 							clickHandler.drawPath();
@@ -93,7 +95,7 @@ public class Tile implements ITile {
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
 					if(!isClicked && isHoverable) {
-						texture.setTexture(new Texture("tileHover.png"));
+						texture.setTexture(manager.get("tileHover.png", Texture.class));
 					}
 				}
 				
@@ -196,5 +198,8 @@ public class Tile implements ITile {
 	public List<ITile> getNeighbors() {
 		return neighbors;
 	}
-
+	
+	public void restart() {
+		hardReset();
+	}
 }

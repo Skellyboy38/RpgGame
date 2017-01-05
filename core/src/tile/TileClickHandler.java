@@ -2,6 +2,7 @@ package tile;
 
 import java.util.Map;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,12 +24,12 @@ public class TileClickHandler {
 	private IGem clickedGem;
 	private Rock clickedRock;
 	
-	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch, Summoner summoner) {
+	public TileClickHandler(Map<Coordinate, ITile> tileMap, Coordinate[][] coordinates, SpriteBatch batch, Summoner summoner, AssetManager manager) {
 		this.tileMap = tileMap;
 		this.batch = batch;
 		this.summoner = summoner;
 		this.coordinates = coordinates;
-		this.clickedTexture = new TextureRegion(new Texture("clickedGem.png"));
+		this.clickedTexture = new TextureRegion(manager.get("clickedGem.png", Texture.class));
 		
 		this.clickedTile = null;
 		this.clickedGem = null;

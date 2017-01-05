@@ -1,6 +1,7 @@
 package gem;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +32,7 @@ public abstract class Gem implements IGem {
 	public static final int CRIT_TEXTURE_DURATION = 500;
 	
 	protected SpriteBatch batch;
+	protected AssetManager manager;
 	private ShapeRenderer renderer;
 	private Circle collisionBox;
 	private Rectangle body;
@@ -63,15 +65,16 @@ public abstract class Gem implements IGem {
 	
 	private String type;
 
-	public Gem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, String type, int level) {
+	public Gem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
 		this.range = Settings.gemSettings.get(type).get(level).range;
 		this.damage = Settings.gemSettings.get(type).get(level).damage;
 		this.originalDelay = Settings.gemSettings.get(type).get(level).delay;
 		this.delay = originalDelay;
 		this.batch = batch;
+		this.manager = manager;
 		this.clickHandler = clickHandler;
 		this.textureRegion = new TextureRegion(texture);
-		this.critTexture = new Texture("crit.png");
+		this.critTexture = manager.get("crit.png", Texture.class);
 		this.bullets = new ArrayList<IBullet>();
 		this.renderer = renderer;
 		this.body = new Rectangle();
@@ -101,13 +104,6 @@ public abstract class Gem implements IGem {
 		this.level = level;
 		
 		stage.addActor(button);
-	}
-
-	public void dispose() {
-		critTexture.dispose();
-		for(IBullet b : bullets) {
-			b.dispose();
-		}
 	}
 	
 	public float getCritDamage() {

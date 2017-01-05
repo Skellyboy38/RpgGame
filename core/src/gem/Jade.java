@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,8 +20,8 @@ public class Jade extends SpecialGem {
 	private Player player;
 
 	public Jade(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture,
-			int posX, int posY, String type, int level, Player player) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level);
+			int posX, int posY, String type, int level, Player player, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level, manager);
 		
 		this.player = player;
 		this.name = "Jade";

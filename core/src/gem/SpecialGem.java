@@ -1,6 +1,7 @@
 package gem;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,8 +18,8 @@ public class SpecialGem extends Gem {
 	private int animationCounter;
 
 	public SpecialGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler,
-			Texture texture, int posX, int posY, String type, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level);
+			Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level, manager);
 		
 		TextureRegion[][] temp = TextureRegion.split(texture, 20, texture.getHeight());
 		TextureRegion[] frames = new TextureRegion[texture.getWidth()/20];

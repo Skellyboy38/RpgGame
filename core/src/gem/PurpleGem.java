@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,8 +17,8 @@ public class PurpleGem extends Gem {
 	private String description;
 	private float critIncreaseAmount;
 
-	public PurpleGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "purple", level);
+	public PurpleGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "purple", level, manager);
 		
 		this.name = "Purple gem";
 		this.description = "The purple gem increases crit chance.";
@@ -29,7 +30,7 @@ public class PurpleGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new PurpleBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new PurpleBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
 		}
 	}
 	

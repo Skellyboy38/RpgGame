@@ -2,6 +2,7 @@ package bullets;
 
 import java.util.List;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
@@ -17,8 +18,8 @@ public class RedBullet extends Bullet {
 	private Circle burstCircle;
 	private List<Monster> monsters;
 
-	public RedBullet(int posX, int posY, IMonster m, IGem gem, List<Monster> monsters) {
-		super(posX, posY, m, gem, new Texture("redBullet.png"));
+	public RedBullet(int posX, int posY, IMonster m, IGem gem, List<Monster> monsters, AssetManager manager) {
+		super(posX, posY, m, gem, manager.get("redBullet.png", Texture.class));
 		
 		this.burstCircle = new Circle(posX, posY, BURST_RADIUS);
 		this.monsters = monsters;

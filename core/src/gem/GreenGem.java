@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,8 +18,8 @@ public class GreenGem extends Gem {
 	private int poisonDamage;
 	private int poisonDuration;
 
-	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "green", level);
+	public GreenGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "green", level, manager);
 
 		this.poisonDamage = Settings.gemSettings.get("green").get(level).poisonAmount;
 		this.poisonDuration = Settings.gemSettings.get("green").get(level).poisonDuration;
@@ -31,7 +32,7 @@ public class GreenGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new GreenBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new GreenBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
 			m.poison(poisonDamage, poisonDuration);
 		}
 	}

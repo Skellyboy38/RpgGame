@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,8 +16,8 @@ public class WhiteGem extends Gem {
 	private String description;
 	private float increaseSpeedAmount;
 
-	public WhiteGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "white", level);
+	public WhiteGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "white", level, manager);
 		
 		this.name = "White gem";
 		this.description = "The white gem only attacks ground units.";
@@ -31,7 +32,7 @@ public class WhiteGem extends Gem {
 		if(!m.isDead() && !m.isFlying()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new WhiteBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new WhiteBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
 		}
 	}
 	

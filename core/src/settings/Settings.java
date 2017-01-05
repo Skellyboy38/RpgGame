@@ -3,6 +3,7 @@ package settings;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.RpgGame;
 
@@ -20,7 +21,7 @@ public class Settings {
 	public static Map<String, String> elementStrengths;
 	public static Map<String, SpecialCombination> specialGemRecipes;
 
-	public Settings() {
+	public Settings(AssetManager manager) {
 		levels = new HashMap<Integer, Entity>();
 		gemSettings = new HashMap<String, Map<Integer, GemSettings>>();
 		gemChances = new HashMap<Integer, Float[]>();
@@ -33,25 +34,13 @@ public class Settings {
 		elementIntToType = new HashMap<Integer, String>();
 		specialGemRecipes = new HashMap<String, SpecialCombination>();
 		
-		addAnimationSheets();
+		addAnimationSheets(manager);
 		addUpgradePrices();
 		populateLevels();
 		populateGemSettings();
 		populateGemChances();
-		populateElements();
+		populateElements(manager);
 		createSpecialGemRecipes();
-	}
-
-	public void dispose() {
-		for(Texture t : animationSheets.values()) {
-			t.dispose();
-		}
-		for(Texture t : ailmentAnimationSheets.values()) {
-			t.dispose();
-		}
-		for(Texture t : elementTypes.values()) {
-			t.dispose();
-		}
 	}
 	
 	public void createSpecialGemRecipes() {
@@ -109,14 +98,14 @@ public class Settings {
 				"green", 2));
 	}
 	
-	public void populateElements() {
-		elementTypes.put("blue", new Texture("bluePower.png"));
-		elementTypes.put("black", new Texture("blackPower.png"));
-		elementTypes.put("green", new Texture("greenPower.png"));
-		elementTypes.put("yellow", new Texture("yellowPower.png"));
-		elementTypes.put("red", new Texture("redPower.png"));
-		elementTypes.put("white", new Texture("whitePower.png"));
-		elementTypes.put("purple", new Texture("purplePower.png"));
+	public void populateElements(AssetManager manager) {
+		elementTypes.put("blue", manager.get("bluePower.png", Texture.class));
+		elementTypes.put("black", manager.get("blackPower.png", Texture.class));
+		elementTypes.put("green", manager.get("greenPower.png", Texture.class));
+		elementTypes.put("yellow", manager.get("yellowPower.png", Texture.class));
+		elementTypes.put("red", manager.get("redPower.png", Texture.class));
+		elementTypes.put("white", manager.get("whitePower.png", Texture.class));
+		elementTypes.put("purple", manager.get("purplePower.png", Texture.class));
 		
 		elementWeaknesses.put("blue", "green");
 		elementWeaknesses.put("red", "blue");
@@ -156,13 +145,13 @@ public class Settings {
 		upgradePrices.put(10, 200);
 	}
 	
-	public void addAnimationSheets() {
-		animationSheets.put(1, new Texture("monsterSheet1.png"));
-		animationSheets.put(2, new Texture("monsterSheet2.png"));
-		animationSheets.put(5, new Texture("flyingMonsterSheet1.png"));
+	public void addAnimationSheets(AssetManager manager) {
+		animationSheets.put(1, manager.get("monsterSheet1.png", Texture.class));
+		animationSheets.put(2, manager.get("monsterSheet2.png", Texture.class));
+		animationSheets.put(5, manager.get("flyingMonsterSheet1.png", Texture.class));
 		
-		ailmentAnimationSheets.put("slow", new Texture("slowAnimation.png"));
-		ailmentAnimationSheets.put("poison", new Texture("poisonAnimation.png"));
+		ailmentAnimationSheets.put("slow", manager.get("slowAnimation.png", Texture.class));
+		ailmentAnimationSheets.put("poison", manager.get("poisonAnimation.png", Texture.class));
 	}
 	
 	public void populateLevels() {

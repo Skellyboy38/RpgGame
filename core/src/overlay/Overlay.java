@@ -3,6 +3,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -77,7 +78,7 @@ public class Overlay {
 	private boolean isMinimized;
 	private String purchaseMessage;
 
-	public Overlay(TileClickHandler clickHandler, Summoner summoner, Player player, GemHandler gemHandler) {
+	public Overlay(TileClickHandler clickHandler, Summoner summoner, Player player, GemHandler gemHandler, AssetManager manager) {
 		
 		this.clickHandler = clickHandler;
 		this.gemHandler = gemHandler;
@@ -86,13 +87,13 @@ public class Overlay {
 		this.showShop = false;
 		this.isMinimized = false;
 		this.batch = new SpriteBatch();
-		this.background = new Texture("overlay.png");
-		this.infoArea = new Texture("infoArea.png");
-		this.buttonTexture = new Texture("shopButton.png");
-		this.gemChancesTexture = new Texture("gemChances.png");
-		this.shopTexture = new Texture("shop.png");
-		this.minimizeTexture = new Texture("minimizeButton.png");
-		this.maximizeTexture = new Texture("maximizeButton.png");
+		this.background = manager.get("overlay.png", Texture.class);
+		this.infoArea = manager.get("infoArea.png", Texture.class);
+		this.buttonTexture = manager.get("shopButton.png", Texture.class);
+		this.gemChancesTexture = manager.get("gemChances.png", Texture.class);
+		this.shopTexture = manager.get("shop.png", Texture.class);
+		this.minimizeTexture = manager.get("minimizeButton.png", Texture.class);
+		this.maximizeTexture = manager.get("maximizeButton.png", Texture.class);
 		this.player = player;
 		this.stage = new Stage();
 		this.font = new BitmapFont();
@@ -112,6 +113,21 @@ public class Overlay {
 		stage.addActor(gemChancesButton);
 		stage.addActor(minimizeButton);
 		
+		purchaseMessage = "";
+	}
+	
+	public void reset() {
+		this.showGemChances = false;
+		this.showShop = false;
+		this.isMinimized = false;
+		
+		maximizeButton.remove();
+		upgradeGemChancesButton.remove();
+		
+		stage.addActor(shopButton);
+		stage.addActor(monsterPathButton);
+		stage.addActor(gemChancesButton);
+		stage.addActor(minimizeButton);
 		purchaseMessage = "";
 	}
 
@@ -347,18 +363,5 @@ public class Overlay {
 		}
 		batch.end();
 		stage.act();
-	}
-
-	public void dispose() {
-		background.dispose();
-		infoArea.dispose();
-		buttonTexture.dispose();
-		gemChancesTexture.dispose();
-		shopTexture.dispose();
-		minimizeTexture.dispose();
-		maximizeTexture.dispose();
-		font.dispose();
-		stage.dispose();
-		batch.dispose();
 	}
 }

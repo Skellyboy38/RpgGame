@@ -11,6 +11,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,15 +35,16 @@ import tile.Tile;
 import tile.TileClickHandler;
 
 public class RpgGame extends ApplicationAdapter {
-	
+
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 600;
 	public static int PLAYER_HP = 20;
 	public static final float ZOOM_FACTOR = 0.05f;
 	public static final int TILE_WIDTH = 20;
 	public static TextButtonStyle BUTTON_STYLE = new TextButtonStyle();
-	
+
 	SpriteBatch batch;
+	AssetManager manager;
 	ShapeRenderer renderer;
 	Summoner summoner;
 	CollisionDetector collisionDetector;
@@ -63,113 +65,121 @@ public class RpgGame extends ApplicationAdapter {
 	float effectiveViewportWidth;
 	float effectiveViewportHeight;
 	Texture background;
+	Texture loading;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int screenWidth;
 	int screenHeight;
-	
+	boolean createHandlers;
+
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		renderer = new ShapeRenderer();
 		BUTTON_STYLE.font = new BitmapFont();
-		background = new Texture("background.png");
-		gameSettings = new Settings();
-		player = new Player(PLAYER_HP);
-		cam = new OrthographicCamera(WIDTH, HEIGHT);
+		screenWidth = (int)screenSize.getWidth();
+		screenHeight = (int)screenSize.getHeight();
 		effectiveViewportWidth = WIDTH;
 		effectiveViewportHeight = HEIGHT;
+		cam = new OrthographicCamera(WIDTH, HEIGHT);
 		cam.position.set(cam.viewportWidth/2f, cam.viewportHeight/2f, 0);
 		cam.update();
 		viewport = new FitViewport(WIDTH, HEIGHT, cam);
+		batch = new SpriteBatch();
+		manager = new AssetManager();
+		renderer = new ShapeRenderer();
+		loading = new Texture("loading.png");
+		createHandlers = true;
+		
 		stage = new Stage(viewport, batch);
 		zoom = new InputCore();
 		inputMultiplexer = new InputMultiplexer();
 		tiles = new ArrayList<ITile>();
 		checkpoints = new ArrayList<ITile>();
 		tileMap = new HashMap<Coordinate, ITile>();
-		summoner = new Summoner(batch, renderer, checkpoints, player);
-		createCoordinates();
-		clickHandler = new TileClickHandler(tileMap, coordinates, batch, summoner);
-		createTiles();
-		gemHandler = new GemHandler(batch, renderer, stage, clickHandler);
-		collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
-		overlay = new Overlay(clickHandler, summoner, player, gemHandler);
-		inputMultiplexer.addProcessor(overlay.getStage());
-		inputMultiplexer.addProcessor(stage);
-		inputMultiplexer.addProcessor(zoom);
-		Gdx.input.setInputProcessor(inputMultiplexer);
-		summoner.getFlyingPaths();
-		screenWidth = (int)screenSize.getWidth();
-		screenHeight = (int)screenSize.getHeight();
+		loadAssets();
 	}
 
 	@Override
 	public void render () {
-		if(!player.isDead()) {
-			updateEffectiveViewport();
-			Gdx.gl.glClearColor(1, 1, 1, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			cam.update();
-			batch.setProjectionMatrix(cam.combined);
-			renderer.setProjectionMatrix(cam.combined);
-			batch.begin();
-			batch.draw(background, -500, -300);
-			batch.end();
-			stage.act();
-			renderTiles();
-			gemHandler.render();
-			clickHandler.render();
-			summoner.render();
-			overlay.render();
-			collisionDetector.detectCollisions();
-			checkInputs();
+		if(manager.update()) {
+			//Do only once when all textures are loaded
+			if(createHandlers) {
+				background = manager.get("background.png", Texture.class);
+				gameSettings = new Settings(manager);
+				player = new Player(PLAYER_HP);
+				summoner = new Summoner(batch, renderer, checkpoints, player, manager);
+				createCoordinates();
+				clickHandler = new TileClickHandler(tileMap, coordinates, batch, summoner, manager);
+				createTiles();
+				gemHandler = new GemHandler(batch, renderer, stage, clickHandler, manager);
+				collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
+				overlay = new Overlay(clickHandler, summoner, player, gemHandler, manager);
+				inputMultiplexer.addProcessor(overlay.getStage());
+				inputMultiplexer.addProcessor(stage);
+				inputMultiplexer.addProcessor(zoom);
+				Gdx.input.setInputProcessor(inputMultiplexer);
+				summoner.getFlyingPaths();
+				
+				createHandlers = false;
+			}
+			//The main game loop
+			if(!player.isDead()) {
+				updateEffectiveViewport();
+				Gdx.gl.glClearColor(1, 1, 1, 1);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+				cam.update();
+				batch.setProjectionMatrix(cam.combined);
+				renderer.setProjectionMatrix(cam.combined);
+				batch.begin();
+				batch.draw(background, -500, -300);
+				batch.end();
+				stage.act();
+				renderTiles();
+				gemHandler.render();
+				clickHandler.render();
+				summoner.render();
+				overlay.render();
+				collisionDetector.detectCollisions();
+				checkInputs();
+			}
+			else {
+				restart();
+			}
 		}
 		else {
-			restart();
+			Gdx.gl.glClearColor(1, 1, 1, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.begin();
+			batch.draw(loading, 0, 0);
+			batch.end();
 		}
 	}
-	
+
 	public void restart() {
-		background.dispose();
-		stage.dispose();
-		batch.dispose();
-		renderer.dispose();
-		summoner.dispose();
-		overlay.dispose();
-		gameSettings.dispose();
-		gemHandler.dispose();
 		resetTiles();
-//		player.reset();
-//		clickHandler.reset();
-//		gemHandler.reset();
+		player.reset();
+		clickHandler.reset();
+		gemHandler.reset();
 		summoner.reset();
-		create();
+		overlay.reset();
 	}
-	
+
 	public void resetTiles() {
 		for(int y = 0; y < 30; y++) {
 			for(int x = 0; x < 50; x++) {
-				tileMap.get(coordinates[x][y]).dispose();
+				tileMap.get(coordinates[x][y]).restart();
 			}
 		}
-		for(ITile tile : tiles) {
-			tile.dispose();
-		}
-		for(ITile tile : checkpoints) {
-			tile.dispose();
-		}
 	}
-	
+
 	@Override
 	public void dispose () {
 		batch.dispose();
 	}
-	
+
 	public void updateEffectiveViewport() {
 		effectiveViewportWidth = WIDTH*cam.zoom;
 		effectiveViewportHeight = HEIGHT*cam.zoom;
 	}
-	
+
 	public void checkInputs() {
 		boolean isEnterPressed = false;
 		boolean isCPressed = false;
@@ -214,7 +224,7 @@ public class RpgGame extends ApplicationAdapter {
 				gemHandler.replaceRock(rock, rock.getCoordinates().getX(), rock.getCoordinates().getY());
 			}
 		}
-		
+
 		if(Gdx.input.getX() <= 40 && (cam.position.x - effectiveViewportWidth/2) > -50) {
 			cam.position.x -= 5;
 		}
@@ -228,16 +238,16 @@ public class RpgGame extends ApplicationAdapter {
 			cam.position.y -= 5;
 		}
 	}
-	
+
 	public void createTiles() {
 		int posX = 0;
 		int posY = 0;
 		int id = 0;
-		
+
 		for(int y = 0; y < 30; y++) {
 			for(int x = 0; x < 50; x++) {
 				boolean isCheckpoint = isCheckpoint(x, y);
-				Tile tile = new Tile(id, batch, stage, clickHandler, getTextureBasedOnPosition(x, y), posX, posY, isCheckpoint);
+				Tile tile = new Tile(id, batch, stage, clickHandler, manager.get(getTextureBasedOnPosition(x, y), Texture.class), posX, posY, isCheckpoint, manager);
 				if(isCheckpoint) {
 					checkpoints.add(tile);
 				}
@@ -251,7 +261,7 @@ public class RpgGame extends ApplicationAdapter {
 		}
 		fetchAllNeighbors();
 	}
-	
+
 	public void fetchAllNeighbors() {
 		for(int y = 0; y < 30; y++) {
 			for(int x = 0; x < 50; x++) {
@@ -307,13 +317,13 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 	}
-	
+
 	public void renderTiles() {
 		for(ITile tile : tiles) {
 			tile.render();
 		}
 	}
-	
+
 	public boolean isCheckpoint(int x, int y) {
 		if(y == 27 && (x == 0 || x == 10 || x == 25 || x == 45)) {
 			return true;
@@ -328,7 +338,7 @@ public class RpgGame extends ApplicationAdapter {
 			return false;
 		}
 	}
-	
+
 	public String getTextureBasedOnPosition(int x, int y) {
 		if(y == 27) {
 			if((x > 0 && x <= 9) || (x > 25 && x < 45)) {
@@ -383,7 +393,7 @@ public class RpgGame extends ApplicationAdapter {
 			return "tile.png";
 		}
 	}
-	
+
 	public void createCoordinates() {
 		coordinates = new Coordinate[50][30];
 		for(int y = 0; y < 30; y++) {
@@ -392,7 +402,7 @@ public class RpgGame extends ApplicationAdapter {
 			}
 		}
 	}
-	
+
 	private class InputCore implements InputProcessor {
 
 		@Override
@@ -448,10 +458,128 @@ public class RpgGame extends ApplicationAdapter {
 			return true;
 		}
 	}
-	
+
 	public void resize(int width, int height) {
-        viewport.update(width, height);
-        overlay.getStage().getViewport().update(width, height);
-        cam.update();
-    }
+		viewport.update(width, height);
+		if(overlay != null) {
+			overlay.getStage().getViewport().update(width, height);
+		}
+		cam.update();
+	}
+
+	public void loadAssets() {
+		manager.load("background.png", Texture.class);
+
+		manager.load("bluePower.png", Texture.class);
+		manager.load("blackPower.png", Texture.class);
+		manager.load("greenPower.png", Texture.class);
+		manager.load("yellowPower.png", Texture.class);
+		manager.load("redPower.png", Texture.class);
+		manager.load("whitePower.png", Texture.class);
+		manager.load("purplePower.png", Texture.class);
+
+		manager.load("monsterSheet1.png", Texture.class);
+		manager.load("monsterSheet2.png", Texture.class);
+		manager.load("flyingMonsterSheet1.png", Texture.class);
+		manager.load("slowAnimation.png", Texture.class);
+		manager.load("poisonAnimation.png", Texture.class);
+
+		manager.load("temporaryPath.png", Texture.class);
+
+		//Bullets
+		manager.load("blackBullet.png", Texture.class);
+		manager.load("blueBullet.png", Texture.class);
+		manager.load("greenBullet.png", Texture.class);
+		manager.load("pinkBullet.png", Texture.class);
+		manager.load("purpleBullet.png", Texture.class);
+		manager.load("redBullet.png", Texture.class);
+		manager.load("whiteBullet.png", Texture.class);
+		manager.load("yellowBullet.png", Texture.class);
+
+		//For the overlay
+		manager.load("overlay.png", Texture.class);
+		manager.load("infoArea.png", Texture.class);
+		manager.load("shopButton.png", Texture.class);
+		manager.load("gemChances.png", Texture.class);
+		manager.load("shop.png", Texture.class);
+		manager.load("minimizeButton.png", Texture.class);
+		manager.load("maximizeButton.png", Texture.class);
+
+		//Gem handler
+		manager.load("temporaryGem.png", Texture.class);
+		manager.load("enhance.png", Texture.class);
+
+		//Green gem
+		manager.load("green_1.png", Texture.class);
+		manager.load("green_2.png", Texture.class);
+		manager.load("green_3.png", Texture.class);
+		manager.load("green_4.png", Texture.class);
+		manager.load("green_5.png", Texture.class);
+		manager.load("green_6.png", Texture.class);
+
+		//Blue gem
+		manager.load("blue_1.png", Texture.class);
+		manager.load("blue_2.png", Texture.class);
+		manager.load("blue_3.png", Texture.class);
+		manager.load("blue_4.png", Texture.class);
+		manager.load("blue_5.png", Texture.class);
+		manager.load("blue_6.png", Texture.class);
+
+		//Yellow gem
+		manager.load("yellow_1.png", Texture.class);
+		manager.load("yellow_2.png", Texture.class);
+		manager.load("yellow_3.png", Texture.class);
+		manager.load("yellow_4.png", Texture.class);
+		manager.load("yellow_5.png", Texture.class);
+		manager.load("yellow_6.png", Texture.class);
+
+		//White gem
+		manager.load("white_1.png", Texture.class);
+		manager.load("white_2.png", Texture.class);
+		manager.load("white_3.png", Texture.class);
+		manager.load("white_4.png", Texture.class);
+		manager.load("white_5.png", Texture.class);
+		manager.load("white_6.png", Texture.class);
+
+		//Pink gem
+		manager.load("pink_1.png", Texture.class);
+		manager.load("pink_2.png", Texture.class);
+		manager.load("pink_3.png", Texture.class);
+		manager.load("pink_4.png", Texture.class);
+		manager.load("pink_5.png", Texture.class);
+		manager.load("pink_6.png", Texture.class);
+
+		//Red gem
+		manager.load("red_1.png", Texture.class);
+		manager.load("red_2.png", Texture.class);
+		manager.load("red_3.png", Texture.class);
+		manager.load("red_4.png", Texture.class);
+		manager.load("red_5.png", Texture.class);
+		manager.load("red_6.png", Texture.class);
+
+		//Purple gem
+		manager.load("purple_1.png", Texture.class);
+		manager.load("purple_2.png", Texture.class);
+		manager.load("purple_3.png", Texture.class);
+		manager.load("purple_4.png", Texture.class);
+		manager.load("purple_5.png", Texture.class);
+		manager.load("purple_6.png", Texture.class);
+
+		//Black gem
+		manager.load("black_1.png", Texture.class);
+		manager.load("black_2.png", Texture.class);
+		manager.load("black_3.png", Texture.class);
+		manager.load("black_4.png", Texture.class);
+		manager.load("black_5.png", Texture.class);
+		manager.load("black_6.png", Texture.class);
+		
+		manager.load("rock.png", Texture.class);
+		manager.load("tilePressed.png", Texture.class);
+		manager.load("tileHover.png", Texture.class);
+		manager.load("clickedGem.png", Texture.class);
+		manager.load("tile.png", Texture.class);
+		manager.load("path.png", Texture.class);
+		manager.load("checkpoint.png", Texture.class);
+		manager.load("crit.png", Texture.class);
+	}
 }

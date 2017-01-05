@@ -1,5 +1,6 @@
 package gem;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,8 +17,8 @@ public class BlackGem extends Gem {
 	private String description;
 	private float increaseSpeedAmount;
 
-	public BlackGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, "black", level);
+	public BlackGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, texture, posX, posY, "black", level, manager);
 		
 		this.increaseSpeedAmount = Settings.gemSettings.get("black").get(level).increaseSpeedAmount + 1;
 		this.name = "Black gem";
@@ -33,7 +34,7 @@ public class BlackGem extends Gem {
 		if(!m.isDead()) {
 			elapsedTime = 0;
 			canHit = false;
-			bullets.add(new BlackBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this));
+			bullets.add(new BlackBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
 		}
 	}
 	

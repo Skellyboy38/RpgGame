@@ -45,4 +45,6 @@ public interface ITile {
 	public void hardReset();
 
 	public void dispose();
+	
+	public void restart();
 }
