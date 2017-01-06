@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import monster.Summoner;
 import settings.Settings;
 import tile.TileClickHandler;
 
@@ -26,6 +27,7 @@ public class GemHandler {
 	private List<IGem> specialCombinations;
 	private List<IGem> currentSpecialCombinations;
 	private Stage stage;
+	private Summoner summoner;
 	private AssetManager manager;
 	private TileClickHandler clickHandler;
 	private GemCreator creator;
@@ -40,9 +42,10 @@ public class GemHandler {
 	
 	private SpriteBatch batch;
 	
-	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, AssetManager manager) {
+	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, AssetManager manager, Summoner summoner) {
 		this.clickHandler = clickHandler;
 		this.manager = manager;
+		this.summoner = summoner;
 		this.renderer = renderer;
 		this.batch = batch;
 		this.stage = stage;
@@ -155,7 +158,9 @@ public class GemHandler {
 
 	public void render() {
 		animationCounter += Gdx.graphics.getDeltaTime();
-		System.out.println(animationCounter);
+		if(animationCounter >= 7200) {
+			animationCounter = 0;
+		}
 		for(Rock r : rocks) {
 			r.render();
 		}
@@ -168,29 +173,95 @@ public class GemHandler {
 			batch.draw(newGem, gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			batch.end();
 		}
-		for(IGem gem : checkCombinations()) {
-			batch.begin();
-			TextureRegion currentFrame = combineAnimation.getKeyFrame(animationCounter, true);
-			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
-			batch.end();
-		}
 		for(IGem gem : specialCombinations) {
 			batch.begin();
 			TextureRegion currentFrame = specialAnimation.getKeyFrame(animationCounter, true);
 			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			batch.end();
 		}
-		checkSpecialCombinations(currentGems, true);
-		for(IGem gem : currentSpecialCombinations) {
-			batch.begin();
-			TextureRegion currentFrame = specialAnimation.getKeyFrame(animationCounter, true);
-			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
-			batch.end();
+		if(!summoner.isSummoning()) {
+			checkSpecialCombinations(currentGems, true);
+			for(IGem gem : checkCombinations()) {
+				batch.begin();
+				TextureRegion currentFrame = combineAnimation.getKeyFrame(animationCounter, true);
+				batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+				batch.end();
+			}
+			for(IGem gem : currentSpecialCombinations) {
+				batch.begin();
+				TextureRegion currentFrame = specialAnimation.getKeyFrame(animationCounter, true);
+				batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+				batch.end();
+			}
 		}
 	}
 	
 	public boolean isCombination(IGem gem) {
 		return combinations.contains(gem);
+	}
+	
+	public void commitDowngradedGem(IGem gem) {
+		String type = gem.getType();
+		IGem newGem = null;
+		if(type.equals("green")) {
+			newGem = new GreenGem(batch, renderer, stage, clickHandler, 
+					manager.get("green_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("blue")) {
+			newGem = new BlueGem(batch, renderer, stage, clickHandler, 
+					manager.get("blue_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("yellow")) {
+			newGem = new YellowGem(batch, renderer, stage, clickHandler, 
+					manager.get("yellow_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("white")) {
+			newGem = new WhiteGem(batch, renderer, stage, clickHandler, 
+					manager.get("white_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("pink")) {
+			newGem = new PinkGem(batch, renderer, stage, clickHandler, 
+					manager.get("pink_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("red")) {
+			newGem = new RedGem(batch, renderer, stage, clickHandler, 
+					manager.get("red_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else if(type.equals("purple")) {
+			newGem = new PurpleGem(batch, renderer, stage, clickHandler, 
+					manager.get("purple_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		else {
+			newGem = new BlackGem(batch, renderer, stage, clickHandler, 
+					manager.get("black_"+(gem.getLevel()-1)+".png", Texture.class), 
+					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
+					gem.getLevel()+1, manager);
+		}
+		newGem.setPermanent();
+		gems.add(newGem);
+		currentGems.remove(gem);
+		for(IGem g : currentGems) {
+			rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
+		}
+		for(IGem g : currentGems) {
+			g.removeListeners();
+		}
+		currentGems.clear();
+		checkSpecialCombinations(gems, false);
 	}
 	
 	public void commitGem(IGem gem, boolean upgrade) {
@@ -276,6 +347,10 @@ public class GemHandler {
 	
 	public boolean isReady() {
 		return currentGems.size() <= NUMBER_GEMS && clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isTemporary();
+	}
+	
+	public boolean isGemAboveLevel1() {
+		return clickHandler.getClickedGem() != null && clickHandler.getClickedGem().getLevel() > 1;
 	}
 	
 	public boolean hasFiveGems() {

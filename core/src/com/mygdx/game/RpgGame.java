@@ -66,10 +66,16 @@ public class RpgGame extends ApplicationAdapter {
 	float effectiveViewportHeight;
 	Texture background;
 	Texture loading;
+	Texture pausedOverlay;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	int screenWidth;
 	int screenHeight;
 	boolean createHandlers;
+	boolean isPaused;
+	boolean isPPressed;
+	boolean isEnterPressed;
+	boolean isCPressed;
+	boolean isDPressed;
 
 	@Override
 	public void create () {
@@ -94,6 +100,11 @@ public class RpgGame extends ApplicationAdapter {
 		tiles = new ArrayList<ITile>();
 		checkpoints = new ArrayList<ITile>();
 		tileMap = new HashMap<Coordinate, ITile>();
+		isPaused = false;
+		isPPressed = false;
+		isEnterPressed = false;
+		isCPressed = false;
+		isDPressed = false;
 		loadAssets();
 	}
 
@@ -103,13 +114,14 @@ public class RpgGame extends ApplicationAdapter {
 			//Do only once when all textures are loaded
 			if(createHandlers) {
 				background = manager.get("background.png", Texture.class);
+				pausedOverlay = manager.get("paused.png", Texture.class);
 				gameSettings = new Settings(manager);
 				player = new Player(PLAYER_HP);
 				summoner = new Summoner(batch, renderer, checkpoints, player, manager);
 				createCoordinates();
 				clickHandler = new TileClickHandler(tileMap, coordinates, batch, summoner, manager);
 				createTiles();
-				gemHandler = new GemHandler(batch, renderer, stage, clickHandler, manager);
+				gemHandler = new GemHandler(batch, renderer, stage, clickHandler, manager, summoner);
 				collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
 				overlay = new Overlay(clickHandler, summoner, player, gemHandler, manager);
 				inputMultiplexer.addProcessor(overlay.getStage());
@@ -122,23 +134,31 @@ public class RpgGame extends ApplicationAdapter {
 			}
 			//The main game loop
 			if(!player.isDead()) {
-				updateEffectiveViewport();
-				Gdx.gl.glClearColor(1, 1, 1, 1);
-				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-				cam.update();
-				batch.setProjectionMatrix(cam.combined);
-				renderer.setProjectionMatrix(cam.combined);
-				batch.begin();
-				batch.draw(background, -500, -300);
-				batch.end();
-				stage.act();
-				renderTiles();
-				gemHandler.render();
-				clickHandler.render();
-				summoner.render();
-				overlay.render();
-				collisionDetector.detectCollisions();
-				checkInputs();
+				if(!isPaused) {
+					updateEffectiveViewport();
+					Gdx.gl.glClearColor(1, 1, 1, 1);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+					cam.update();
+					batch.setProjectionMatrix(cam.combined);
+					renderer.setProjectionMatrix(cam.combined);
+					batch.begin();
+					batch.draw(background, -500, -300);
+					batch.end();
+					stage.act();
+					renderTiles();
+					gemHandler.render();
+					clickHandler.render();
+					summoner.render();
+					overlay.render();
+					collisionDetector.detectCollisions();
+					checkInputs();
+				}
+				else {
+					batch.begin();
+					batch.draw(pausedOverlay, 0 ,0);
+					batch.end();
+				}
+				checkPause();
 			}
 			else {
 				restart();
@@ -179,10 +199,19 @@ public class RpgGame extends ApplicationAdapter {
 		effectiveViewportWidth = WIDTH*cam.zoom;
 		effectiveViewportHeight = HEIGHT*cam.zoom;
 	}
+	
+	public void checkPause() {
+		if(Gdx.input.isKeyPressed(44) && !isPPressed) {
+			isPaused = !isPaused;
+			Gdx.graphics.setContinuousRendering(!isPaused);
+			isPPressed = true;
+		}
+		if(!Gdx.input.isKeyPressed(44)) {
+			isPPressed = false;
+		}
+	}
 
 	public void checkInputs() {
-		boolean isEnterPressed = false;
-		boolean isCPressed = false;
 		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
 			gemHandler.commitGem(clickHandler.getClickedGem(), false);
 			clickHandler.unclickGem();
@@ -190,6 +219,14 @@ public class RpgGame extends ApplicationAdapter {
 			summoner.nextStage();
 			summoner.start();
 			isEnterPressed = true;
+		}
+		if(Gdx.input.isKeyPressed(32) && gemHandler.isReady() && gemHandler.isGemAboveLevel1() && !isDPressed) {
+			gemHandler.commitDowngradedGem(clickHandler.getClickedGem());
+			clickHandler.unclickGem();
+			gemHandler.nextStage();
+			summoner.nextStage();
+			summoner.start();
+			isDPressed = true;
 		}
 		if(Gdx.input.isKeyPressed(31) && gemHandler.isReady() && gemHandler.isCombination(clickHandler.getClickedGem()) && !isCPressed) {
 			gemHandler.commitGem(clickHandler.getClickedGem(), true);
@@ -204,6 +241,9 @@ public class RpgGame extends ApplicationAdapter {
 		}
 		if(!Gdx.input.isKeyPressed(31)) {
 			isCPressed = false;
+		}
+		if(!Gdx.input.isKeyPressed(32)) {
+			isDPressed = false;
 		}
 		if(Gdx.input.isKeyPressed(62) && (clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
 			if(clickHandler.getClickedTile() != null) {
@@ -449,11 +489,13 @@ public class RpgGame extends ApplicationAdapter {
 
 		@Override
 		public boolean scrolled(int amount) {
-			if(amount == 1 && cam.zoom < 1.1){
-				cam.zoom += ZOOM_FACTOR;
-			}
-			else if(amount == -1 && cam.zoom > 0.4){
-				cam.zoom -= ZOOM_FACTOR;
+			if(!isPaused) {
+				if(amount == 1 && cam.zoom < 1.1){
+					cam.zoom += ZOOM_FACTOR;
+				}
+				else if(amount == -1 && cam.zoom > 0.4){
+					cam.zoom -= ZOOM_FACTOR;
+				}
 			}
 			return true;
 		}
@@ -582,5 +624,6 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("path.png", Texture.class);
 		manager.load("checkpoint.png", Texture.class);
 		manager.load("crit.png", Texture.class);
+		manager.load("paused.png", Texture.class);
 	}
 }

@@ -15,6 +15,4 @@ public interface IBullet {
 	public void update();
 	
 	public boolean isCrit();
-
-	public void dispose();
 }
