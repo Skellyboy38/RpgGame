@@ -508,6 +508,7 @@ public class RpgGame extends ApplicationAdapter {
 		//Gem handler
 		manager.load("temporaryGem.png", Texture.class);
 		manager.load("enhance.png", Texture.class);
+		manager.load("specialCombinationAnimationSheet.png", Texture.class);
 
 		//Green gem
 		manager.load("green_1.png", Texture.class);

@@ -22,6 +22,9 @@ public class GemHandler {
 	private List<IGem> gems;
 	private List<Rock> rocks;
 	private List<IGem> currentGems;
+	private List<IGem> combinations;
+	private List<IGem> specialCombinations;
+	private List<IGem> currentSpecialCombinations;
 	private Stage stage;
 	private AssetManager manager;
 	private TileClickHandler clickHandler;
@@ -29,8 +32,10 @@ public class GemHandler {
 	private ShapeRenderer renderer;
 	private TextureRegion newGem;
 	private Texture enhanceSheet;
+	private Texture specialEnhanceSheet;
 	private Texture temporaryGem;
-	private Animation animation;
+	private Animation combineAnimation;
+	private Animation specialAnimation;
 	private float animationCounter;
 	
 	private SpriteBatch batch;
@@ -43,17 +48,30 @@ public class GemHandler {
 		this.stage = stage;
 		this.creator = new GemCreator();
 		this.gems = new ArrayList<IGem>();
+		this.combinations = new ArrayList<IGem>();
+		this.specialCombinations = new ArrayList<IGem>();
+		this.currentSpecialCombinations = new ArrayList<IGem>();
 		this.currentGems = new ArrayList<IGem>();
 		this.rocks = new ArrayList<Rock>();
 		this.temporaryGem = manager.get("temporaryGem.png", Texture.class);
 		this.newGem = new TextureRegion(temporaryGem);
 		this.enhanceSheet = manager.get("enhance.png", Texture.class);
+		this.specialEnhanceSheet = manager.get("specialCombinationAnimationSheet.png", Texture.class);
+		
 		TextureRegion[][] temp = TextureRegion.split(enhanceSheet, 20, 20);
 		TextureRegion[] frames = new TextureRegion[10];
 		for(int i = 0; i < 10; i++) {
 			frames[i] = temp[0][i];
 		}
-		this.animation = new Animation(0.1f, frames);
+		this.combineAnimation = new Animation(0.1f, frames);
+		
+		TextureRegion[][] temp2 = TextureRegion.split(specialEnhanceSheet, 20, 40);
+		TextureRegion[] frames2 = new TextureRegion[14];
+		for(int i = 0; i < 14; i++) {
+			frames2[i] = temp2[0][i];
+		}
+		this.specialAnimation = new Animation(0.1f, frames2);
+		
 		this.animationCounter = 0;
 	}
 	
@@ -62,7 +80,7 @@ public class GemHandler {
 	}
 	
 	public List<IGem> checkCombinations() {
-		List<IGem> toRet = new ArrayList<IGem>();
+		combinations.clear();
 		for(int i = 0; i < currentGems.size(); i++) {
 			for(int j = 0; j < currentGems.size(); j++) {
 				if(i == j) {
@@ -70,20 +88,74 @@ public class GemHandler {
 				}
 				if(currentGems.get(i).getLevel() < 6 && currentGems.get(i).getType().equals(currentGems.get(j).getType()) &&
 						currentGems.get(i).getLevel() == currentGems.get(j).getLevel()) {
-					toRet.add(currentGems.get(i));
+					combinations.add(currentGems.get(i));
 				}
 			}
 		}
-		return toRet;
+		return combinations;
 	}
 	
-	// TO DO !!!!!!!!!!!!!!!!!
-	public List<IGem> checkSpecialCombinations() {
-		return null;
+	public void checkSpecialCombinations(List<IGem> gemsToCheck, boolean isCurrent) {
+		if(isCurrent) {
+			currentSpecialCombinations.clear();
+		}
+		else {
+			specialCombinations.clear();
+		}
+		for(Settings.SpecialCombination sc : Settings.specialGemRecipes.values()) {
+			Gem gem1 = null;
+			Gem gem2 = null;
+			Gem gem3 = null;
+			boolean hasFound = false;
+			for(IGem g : gemsToCheck) {
+				if(g.getLevel() == sc.level1 && g.getType().equals(sc.type1)) {
+					gem1 = (Gem)g;
+					hasFound = true;
+				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			
+			hasFound = false;
+			for(IGem g : gemsToCheck) {
+				if(g.getLevel() == sc.level2 && g.getType().equals(sc.type2)) {
+					gem2 = (Gem)g;
+					hasFound = true;
+				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			
+			hasFound = false;
+			for(IGem g : gemsToCheck) {
+				if(g.getLevel() == sc.level3 && g.getType().equals(sc.type3)) {
+					gem3 = (Gem)g;
+					hasFound = true;
+				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			if(gem1 != null && gem2 != null && gem3 != null) {
+				if(isCurrent) {
+					currentSpecialCombinations.add(gem1);
+					currentSpecialCombinations.add(gem2);
+					currentSpecialCombinations.add(gem3);
+				}
+				else {
+					specialCombinations.add(gem1);
+					specialCombinations.add(gem2);
+					specialCombinations.add(gem3);
+				}
+			}
+		}
 	}
 
 	public void render() {
 		animationCounter += Gdx.graphics.getDeltaTime();
+		System.out.println(animationCounter);
 		for(Rock r : rocks) {
 			r.render();
 		}
@@ -98,14 +170,27 @@ public class GemHandler {
 		}
 		for(IGem gem : checkCombinations()) {
 			batch.begin();
-			TextureRegion currentFrame = animation.getKeyFrame(animationCounter, true);
+			TextureRegion currentFrame = combineAnimation.getKeyFrame(animationCounter, true);
+			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			batch.end();
+		}
+		for(IGem gem : specialCombinations) {
+			batch.begin();
+			TextureRegion currentFrame = specialAnimation.getKeyFrame(animationCounter, true);
+			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			batch.end();
+		}
+		checkSpecialCombinations(currentGems, true);
+		for(IGem gem : currentSpecialCombinations) {
+			batch.begin();
+			TextureRegion currentFrame = specialAnimation.getKeyFrame(animationCounter, true);
 			batch.draw(currentFrame, gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			batch.end();
 		}
 	}
 	
 	public boolean isCombination(IGem gem) {
-		return checkCombinations().contains(gem);
+		return combinations.contains(gem);
 	}
 	
 	public void commitGem(IGem gem, boolean upgrade) {
@@ -175,6 +260,7 @@ public class GemHandler {
 			g.removeListeners();
 		}
 		currentGems.clear();
+		checkSpecialCombinations(gems, false);
 	}
 	
 	public void addTemporaryGem(int posX, int posY) {
