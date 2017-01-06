@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,12 +14,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -39,12 +44,17 @@ public class RpgGame extends ApplicationAdapter {
 	public static int WIDTH = 1000;
 	public static int HEIGHT = 600;
 	public static int PLAYER_HP = 20;
+	public static int NUMBER_ASSETS = 89;
 	public static final float ZOOM_FACTOR = 0.05f;
 	public static final int TILE_WIDTH = 20;
 	public static TextButtonStyle BUTTON_STYLE = new TextButtonStyle();
 
 	SpriteBatch batch;
 	AssetManager manager;
+	BitmapFont font;
+	NumberFormat format;
+	Rectangle loadFrame;
+	Rectangle loadFill;
 	ShapeRenderer renderer;
 	Summoner summoner;
 	CollisionDetector collisionDetector;
@@ -80,6 +90,10 @@ public class RpgGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		BUTTON_STYLE.font = new BitmapFont();
+		font = new BitmapFont();
+		font.setColor(Color.WHITE);
+		font.getData().setScale(2f);
+		format = new DecimalFormat("#0");
 		screenWidth = (int)screenSize.getWidth();
 		screenHeight = (int)screenSize.getHeight();
 		effectiveViewportWidth = WIDTH;
@@ -105,6 +119,9 @@ public class RpgGame extends ApplicationAdapter {
 		isEnterPressed = false;
 		isCPressed = false;
 		isDPressed = false;
+		
+		loadFill = new Rectangle(270, 230, 300, 20);
+		loadFrame = new Rectangle(270, 230, 300, 20);
 		loadAssets();
 	}
 
@@ -169,7 +186,17 @@ public class RpgGame extends ApplicationAdapter {
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			batch.begin();
 			batch.draw(loading, 0, 0);
+			font.draw(batch, format.format(manager.getProgress()*100) + "%", 600, 250);
 			batch.end();
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(Color.GREEN);
+			renderer.rect(loadFill.getX(), loadFill.getY(), 300*(manager.getProgress()), loadFill.getHeight());
+			renderer.end();
+			renderer.begin(ShapeType.Line);
+			renderer.setColor(Color.WHITE);
+			renderer.rect(loadFrame.getX(), loadFrame.getY(), loadFrame.getWidth(), loadFrame.getHeight());
+			renderer.setColor(Color.BLACK);
+			renderer.end();
 		}
 	}
 
