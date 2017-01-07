@@ -19,6 +19,7 @@ public class Settings {
 	public static Map<String, Texture> elementTypes;
 	public static Map<String, String> elementWeaknesses;
 	public static Map<String, String> elementStrengths;
+	public static Map<String, String> evolutions;
 	public static Map<String, SpecialCombination> specialGemRecipes;
 
 	public Settings(AssetManager manager) {
@@ -33,6 +34,7 @@ public class Settings {
 		elementStrengths = new HashMap<String, String>();
 		elementIntToType = new HashMap<Integer, String>();
 		specialGemRecipes = new HashMap<String, SpecialCombination>();
+		evolutions = new HashMap<String, String>();
 		
 		addAnimationSheets(manager);
 		addUpgradePrices();
@@ -41,6 +43,57 @@ public class Settings {
 		populateGemChances();
 		populateElements(manager);
 		createSpecialGemRecipes();
+		createEvolutions();
+	}
+	
+	public void createEvolutions() {
+		evolutions.put("green_1", "malachite");
+		evolutions.put("green_2", "red_crystal");
+		evolutions.put("green_3", "paraiba_tourmaline");
+		evolutions.put("green_4", "jade");
+		evolutions.put("green_5", "dark_emerald");
+		
+		evolutions.put("red_1", "star_ruby");
+		evolutions.put("red_2", "star_ruby");
+		evolutions.put("red_3", "red_crystal");
+		evolutions.put("red_4", "yellow_sapphire");
+		evolutions.put("red_5", "blood_stone");
+		
+		evolutions.put("blue_1", "silver");
+		evolutions.put("blue_2", "jade");
+		evolutions.put("blue_3", "uranium");
+		evolutions.put("blue_4", "dark_emerald");
+		evolutions.put("blue_5", "yellow_sapphire");
+		
+		evolutions.put("white_1", "silver");
+		evolutions.put("white_2", "gold");
+		evolutions.put("white_3", "pink_diamond");
+		evolutions.put("white_4", "black_opal");
+		evolutions.put("white_5", "pink_diamond");
+		
+		evolutions.put("black_1", "malachite");
+		evolutions.put("black_2", "uranium");
+		evolutions.put("black_3", "jade");
+		evolutions.put("black_4", "paraiba_tourmaline");
+		evolutions.put("black_5", "black_opal");
+		
+		evolutions.put("yellow_1", "silver");
+		evolutions.put("yellow_2", "dark_emerald");
+		evolutions.put("yellow_3", "pink_diamond");
+		evolutions.put("yellow_4", "yellow_sapphire");
+		evolutions.put("yellow_5", "uranium");
+		
+		evolutions.put("purple_1", "malachite");
+		evolutions.put("purple_2", "");
+		evolutions.put("purple_3", "black_opal");
+		evolutions.put("purple_4", "blood_stone");
+		evolutions.put("purple_5", "paraiba_tourmaline");
+		
+		evolutions.put("pink_1", "red_crystal");
+		evolutions.put("pink_2", "star_ruby");
+		evolutions.put("pink_3", "blood_stone");
+		evolutions.put("pink_4", "gold");
+		evolutions.put("pink_5", "gold");
 	}
 	
 	public void createSpecialGemRecipes() {
@@ -83,7 +136,7 @@ public class Settings {
 		specialGemRecipes.put("star_ruby", new SpecialCombination(
 				"red", 2,
 				"red", 1,
-				"pink", 1));
+				"pink", 2));
 		specialGemRecipes.put("uranium", new SpecialCombination(
 				"yellow", 5,
 				"blue", 3,
@@ -95,7 +148,7 @@ public class Settings {
 		specialGemRecipes.put("paraiba_tourmaline", new SpecialCombination(
 				"purple", 5,
 				"black", 4,
-				"green", 2));
+				"green", 3));
 	}
 	
 	public void populateElements(AssetManager manager) {

@@ -86,6 +86,7 @@ public class RpgGame extends ApplicationAdapter {
 	boolean isEnterPressed;
 	boolean isCPressed;
 	boolean isDPressed;
+	boolean isXPressed;
 
 	@Override
 	public void create () {
@@ -119,6 +120,7 @@ public class RpgGame extends ApplicationAdapter {
 		isEnterPressed = false;
 		isCPressed = false;
 		isDPressed = false;
+		isXPressed = false;
 		
 		loadFill = new Rectangle(270, 230, 300, 20);
 		loadFrame = new Rectangle(270, 230, 300, 20);
@@ -239,29 +241,46 @@ public class RpgGame extends ApplicationAdapter {
 	}
 
 	public void checkInputs() {
-		if(Gdx.input.isKeyPressed(66) && gemHandler.isReady() && !isEnterPressed) {
-			gemHandler.commitGem(clickHandler.getClickedGem(), false);
-			clickHandler.unclickGem();
-			gemHandler.nextStage();
-			summoner.nextStage();
-			summoner.start();
+		if(Gdx.input.isKeyPressed(66) && !isEnterPressed) {
+			if(gemHandler.isReady()) {
+				gemHandler.commitGem(clickHandler.getClickedGem(), false);
+				clickHandler.unclickGem();
+				gemHandler.nextStage();
+				summoner.nextStage();
+				summoner.start();
+			}
 			isEnterPressed = true;
 		}
-		if(Gdx.input.isKeyPressed(32) && gemHandler.isReady() && gemHandler.isGemAboveLevel1() && !isDPressed) {
-			gemHandler.commitDowngradedGem(clickHandler.getClickedGem());
-			clickHandler.unclickGem();
-			gemHandler.nextStage();
-			summoner.nextStage();
-			summoner.start();
+		else if(Gdx.input.isKeyPressed(32) && !isDPressed) {
+			if(gemHandler.isReady() && gemHandler.isGemAboveLevel1()) {
+				gemHandler.commitDowngradedGem(clickHandler.getClickedGem());
+				clickHandler.unclickGem();
+				gemHandler.nextStage();
+				summoner.nextStage();
+				summoner.start();
+			}
 			isDPressed = true;
 		}
-		if(Gdx.input.isKeyPressed(31) && gemHandler.isReady() && gemHandler.isCombination(clickHandler.getClickedGem()) && !isCPressed) {
-			gemHandler.commitGem(clickHandler.getClickedGem(), true);
-			clickHandler.unclickGem();
-			gemHandler.nextStage();
-			summoner.nextStage();
-			summoner.start();
+		else if(Gdx.input.isKeyPressed(31) && !isCPressed) {
+			if(gemHandler.isReady() && gemHandler.isCombination(clickHandler.getClickedGem())) {
+				gemHandler.commitGem(clickHandler.getClickedGem(), true);
+				clickHandler.unclickGem();
+				gemHandler.nextStage();
+				summoner.nextStage();
+				summoner.start();
+			}
 			isCPressed = true;
+		}
+		else if(Gdx.input.isKeyPressed(52) && !isXPressed) {
+			if(clickHandler.getClickedGem().isSpecialCombination()) {
+				System.out.println("Summon special gem");
+			}
+//			gemHandler.commitGem(clickHandler.getClickedGem(), true);
+//			clickHandler.unclickGem();
+//			gemHandler.nextStage();
+//			summoner.nextStage();
+//			summoner.start();
+			isXPressed = true;
 		}
 		if(!Gdx.input.isKeyPressed(66)) {
 			isEnterPressed = false;
@@ -271,6 +290,9 @@ public class RpgGame extends ApplicationAdapter {
 		}
 		if(!Gdx.input.isKeyPressed(32)) {
 			isDPressed = false;
+		}
+		if(!Gdx.input.isKeyPressed(52)) {
+			isXPressed = false;
 		}
 		if(Gdx.input.isKeyPressed(62) && (clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
 			if(clickHandler.getClickedTile() != null) {

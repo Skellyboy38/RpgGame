@@ -61,6 +61,7 @@ public abstract class Gem implements IGem {
 	private boolean isSpedUp;
 	private boolean isCritUp;
 	private boolean isTemporary;
+	private boolean isSpecialCombination;
 	protected boolean canHit;
 	
 	private String type;
@@ -101,9 +102,28 @@ public abstract class Gem implements IGem {
 		this.canHit = true;
 		this.isSpedUp = false;
 		this.isCritUp = false;
+		this.isSpecialCombination = false;
 		this.level = level;
 		
 		stage.addActor(button);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		IGem g = (IGem)o;
+		return this.level == g.getLevel() && this.type.equals(g.getType());
+	}
+	
+	public void makeSpecialCombination() {
+		isSpecialCombination = true;
+	}
+	
+	public void removeSpecialCombination() {
+		isSpecialCombination = false;
+	}
+	
+	public boolean isSpecialCombination() {
+		return isSpecialCombination;
 	}
 	
 	public float getCritDamage() {

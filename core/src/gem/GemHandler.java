@@ -25,6 +25,7 @@ public class GemHandler {
 	private List<IGem> currentGems;
 	private List<IGem> combinations;
 	private List<IGem> specialCombinations;
+	private List<IGem> specialCombinationsToAdd;
 	private List<IGem> currentSpecialCombinations;
 	private Stage stage;
 	private Summoner summoner;
@@ -53,6 +54,7 @@ public class GemHandler {
 		this.gems = new ArrayList<IGem>();
 		this.combinations = new ArrayList<IGem>();
 		this.specialCombinations = new ArrayList<IGem>();
+		this.specialCombinationsToAdd = new ArrayList<IGem>();
 		this.currentSpecialCombinations = new ArrayList<IGem>();
 		this.currentGems = new ArrayList<IGem>();
 		this.rocks = new ArrayList<Rock>();
@@ -98,19 +100,16 @@ public class GemHandler {
 		return combinations;
 	}
 	
-	public void checkSpecialCombinations(List<IGem> gemsToCheck, boolean isCurrent) {
-		if(isCurrent) {
-			currentSpecialCombinations.clear();
-		}
-		else {
-			specialCombinations.clear();
-		}
+	public void checkCurrentSpecialCombinations() {
+		specialCombinationsToAdd.clear();
+		currentSpecialCombinations.clear();
+
 		for(Settings.SpecialCombination sc : Settings.specialGemRecipes.values()) {
 			Gem gem1 = null;
 			Gem gem2 = null;
 			Gem gem3 = null;
 			boolean hasFound = false;
-			for(IGem g : gemsToCheck) {
+			for(IGem g : currentGems) {
 				if(g.getLevel() == sc.level1 && g.getType().equals(sc.type1)) {
 					gem1 = (Gem)g;
 					hasFound = true;
@@ -121,7 +120,7 @@ public class GemHandler {
 			}
 			
 			hasFound = false;
-			for(IGem g : gemsToCheck) {
+			for(IGem g : currentGems) {
 				if(g.getLevel() == sc.level2 && g.getType().equals(sc.type2)) {
 					gem2 = (Gem)g;
 					hasFound = true;
@@ -132,7 +131,7 @@ public class GemHandler {
 			}
 			
 			hasFound = false;
-			for(IGem g : gemsToCheck) {
+			for(IGem g : currentGems) {
 				if(g.getLevel() == sc.level3 && g.getType().equals(sc.type3)) {
 					gem3 = (Gem)g;
 					hasFound = true;
@@ -142,16 +141,66 @@ public class GemHandler {
 				continue;
 			}
 			if(gem1 != null && gem2 != null && gem3 != null) {
-				if(isCurrent) {
-					currentSpecialCombinations.add(gem1);
-					currentSpecialCombinations.add(gem2);
-					currentSpecialCombinations.add(gem3);
+				for(IGem g : currentGems) {
+					if(g.equals(gem1) || g.equals(gem2) || g.equals(gem3)) {
+						specialCombinationsToAdd.add(g);
+					}
 				}
-				else {
-					specialCombinations.add(gem1);
-					specialCombinations.add(gem2);
-					specialCombinations.add(gem3);
+				currentSpecialCombinations.addAll(specialCombinationsToAdd);
+			}
+		}
+	}
+	
+	public void checkSpecialCombinations() {
+		specialCombinationsToAdd.clear();
+		specialCombinations.clear();
+		
+		for(Settings.SpecialCombination sc : Settings.specialGemRecipes.values()) {
+			Gem gem1 = null;
+			Gem gem2 = null;
+			Gem gem3 = null;
+			boolean hasFound = false;
+			for(IGem g : gems) {
+				if(g.getLevel() == sc.level1 && g.getType().equals(sc.type1)) {
+					gem1 = (Gem)g;
+					hasFound = true;
 				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			
+			hasFound = false;
+			for(IGem g : gems) {
+				if(g.getLevel() == sc.level2 && g.getType().equals(sc.type2)) {
+					gem2 = (Gem)g;
+					hasFound = true;
+				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			
+			hasFound = false;
+			for(IGem g : gems) {
+				if(g.getLevel() == sc.level3 && g.getType().equals(sc.type3)) {
+					gem3 = (Gem)g;
+					hasFound = true;
+				}
+			}
+			if(!hasFound) {
+				continue;
+			}
+			if(gem1 != null && gem2 != null && gem3 != null) {
+				for(IGem g : gems) {
+					if(g.equals(gem1) || g.equals(gem2) || g.equals(gem3)) {
+						specialCombinationsToAdd.add(g);
+					}
+				}
+				for(IGem g : specialCombinationsToAdd) {
+					g.makeSpecialCombination();
+				}
+				specialCombinations.addAll(specialCombinationsToAdd);
 			}
 		}
 	}
@@ -180,7 +229,7 @@ public class GemHandler {
 			batch.end();
 		}
 		if(!summoner.isSummoning()) {
-			checkSpecialCombinations(currentGems, true);
+			checkCurrentSpecialCombinations();
 			for(IGem gem : checkCombinations()) {
 				batch.begin();
 				TextureRegion currentFrame = combineAnimation.getKeyFrame(animationCounter, true);
@@ -207,49 +256,49 @@ public class GemHandler {
 			newGem = new GreenGem(batch, renderer, stage, clickHandler, 
 					manager.get("green_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("blue")) {
 			newGem = new BlueGem(batch, renderer, stage, clickHandler, 
 					manager.get("blue_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("yellow")) {
 			newGem = new YellowGem(batch, renderer, stage, clickHandler, 
 					manager.get("yellow_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("white")) {
 			newGem = new WhiteGem(batch, renderer, stage, clickHandler, 
 					manager.get("white_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("pink")) {
 			newGem = new PinkGem(batch, renderer, stage, clickHandler, 
 					manager.get("pink_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("red")) {
 			newGem = new RedGem(batch, renderer, stage, clickHandler, 
 					manager.get("red_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else if(type.equals("purple")) {
 			newGem = new PurpleGem(batch, renderer, stage, clickHandler, 
 					manager.get("purple_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		else {
 			newGem = new BlackGem(batch, renderer, stage, clickHandler, 
 					manager.get("black_"+(gem.getLevel()-1)+".png", Texture.class), 
 					gem.getCoordinates().getX(), gem.getCoordinates().getY(), 
-					gem.getLevel()+1, manager);
+					gem.getLevel()-1, manager);
 		}
 		newGem.setPermanent();
 		gems.add(newGem);
@@ -261,7 +310,7 @@ public class GemHandler {
 			g.removeListeners();
 		}
 		currentGems.clear();
-		checkSpecialCombinations(gems, false);
+		checkSpecialCombinations();
 	}
 	
 	public void commitGem(IGem gem, boolean upgrade) {
@@ -331,7 +380,7 @@ public class GemHandler {
 			g.removeListeners();
 		}
 		currentGems.clear();
-		checkSpecialCombinations(gems, false);
+		checkSpecialCombinations();
 	}
 	
 	public void addTemporaryGem(int posX, int posY) {

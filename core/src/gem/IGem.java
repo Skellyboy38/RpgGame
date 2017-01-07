@@ -77,4 +77,10 @@ public interface IGem {
 	public float getCritChance();
 	
 	public void increaseCrit(float amount);
+	
+	public void makeSpecialCombination();
+	
+	public void removeSpecialCombination();
+	
+	public boolean isSpecialCombination();
 }
