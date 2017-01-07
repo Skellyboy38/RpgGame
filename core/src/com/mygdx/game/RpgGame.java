@@ -549,6 +549,12 @@ public class RpgGame extends ApplicationAdapter {
 
 		manager.load("monsterSheet1.png", Texture.class);
 		manager.load("monsterSheet2.png", Texture.class);
+		manager.load("monsterSheet3.png", Texture.class);
+		manager.load("monsterSheet4.png", Texture.class);
+		manager.load("monsterSheet6.png", Texture.class);
+		manager.load("monsterSheet7.png", Texture.class);
+		manager.load("monsterSheet8.png", Texture.class);
+		manager.load("monsterSheet9.png", Texture.class);
 		manager.load("flyingMonsterSheet1.png", Texture.class);
 		manager.load("slowAnimation.png", Texture.class);
 		manager.load("poisonAnimation.png", Texture.class);

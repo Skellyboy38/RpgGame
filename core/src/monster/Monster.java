@@ -123,7 +123,7 @@ public class Monster implements IMonster {
 		for(int i = 0; i < animationSheet.getWidth()/20; i++) {
 			frames[i] = temp[0][i];
 		}
-		return new Animation(0.05f, frames);
+		return new Animation(0.1f, frames);
 	}
 	
 	public void updateCollisionBox() {
