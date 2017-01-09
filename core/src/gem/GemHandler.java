@@ -100,6 +100,12 @@ public class GemHandler {
 		return combinations;
 	}
 	
+	public void removeSpecialCombinationStatus() {
+		for(IGem gem : currentSpecialCombinations) {
+			gem.removeSpecialCombination();
+		}
+	}
+	
 	public void checkCurrentSpecialCombinations() {
 		specialCombinationsToAdd.clear();
 		currentSpecialCombinations.clear();
@@ -144,6 +150,7 @@ public class GemHandler {
 				for(IGem g : currentGems) {
 					if(g.equals(gem1) || g.equals(gem2) || g.equals(gem3)) {
 						specialCombinationsToAdd.add(g);
+						g.makeSpecialCombination();
 					}
 				}
 				currentSpecialCombinations.addAll(specialCombinationsToAdd);
@@ -250,6 +257,7 @@ public class GemHandler {
 	}
 	
 	public void commitDowngradedGem(IGem gem) {
+		removeSpecialCombinationStatus();
 		String type = gem.getType();
 		IGem newGem = null;
 		if(type.equals("green")) {
@@ -314,6 +322,7 @@ public class GemHandler {
 	}
 	
 	public void commitGem(IGem gem, boolean upgrade) {
+		removeSpecialCombinationStatus();
 		if(upgrade) {
 			String type = gem.getType();
 			IGem newGem;
@@ -391,6 +400,10 @@ public class GemHandler {
 			currentGems.clear();
 		}
 		checkSpecialCombinations();
+	}
+	
+	public void summonSpecialGem(String gemToSummon) {
+		System.out.println(gemToSummon);
 	}
 	
 	public void addTemporaryGem(int posX, int posY) {

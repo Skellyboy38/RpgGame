@@ -297,7 +297,7 @@ public class RpgGame extends ApplicationAdapter {
 		}
 		else if(Gdx.input.isKeyPressed(52) && !isXPressed) {
 			if(clickHandler.getClickedGem().isSpecialCombination()) {
-				System.out.println("Summon special gem");
+				gemHandler.summonSpecialGem(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()));
 			}
 //			gemHandler.commitGem(clickHandler.getClickedGem(), true);
 //			clickHandler.unclickGem();
