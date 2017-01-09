@@ -87,6 +87,7 @@ public class RpgGame extends ApplicationAdapter {
 	boolean isCPressed;
 	boolean isDPressed;
 	boolean isXPressed;
+	boolean isSpacePressed;
 
 	@Override
 	public void create () {
@@ -121,6 +122,7 @@ public class RpgGame extends ApplicationAdapter {
 		isCPressed = false;
 		isDPressed = false;
 		isXPressed = false;
+		isSpacePressed = false;
 		
 		loadFill = new Rectangle(270, 230, 300, 20);
 		loadFrame = new Rectangle(270, 230, 300, 20);
@@ -251,6 +253,28 @@ public class RpgGame extends ApplicationAdapter {
 			}
 			isEnterPressed = true;
 		}
+		else if(Gdx.input.isKeyPressed(62) && !isSpacePressed) { 
+			if((clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
+				if(clickHandler.getClickedTile() != null) {
+					clickHandler.getClickedTile().occupy();
+					if(summoner.doesPathExist()) {
+						ITile tile = clickHandler.getClickedTile();
+						tile.disable();
+						clickHandler.buryTile();
+						gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
+					}
+					else {
+						clickHandler.getClickedTile().unoccupy();
+					}
+				}
+				else {
+					Rock rock = clickHandler.getClickedRock();
+					clickHandler.unclickRock();
+					gemHandler.replaceRock(rock, rock.getCoordinates().getX(), rock.getCoordinates().getY());
+				}
+			}
+			isSpacePressed = true;
+		}
 		else if(Gdx.input.isKeyPressed(32) && !isDPressed) {
 			if(gemHandler.isReady() && gemHandler.isGemAboveLevel1()) {
 				gemHandler.commitDowngradedGem(clickHandler.getClickedGem());
@@ -294,24 +318,8 @@ public class RpgGame extends ApplicationAdapter {
 		if(!Gdx.input.isKeyPressed(52)) {
 			isXPressed = false;
 		}
-		if(Gdx.input.isKeyPressed(62) && (clickHandler.getClickedTile() != null || clickHandler.getClickedRock() != null) && !gemHandler.hasFiveGems() && !summoner.isSummoning()) {
-			if(clickHandler.getClickedTile() != null) {
-				clickHandler.getClickedTile().occupy();
-				if(summoner.doesPathExist()) {
-					ITile tile = clickHandler.getClickedTile();
-					tile.disable();
-					clickHandler.buryTile();
-					gemHandler.addTemporaryGem(tile.getPosition().getX(), tile.getPosition().getY());
-				}
-				else {
-					clickHandler.getClickedTile().unoccupy();
-				}
-			}
-			else {
-				Rock rock = clickHandler.getClickedRock();
-				clickHandler.unclickRock();
-				gemHandler.replaceRock(rock, rock.getCoordinates().getX(), rock.getCoordinates().getY());
-			}
+		if(!Gdx.input.isKeyPressed(62)) {
+			isSpacePressed = false;
 		}
 
 		if(Gdx.input.getX() <= 40 && (cam.position.x - effectiveViewportWidth/2) > -50) {

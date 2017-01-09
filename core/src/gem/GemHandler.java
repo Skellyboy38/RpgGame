@@ -367,19 +367,29 @@ public class GemHandler {
 			}
 			newGem.setPermanent();
 			gems.add(newGem);
+			gem.removeListeners();
+			for(IGem g : currentGems) {
+				if(g.getCoordinates().getX() != gem.getCoordinates().getX() || g.getCoordinates().getY() != gem.getCoordinates().getY()) {
+					rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
+				}
+			}
+			for(IGem g : currentGems) {
+				g.removeListeners();
+			}
+			currentGems.clear();
 		}
 		else {
 			gem.setPermanent();
 			gems.add(gem);
+			currentGems.remove(gem);
+			for(IGem g : currentGems) {
+				rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
+			}
+			for(IGem g : currentGems) {
+				g.removeListeners();
+			}
+			currentGems.clear();
 		}
-		currentGems.remove(gem);
-		for(IGem g : currentGems) {
-			rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
-		}
-		for(IGem g : currentGems) {
-			g.removeListeners();
-		}
-		currentGems.clear();
 		checkSpecialCombinations();
 	}
 	
