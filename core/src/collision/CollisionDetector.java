@@ -47,9 +47,12 @@ public class CollisionDetector {
 					if(type.equals("red") && g.canHit()) {
 						g.hit(m, monsters);
 					}
+					if(type.equals("jade") && g.canHit()) {
+						g.hit(m);
+					}
 				}
 			}
-			if(type.equals("yellow") && g.canHit() && !allMonstersInRange.isEmpty()) {
+			if((type.equals("yellow") || type.equals("star_ruby")) && g.canHit() && !allMonstersInRange.isEmpty()) {
 				g.hit(allMonstersInRange);
 			}
 			if(type.equals("blue") && g.canHit()) {

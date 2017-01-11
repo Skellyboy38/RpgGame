@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import bullets.JadeBullet;
 import monster.Monster;
 import player.Player;
+import settings.Settings;
 import tile.TileClickHandler;
 
 public class Jade extends SpecialGem {
@@ -17,6 +18,8 @@ public class Jade extends SpecialGem {
 	private String description;
 	private float moneyChance;
 	private int moneyAmount;
+	private int poisonDamage;
+	private int poisonDuration;
 	private Player player;
 
 	public Jade(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture,
@@ -28,6 +31,18 @@ public class Jade extends SpecialGem {
 		this.description = "Jade has a chance on hit to earn money and poison.";
 		this.moneyChance = 0.05f*level;
 		this.moneyAmount = 10*level;
+		this.poisonDamage = Settings.gemSettings.get("jade").get(level).poisonAmount;
+		this.poisonDuration = Settings.gemSettings.get("jade").get(level).poisonDuration;
+	}
+	
+	@Override
+	public int getPoisonDamage() {
+		return poisonDamage;
+	}
+	
+	@Override
+	public int getPoisonDuration() {
+		return poisonDuration;
 	}
 	
 	public String getName() {

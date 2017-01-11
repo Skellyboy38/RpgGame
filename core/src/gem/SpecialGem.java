@@ -15,7 +15,7 @@ import tile.TileClickHandler;
 public class SpecialGem extends Gem {
 	
 	private Animation animation;
-	private int animationCounter;
+	private float animationCounter;
 
 	public SpecialGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler,
 			Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
@@ -26,7 +26,7 @@ public class SpecialGem extends Gem {
 		for(int i = 0; i < texture.getWidth()/20; i++) {
 			frames[i] = temp[0][i];
 		}
-		this.animation =  new Animation(0.05f, frames);
+		this.animation =  new Animation(0.1f, frames);
 		this.animationCounter = 0;
 	}
 	

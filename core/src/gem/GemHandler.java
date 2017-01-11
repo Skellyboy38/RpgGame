@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import monster.Summoner;
+import player.Player;
 import settings.Settings;
 import tile.TileClickHandler;
 
@@ -29,6 +30,7 @@ public class GemHandler {
 	private List<IGem> currentSpecialCombinations;
 	private Stage stage;
 	private Summoner summoner;
+	private Player player;
 	private AssetManager manager;
 	private TileClickHandler clickHandler;
 	private GemCreator creator;
@@ -43,11 +45,12 @@ public class GemHandler {
 	
 	private SpriteBatch batch;
 	
-	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, AssetManager manager, Summoner summoner) {
+	public GemHandler(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, AssetManager manager, Summoner summoner, Player player) {
 		this.clickHandler = clickHandler;
 		this.manager = manager;
 		this.summoner = summoner;
 		this.renderer = renderer;
+		this.player = player;
 		this.batch = batch;
 		this.stage = stage;
 		this.creator = new GemCreator();
@@ -402,8 +405,106 @@ public class GemHandler {
 		checkSpecialCombinations();
 	}
 	
-	public void summonSpecialGem(String gemToSummon) {
-		System.out.println(gemToSummon);
+	public void summonSpecialGemNotCurrent(String gemToSummon, IGem gem) {
+		IGem specialGem = null;
+		if(gemToSummon.equals("jade")) {
+			specialGem = creator.createSpecialGem("jade", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		else if(gemToSummon.equals("star_ruby")) {
+			specialGem = creator.createSpecialGem("star_ruby", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		if(specialGem != null) {
+			Settings.SpecialCombination recipe = Settings.specialGemRecipes.get(specialGem.getType());
+			String type1, type2;
+			int level1, level2;
+			
+			if(gem.getType().equals(recipe.type1)) {
+				if(gem.getLevel() == recipe.level1) {
+					type1 = recipe.type2;
+					type2 = recipe.type3;
+					level1 = recipe.level2;
+					level2 = recipe.level3;
+				}
+				else if(gem.getLevel() == recipe.level2) {
+					type1 = recipe.type2;
+					type2 = recipe.type3;
+					level1 = recipe.level1;
+					level2 = recipe.level3;
+				}
+				else {
+					type1 = recipe.type2;
+					type2 = recipe.type3;
+					level1 = recipe.level1;
+					level2 = recipe.level2;
+				}
+			}
+			else if(gem.getType().equals(recipe.type2)) {
+				if(gem.getLevel() == recipe.level1) {
+					type1 = recipe.type1;
+					type2 = recipe.type3;
+					level1 = recipe.level2;
+					level2 = recipe.level3;
+				}
+				else if(gem.getLevel() == recipe.level2) {
+					type1 = recipe.type1;
+					type2 = recipe.type3;
+					level1 = recipe.level1;
+					level2 = recipe.level3;
+				}
+				else {
+					type1 = recipe.type1;
+					type2 = recipe.type3;
+					level1 = recipe.level1;
+					level2 = recipe.level2;
+				}
+			}
+			else {
+				if(gem.getLevel() == recipe.level1) {
+					type1 = recipe.type1;
+					type2 = recipe.type2;
+					level1 = recipe.level2;
+					level2 = recipe.level3;
+				}
+				else if(gem.getLevel() == recipe.level2) {
+					type1 = recipe.type1;
+					type2 = recipe.type2;
+					level1 = recipe.level1;
+					level2 = recipe.level3;
+				}
+				else {
+					type1 = recipe.type1;
+					type2 = recipe.type2;
+					level1 = recipe.level1;
+					level2 = recipe.level2;
+				}
+			}
+			
+			gems.remove(gem);
+			for(IGem g : gems) {
+				if(g.getType().equals(type1) && g.getLevel() == level1) {
+					turnGemIntoRock(g);
+					System.out.println("Turned " + type1 + "_" + level1);
+					break;
+				}
+			}
+			for(IGem g : gems) {
+				if(g.getType().equals(type2) && g.getLevel() == level2) {
+					turnGemIntoRock(g);
+					System.out.println("Turned " + type2 + "_" + level2);
+					break;
+				}
+			}
+			gems.add(specialGem);
+			checkSpecialCombinations();
+		}
+	}
+	
+	public void turnGemIntoRock(IGem gem) {
+		gem.removeListeners();
+		gems.remove(gem);
+		rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), gem.getCoordinates().getX(), gem.getCoordinates().getY()));
 	}
 	
 	public void addTemporaryGem(int posX, int posY) {
@@ -494,6 +595,18 @@ public class GemHandler {
 		
 		public boolean canIncreaseGemChances() {
 			return chancesLevel < 10;
+		}
+		
+		public SpecialGem createSpecialGem(String name, int posX, int posY) {
+			if(name.equals("jade")) {
+				return new Jade(batch, renderer, stage, clickHandler, manager.get("jade_animation1.png", Texture.class), posX, posY, "jade", 1, player, manager);
+			}
+			else if(name.equals("star_ruby")) {
+				return new StarRuby(batch, renderer, stage, clickHandler, manager.get("star_ruby_animation1.png", Texture.class), posX, posY, "star_ruby", 1, manager);
+			}
+			else {
+				return null;
+			}
 		}
 		
 		public IGem createGem(int posX, int posY) {

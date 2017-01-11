@@ -33,7 +33,6 @@ public class BlueGem extends Gem {
 			elapsedTime = 0;
 			canHit = false;
 			bullets.add(new BlueBullet(posX + textureRegion.getRegionWidth()/2, posY + textureRegion.getRegionHeight()/2, m, this, manager));
-			m.slow(slowAmount, slowDuration);
 		}
 	}
 	

@@ -37,6 +37,7 @@ public class JadeBullet extends Bullet {
 					toHit.hit(gem.getDamage(), gem.getType());
 				}
 				alreadyHit = true;
+				toHit.poison(gem.getPoisonDamage(), gem.getPoisonDuration());
 				if(chance <= moneyChance) {
 					player.addMoney(moneyAmount);
 				}

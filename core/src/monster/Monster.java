@@ -27,6 +27,7 @@ public class Monster implements IMonster {
 	private Animation animation;
 	private Animation poisonAnimation;
 	private Animation slowAnimation;
+	private Animation blazeAnimation;
 	private Texture typeTexture;
 	private Texture animationSheet;
 	private TextureRegion texture;
@@ -48,6 +49,7 @@ public class Monster implements IMonster {
 	private int slowTimer;
 	private int slowDuration;
 	private int poisonTimer;
+	private int blazeTimer;
 	private int poisonDamageTimer;
 	private int poisonDuration;
 	private int poisonDamage;
@@ -63,6 +65,7 @@ public class Monster implements IMonster {
 	private boolean canGiveGold;
 	private boolean isSlowed;
 	private boolean isPoisoned;
+	private boolean isBlazed;
 	private boolean isFlying;
 	
 	private float animationCounter;
@@ -74,12 +77,14 @@ public class Monster implements IMonster {
 		
 		this.poisonAnimation = createAnimation(Settings.ailmentAnimationSheets.get("poison"));
 		this.slowAnimation = createAnimation(Settings.ailmentAnimationSheets.get("slow"));
+		this.blazeAnimation = createAnimation(Settings.ailmentAnimationSheets.get("blaze"));
 		
 		this.canFly = false;
 		this.canDamagePlayer = true;
 		this.canGiveGold = true;
 		this.isSlowed = false;
 		this.isPoisoned = false;
+		this.isBlazed = false;
 		
 		this.slowTimer = 0;
 		this.slowDuration = 0;
@@ -89,6 +94,7 @@ public class Monster implements IMonster {
 		this.poisonDamage = 0;
 		this.poisonDelay = 500;
 		this.animationCounter = 0;
+		this.blazeTimer = 0;
 		this.tileCounter = -1;
 	}
 	
@@ -134,7 +140,12 @@ public class Monster implements IMonster {
 	
 	public void slow(int amount, int duration) {
 		if(!isSlowed) {
-			speed -= amount;
+			if(speed - amount <= 0) {
+				speed = 1;
+			}
+			else {
+				speed -= amount;
+			}
 			isSlowed = true;
 		}
 		slowTimer = 0;
@@ -149,6 +160,15 @@ public class Monster implements IMonster {
 		isPoisoned = true;
 		poisonDamage = amount;
 		poisonDuration = duration;
+	}
+	
+	public void blaze() {
+		isBlazed = true;
+		blazeTimer = 0;
+	}
+	
+	public void unBlaze() {
+		isBlazed = false;
 	}
 	
 	public Rectangle getCollisionBox() {
@@ -201,6 +221,12 @@ public class Monster implements IMonster {
 				hit(poisonDamage, type);
 			}
 		}
+		if(isBlazed) {
+			blazeTimer += Gdx.graphics.getDeltaTime()*1000;
+			if(blazeTimer >= 500) {
+				unBlaze();
+			}
+		}
 		updateCollisionBox();
 		render();
 	}
@@ -226,6 +252,11 @@ public class Monster implements IMonster {
 			}
 			if(isPoisoned) {
 				TextureRegion currentSlowFrame = poisonAnimation.getKeyFrame(animationCounter, true);
+				batch.setColor(c.r, c.g, c.b, 0.5f);
+				batch.draw(currentSlowFrame, posX, posY);
+			}
+			if(isBlazed) {
+				TextureRegion currentSlowFrame = blazeAnimation.getKeyFrame(animationCounter, true);
 				batch.setColor(c.r, c.g, c.b, 0.5f);
 				batch.draw(currentSlowFrame, posX, posY);
 			}

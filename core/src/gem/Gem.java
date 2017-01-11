@@ -111,7 +111,7 @@ public abstract class Gem implements IGem {
 	@Override
 	public boolean equals(Object o) {
 		IGem g = (IGem)o;
-		return this.level == g.getLevel() && this.type.equals(g.getType());
+		return this.getCoordinates().getX() == g.getCoordinates().getX() && this.getCoordinates().getY() == g.getCoordinates().getY();
 	}
 	
 	public void makeSpecialCombination() {

@@ -142,7 +142,7 @@ public class RpgGame extends ApplicationAdapter {
 				createCoordinates();
 				clickHandler = new TileClickHandler(tileMap, coordinates, batch, summoner, manager);
 				createTiles();
-				gemHandler = new GemHandler(batch, renderer, stage, clickHandler, manager, summoner);
+				gemHandler = new GemHandler(batch, renderer, stage, clickHandler, manager, summoner, player);
 				collisionDetector = new CollisionDetector(gemHandler.getFinalizedGems(), summoner.getMonsters());
 				overlay = new Overlay(clickHandler, summoner, player, gemHandler, manager);
 				inputMultiplexer.addProcessor(overlay.getStage());
@@ -296,8 +296,8 @@ public class RpgGame extends ApplicationAdapter {
 			isCPressed = true;
 		}
 		else if(Gdx.input.isKeyPressed(52) && !isXPressed) {
-			if(clickHandler.getClickedGem().isSpecialCombination()) {
-				gemHandler.summonSpecialGem(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()));
+			if(clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isSpecialCombination()) {
+				gemHandler.summonSpecialGemNotCurrent(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()), clickHandler.getClickedGem());
 			}
 //			gemHandler.commitGem(clickHandler.getClickedGem(), true);
 //			clickHandler.unclickGem();
@@ -588,6 +588,7 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("flyingMonsterSheet1.png", Texture.class);
 		manager.load("slowAnimation.png", Texture.class);
 		manager.load("poisonAnimation.png", Texture.class);
+		manager.load("blazeAnimation.png", Texture.class);
 
 		manager.load("temporaryPath.png", Texture.class);
 
@@ -688,5 +689,11 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("checkpoint.png", Texture.class);
 		manager.load("crit.png", Texture.class);
 		manager.load("paused.png", Texture.class);
+		
+		manager.load("jade_animation1.png", Texture.class);
+		manager.load("jade_animation2.png", Texture.class);
+		manager.load("jade_animation3.png", Texture.class);
+		
+		manager.load("star_ruby_animation1.png", Texture.class);
 	}
 }

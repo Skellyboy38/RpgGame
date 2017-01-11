@@ -211,6 +211,7 @@ public class Settings {
 		
 		ailmentAnimationSheets.put("slow", manager.get("slowAnimation.png", Texture.class));
 		ailmentAnimationSheets.put("poison", manager.get("poisonAnimation.png", Texture.class));
+		ailmentAnimationSheets.put("blaze", manager.get("blazeAnimation.png", Texture.class));
 	}
 	
 	public void populateLevels() {
@@ -222,38 +223,38 @@ public class Settings {
 		levels.put(7, new Entity(2, 1000, 10, 300, 3, animationSheets.get(7), false));
 		levels.put(8, new Entity(2, 1200, 10, 300, 3, animationSheets.get(8), false));
 		levels.put(9, new Entity(2, 1400, 10, 300, 3, animationSheets.get(9), false));
-		levels.put(11, new Entity(4, 2000, 10, 270, 4, animationSheets.get(4), false));
-		levels.put(12, new Entity(4, 2400, 10, 270, 4, animationSheets.get(2), false));
-		levels.put(13, new Entity(4, 2800, 10, 250, 4, animationSheets.get(3), false));
-		levels.put(14, new Entity(4, 3200, 10, 250, 4, animationSheets.get(4), false));
-		levels.put(16, new Entity(4, 4800, 10, 200, 4, animationSheets.get(2), false));
-		levels.put(17, new Entity(4, 5600, 10, 200, 4, animationSheets.get(7), false));
-		levels.put(18, new Entity(4, 6400, 10, 200, 4, animationSheets.get(2), false));
-		levels.put(19, new Entity(4, 7200, 10, 200, 4, animationSheets.get(3), false));
-		levels.put(21, new Entity(4, 10500, 10, 200, 5, animationSheets.get(4), false));
-		levels.put(22, new Entity(4, 12000, 10, 200, 5, animationSheets.get(2), false));
-		levels.put(23, new Entity(4, 13500, 10, 200, 5, animationSheets.get(1), false));
-		levels.put(24, new Entity(4, 15000, 10, 200, 5, animationSheets.get(2), false));
-		levels.put(26, new Entity(4, 25000, 15, 200, 5, animationSheets.get(3), false));
-		levels.put(27, new Entity(4, 30000, 15, 200, 5, animationSheets.get(4), false));
-		levels.put(28, new Entity(4, 35000, 15, 200, 5, animationSheets.get(2), false));
-		levels.put(29, new Entity(4, 40000, 15, 200, 5, animationSheets.get(3), false));
-		levels.put(31, new Entity(4, 60000, 20, 200, 6, animationSheets.get(1), false));
-		levels.put(32, new Entity(4, 70000, 20, 200, 6, animationSheets.get(2), false));
-		levels.put(33, new Entity(4, 80000, 20, 200, 6, animationSheets.get(4), false));
-		levels.put(34, new Entity(4, 90000, 20, 200, 6, animationSheets.get(2), false));
-		levels.put(36, new Entity(4, 110000, 20, 200, 6, animationSheets.get(3), false));
-		levels.put(37, new Entity(4, 120000, 20, 200, 6, animationSheets.get(1), false));
-		levels.put(38, new Entity(4, 130000, 20, 200, 6, animationSheets.get(2), false));
-		levels.put(39, new Entity(4, 140000, 20, 200, 6, animationSheets.get(3), false));
-		levels.put(41, new Entity(4, 200000, 30, 200, 7, animationSheets.get(4), false));
-		levels.put(42, new Entity(4, 230000, 30, 200, 7, animationSheets.get(2), false));
-		levels.put(43, new Entity(4, 260000, 30, 200, 7, animationSheets.get(3), false));
-		levels.put(44, new Entity(4, 290000, 30, 200, 7, animationSheets.get(2), false));
-		levels.put(46, new Entity(4, 410000, 30, 200, 8, animationSheets.get(4), false));
-		levels.put(47, new Entity(4, 470000, 30, 200, 8, animationSheets.get(1), false));
-		levels.put(48, new Entity(4, 600000, 30, 200, 8, animationSheets.get(2), false));
-		levels.put(49, new Entity(4, 800000, 30, 200, 8, animationSheets.get(3), false));
+		levels.put(11, new Entity(2, 2000, 10, 270, 4, animationSheets.get(4), false));
+		levels.put(12, new Entity(2, 2400, 10, 270, 4, animationSheets.get(2), false));
+		levels.put(13, new Entity(2, 2800, 10, 250, 4, animationSheets.get(3), false));
+		levels.put(14, new Entity(2, 3200, 10, 250, 4, animationSheets.get(4), false));
+		levels.put(16, new Entity(2, 4800, 10, 200, 4, animationSheets.get(2), false));
+		levels.put(17, new Entity(2, 5600, 10, 200, 4, animationSheets.get(7), false));
+		levels.put(18, new Entity(2, 6400, 10, 200, 4, animationSheets.get(2), false));
+		levels.put(19, new Entity(2, 7200, 10, 200, 4, animationSheets.get(3), false));
+		levels.put(21, new Entity(2, 10500, 10, 200, 5, animationSheets.get(4), false));
+		levels.put(22, new Entity(2, 12000, 10, 200, 5, animationSheets.get(2), false));
+		levels.put(23, new Entity(2, 13500, 10, 200, 5, animationSheets.get(1), false));
+		levels.put(24, new Entity(2, 15000, 10, 200, 5, animationSheets.get(2), false));
+		levels.put(26, new Entity(2, 25000, 15, 200, 5, animationSheets.get(3), false));
+		levels.put(27, new Entity(2, 30000, 15, 200, 5, animationSheets.get(4), false));
+		levels.put(28, new Entity(2, 35000, 15, 200, 5, animationSheets.get(2), false));
+		levels.put(29, new Entity(2, 40000, 15, 200, 5, animationSheets.get(3), false));
+		levels.put(31, new Entity(2, 60000, 20, 200, 6, animationSheets.get(1), false));
+		levels.put(32, new Entity(2, 70000, 20, 200, 6, animationSheets.get(2), false));
+		levels.put(33, new Entity(2, 80000, 20, 200, 6, animationSheets.get(4), false));
+		levels.put(34, new Entity(2, 90000, 20, 200, 6, animationSheets.get(2), false));
+		levels.put(36, new Entity(2, 110000, 20, 200, 6, animationSheets.get(3), false));
+		levels.put(37, new Entity(2, 120000, 20, 200, 6, animationSheets.get(1), false));
+		levels.put(38, new Entity(2, 130000, 20, 200, 6, animationSheets.get(2), false));
+		levels.put(39, new Entity(2, 140000, 20, 200, 6, animationSheets.get(3), false));
+		levels.put(41, new Entity(2, 200000, 30, 200, 7, animationSheets.get(4), false));
+		levels.put(42, new Entity(2, 230000, 30, 200, 7, animationSheets.get(2), false));
+		levels.put(43, new Entity(2, 260000, 30, 200, 7, animationSheets.get(3), false));
+		levels.put(44, new Entity(2, 290000, 30, 200, 7, animationSheets.get(2), false));
+		levels.put(46, new Entity(2, 410000, 30, 200, 8, animationSheets.get(4), false));
+		levels.put(47, new Entity(2, 470000, 30, 200, 8, animationSheets.get(1), false));
+		levels.put(48, new Entity(2, 600000, 30, 200, 8, animationSheets.get(2), false));
+		levels.put(49, new Entity(2, 800000, 30, 200, 8, animationSheets.get(3), false));
 		
 		levels.put(5, new Entity(2, 300, 10, 300, 2, animationSheets.get(5), true));
 		levels.put(10, new Entity(2, 800, 10, 270, 3, animationSheets.get(5), true));
@@ -345,6 +346,12 @@ public class Settings {
 		Jade.put(2, new GemSettings(180, 600, 600, 0, 0, 100, 5000, 0f, 0f));
 		Jade.put(3, new GemSettings(180, 1200, 600, 0, 0, 200, 7000, 0f, 0f));
 		gemSettings.put("jade", Jade);
+		
+		Map<Integer, GemSettings> StarRuby = new HashMap<Integer, GemSettings>();
+		StarRuby.put(1, new GemSettings(150, 300, 600, 0, 0, 0, 0, 0f, 0f));
+		StarRuby.put(2, new GemSettings(180, 600, 600, 0, 0, 0, 0, 0f, 0f));
+		StarRuby.put(3, new GemSettings(180, 1200, 600, 0, 0, 0, 0, 0f, 0f));
+		gemSettings.put("star_ruby", StarRuby);
 	}
 	
 	public void populateGemChances() {
