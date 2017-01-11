@@ -405,6 +405,19 @@ public class GemHandler {
 		checkSpecialCombinations();
 	}
 	
+	public void summonSpecialGemCurrent(String gemToSummon, IGem gem) {
+		IGem specialGem = null;
+		if(gemToSummon.equals("jade")) {
+			specialGem = creator.createSpecialGem("jade", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		else if(gemToSummon.equals("star_ruby")) {
+			specialGem = creator.createSpecialGem("star_ruby", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		commitGem(specialGem, false);
+	}
+	
 	public void summonSpecialGemNotCurrent(String gemToSummon, IGem gem) {
 		IGem specialGem = null;
 		if(gemToSummon.equals("jade")) {
@@ -599,10 +612,10 @@ public class GemHandler {
 		
 		public SpecialGem createSpecialGem(String name, int posX, int posY) {
 			if(name.equals("jade")) {
-				return new Jade(batch, renderer, stage, clickHandler, manager.get("jade_animation1.png", Texture.class), posX, posY, "jade", 1, player, manager);
+				return new Jade(batch, renderer, stage, clickHandler, posX, posY, "jade", 1, player, manager);
 			}
 			else if(name.equals("star_ruby")) {
-				return new StarRuby(batch, renderer, stage, clickHandler, manager.get("star_ruby_animation1.png", Texture.class), posX, posY, "star_ruby", 1, manager);
+				return new StarRuby(batch, renderer, stage, clickHandler, "star_ruby_animation", posX, posY, "star_ruby", 1, manager);
 			}
 			else {
 				return null;

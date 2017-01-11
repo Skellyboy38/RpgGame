@@ -297,13 +297,17 @@ public class RpgGame extends ApplicationAdapter {
 		}
 		else if(Gdx.input.isKeyPressed(52) && !isXPressed) {
 			if(clickHandler.getClickedGem() != null && clickHandler.getClickedGem().isSpecialCombination()) {
-				gemHandler.summonSpecialGemNotCurrent(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()), clickHandler.getClickedGem());
+				if(clickHandler.getClickedGem().isTemporary()) {
+					gemHandler.summonSpecialGemCurrent(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()), clickHandler.getClickedGem());
+				}
+				else {
+					gemHandler.summonSpecialGemNotCurrent(Settings.evolutions.get(clickHandler.getClickedGem().getType() + "_" + clickHandler.getClickedGem().getLevel()), clickHandler.getClickedGem());
+				}
 			}
-//			gemHandler.commitGem(clickHandler.getClickedGem(), true);
-//			clickHandler.unclickGem();
-//			gemHandler.nextStage();
-//			summoner.nextStage();
-//			summoner.start();
+			clickHandler.unclickGem();
+			gemHandler.nextStage();
+			summoner.nextStage();
+			summoner.start();
 			isXPressed = true;
 		}
 		if(!Gdx.input.isKeyPressed(66)) {
@@ -695,5 +699,7 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("jade_animation3.png", Texture.class);
 		
 		manager.load("star_ruby_animation1.png", Texture.class);
+		manager.load("star_ruby_animation2.png", Texture.class);
+		manager.load("star_ruby_animation3.png", Texture.class);
 	}
 }

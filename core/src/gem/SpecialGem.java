@@ -20,12 +20,14 @@ public class SpecialGem extends Gem {
 	private Animation animation;
 	private float animationCounter;
 	private List<Integer> upgradePrices;
+	private String animationName;
 
 	public SpecialGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler,
-			Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level, manager);
+			String animationName, int posX, int posY, String type, int level, AssetManager manager) {
+		super(batch, renderer, stage, clickHandler, manager.get(animationName+level+".png", Texture.class), posX, posY, type, level, manager);
 		
-		this.animation =  createAnimation(texture);
+		this.animationName = animationName;
+		this.animation =  createAnimation(manager.get(animationName+level+".png", Texture.class));
 		this.animationCounter = 0;
 		this.upgradePrices = Settings.specialGemUpgradePrices.get(type);
 	}
@@ -75,6 +77,7 @@ public class SpecialGem extends Gem {
 			this.range = Settings.gemSettings.get(type).get(level).range;
 			this.damage = Settings.gemSettings.get(type).get(level).damage;
 			this.originalDelay = Settings.gemSettings.get(type).get(level).delay;
+			this.animation = createAnimation(manager.get(animationName+level+".png", Texture.class));
 		}
 	}
 

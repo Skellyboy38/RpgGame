@@ -3,7 +3,6 @@ package gem;
 import java.util.List;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,9 +14,9 @@ public class StarRuby extends SpecialGem {
 	private String name;
 	private String description;
 
-	public StarRuby(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture,
+	public StarRuby(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, String animationName,
 			int posX, int posY, String type, int level, AssetManager manager) {
-		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level, manager);
+		super(batch, renderer, stage, clickHandler, animationName, posX, posY, type, level, manager);
 		
 		this.name = "Star Ruby";
 		this.description = "Star Ruby burns all enemies around it.";
