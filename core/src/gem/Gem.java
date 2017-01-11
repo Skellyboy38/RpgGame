@@ -64,7 +64,7 @@ public abstract class Gem implements IGem {
 	private boolean isSpecialCombination;
 	protected boolean canHit;
 	
-	private String type;
+	protected String type;
 
 	public Gem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler, Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
 		this.range = Settings.gemSettings.get(type).get(level).range;
@@ -111,7 +111,8 @@ public abstract class Gem implements IGem {
 	@Override
 	public boolean equals(Object o) {
 		IGem g = (IGem)o;
-		return this.getCoordinates().getX() == g.getCoordinates().getX() && this.getCoordinates().getY() == g.getCoordinates().getY();
+		return this.getCoordinates().getX() == g.getCoordinates().getX() && this.getCoordinates().getY() == g.getCoordinates().getY() &&
+				this.getType().equals(g.getType()) && this.getLevel() == g.getLevel();
 	}
 	
 	public void makeSpecialCombination() {

@@ -1,5 +1,7 @@
 package gem;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,24 +12,31 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import bullets.IBullet;
+import settings.Settings;
 import tile.TileClickHandler;
 
 public class SpecialGem extends Gem {
 	
 	private Animation animation;
 	private float animationCounter;
+	private List<Integer> upgradePrices;
 
 	public SpecialGem(SpriteBatch batch, ShapeRenderer renderer, Stage stage, TileClickHandler clickHandler,
 			Texture texture, int posX, int posY, String type, int level, AssetManager manager) {
 		super(batch, renderer, stage, clickHandler, texture, posX, posY, type, level, manager);
 		
-		TextureRegion[][] temp = TextureRegion.split(texture, 20, texture.getHeight());
-		TextureRegion[] frames = new TextureRegion[texture.getWidth()/20];
-		for(int i = 0; i < texture.getWidth()/20; i++) {
+		this.animation =  createAnimation(texture);
+		this.animationCounter = 0;
+		this.upgradePrices = Settings.specialGemUpgradePrices.get(type);
+	}
+	
+	public Animation createAnimation(Texture animationSheet) {
+		TextureRegion[][] temp = TextureRegion.split(animationSheet, 20, animationSheet.getHeight());
+		TextureRegion[] frames = new TextureRegion[animationSheet.getWidth()/20];
+		for(int i = 0; i < animationSheet.getWidth()/20; i++) {
 			frames[i] = temp[0][i];
 		}
-		this.animation =  new Animation(0.1f, frames);
-		this.animationCounter = 0;
+		return new Animation(0.1f, frames);
 	}
 	
 	@Override
@@ -54,6 +63,19 @@ public class SpecialGem extends Gem {
 			toRemove = null;
 		}
 		batch.end();
+	}
+	
+	public int getUpgradePrice() {
+		return level < 3 ? upgradePrices.get(level - 1) : 9999;
+	}
+	
+	public void upgrade() {
+		if(level < 3) {
+			level++;
+			this.range = Settings.gemSettings.get(type).get(level).range;
+			this.damage = Settings.gemSettings.get(type).get(level).damage;
+			this.originalDelay = Settings.gemSettings.get(type).get(level).delay;
+		}
 	}
 
 	@Override

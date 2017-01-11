@@ -1,6 +1,8 @@
 package settings;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -21,6 +23,7 @@ public class Settings {
 	public static Map<String, String> elementStrengths;
 	public static Map<String, String> evolutions;
 	public static Map<String, SpecialCombination> specialGemRecipes;
+	public static Map<String, List<Integer>> specialGemUpgradePrices;
 
 	public Settings(AssetManager manager) {
 		levels = new HashMap<Integer, Entity>();
@@ -35,6 +38,7 @@ public class Settings {
 		elementIntToType = new HashMap<Integer, String>();
 		specialGemRecipes = new HashMap<String, SpecialCombination>();
 		evolutions = new HashMap<String, String>();
+		specialGemUpgradePrices = new HashMap<String, List<Integer>>();
 		
 		addAnimationSheets(manager);
 		addUpgradePrices();
@@ -44,6 +48,12 @@ public class Settings {
 		populateElements(manager);
 		createSpecialGemRecipes();
 		createEvolutions();
+		getGemUpgradePrices();
+	}
+	
+	public void getGemUpgradePrices() {
+		specialGemUpgradePrices.put("jade", Arrays.asList(50, 100));
+		specialGemUpgradePrices.put("star_ruby", Arrays.asList(50, 100));
 	}
 	
 	public void createEvolutions() {

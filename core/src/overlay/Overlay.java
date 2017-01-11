@@ -18,6 +18,7 @@ import com.mygdx.game.RpgGame;
 
 import gem.GemHandler;
 import gem.IGem;
+import gem.SpecialGem;
 import monster.Summoner;
 import player.Player;
 import settings.Settings;
@@ -48,6 +49,7 @@ public class Overlay {
 	public static final Coordinate GEM_CHANCES_3 = new Coordinate(490, 348);
 	public static final Coordinate GEM_CHANCES_4 = new Coordinate(490, 282);
 	public static final Coordinate GEM_CHANCES_5 = new Coordinate(490, 216);
+	public static final Coordinate UPGRADE_SPECIAL_GEM = new Coordinate(350, 100);
 
 	private Texture background;
 	private Texture infoArea;
@@ -72,6 +74,7 @@ public class Overlay {
 	private TextButton minimizeButton;
 	private TextButton maximizeButton;
 	private TextButton upgradeGemChancesButton;
+	private TextButton upgradeSpecialGemButton;
 	
 	private boolean showGemChances;
 	private boolean showShop;
@@ -107,6 +110,7 @@ public class Overlay {
 		createUpgradeGemChancesButton();
 		createMinimizeButton();
 		createMaximizeButton();
+		createUpgradeSpecialGemButton();
 		
 		stage.addActor(shopButton);
 		stage.addActor(monsterPathButton);
@@ -129,6 +133,24 @@ public class Overlay {
 		stage.addActor(gemChancesButton);
 		stage.addActor(minimizeButton);
 		purchaseMessage = "";
+	}
+	
+	public void createUpgradeSpecialGemButton() {
+		upgradeSpecialGemButton = new TextButton("", RpgGame.BUTTON_STYLE);
+		upgradeSpecialGemButton.setHeight(BUTTON_HEIGHT);
+		upgradeSpecialGemButton.setWidth(BUTTON_WIDTH);
+		upgradeSpecialGemButton.setPosition(UPGRADE_SPECIAL_GEM.getX(), UPGRADE_SPECIAL_GEM.getY());
+
+		upgradeSpecialGemButton.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				SpecialGem specialGem = (SpecialGem)clickHandler.getClickedGem();
+				if(player.canBuy(specialGem.getUpgradePrice())) {
+					player.spendMoney(specialGem.getUpgradePrice());
+					specialGem.upgrade();
+				}
+				return false;
+			}
+		});
 	}
 
 	public void createMinimizeButton() {
@@ -315,6 +337,15 @@ public class Overlay {
 				font.setColor(Color.BLACK);
 				font.getData().setScale(0.7f);
 				font.draw(batch, info, GEM_INFO_TEXT.getX(), GEM_INFO_TEXT.getY());
+				if(clickHandler.getClickedGem() instanceof SpecialGem) {
+					SpecialGem specialGem = (SpecialGem)clickHandler.getClickedGem();
+					stage.addActor(upgradeSpecialGemButton);
+					font.draw(batch, "Upgrade: "+specialGem.getUpgradePrice(), upgradeSpecialGemButton.getX() + BUTTON_TEXT_PADDING_WIDTH, 
+							upgradeSpecialGemButton.getY() + BUTTON_TEXT_PADDING_HEIGHT);
+				}
+				else {
+					upgradeSpecialGemButton.remove();
+				}
 			}
 			else if(clickHandler.getClickedRock() != null) {
 				String info = "I am a rock.";
