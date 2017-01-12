@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +21,7 @@ import com.mygdx.game.RpgGame;
 import gem.GemHandler;
 import gem.IGem;
 import gem.SpecialGem;
+import monster.Monster;
 import monster.Summoner;
 import player.Player;
 import settings.Settings;
@@ -58,6 +61,7 @@ public class Overlay {
 	private Texture shopTexture;
 	private Texture minimizeTexture;
 	private Texture maximizeTexture;
+	private Texture monsterSideBarTexture;
 	
 	private TileClickHandler clickHandler;
 	private Summoner summoner;
@@ -67,6 +71,7 @@ public class Overlay {
 	private Stage stage;
 	private GemHandler gemHandler;
 	private NumberFormat formatter;
+	private ShapeRenderer renderer;
 	
 	private TextButton shopButton;
 	private TextButton monsterPathButton;
@@ -90,6 +95,7 @@ public class Overlay {
 		this.showShop = false;
 		this.isMinimized = false;
 		this.batch = new SpriteBatch();
+		this.renderer = new ShapeRenderer();
 		this.background = manager.get("overlay.png", Texture.class);
 		this.infoArea = manager.get("infoArea.png", Texture.class);
 		this.buttonTexture = manager.get("shopButton.png", Texture.class);
@@ -97,6 +103,7 @@ public class Overlay {
 		this.shopTexture = manager.get("shop.png", Texture.class);
 		this.minimizeTexture = manager.get("minimizeButton.png", Texture.class);
 		this.maximizeTexture = manager.get("maximizeButton.png", Texture.class);
+		this.monsterSideBarTexture = manager.get("monsterSideBar.png", Texture.class);
 		this.player = player;
 		this.stage = new Stage();
 		this.font = new BitmapFont();
@@ -291,19 +298,23 @@ public class Overlay {
 	}
 
 	public void render() {
-		
+		stage.act();
 		String shopMessage = "Shop" + "\nGold: " + player.getMoney() + "g";
 		String pathMessage = "Show \nMonster Path";
 		String gemChancesMessage = "Show Gem \nChances (%)";
 		
-		batch.begin();
 		font.setColor(Color.YELLOW);
 		font.getData().setScale(1f);
+		batch.begin();
 		font.draw(batch, "Current level: " + summoner.getLevel() + "\nCurrent HP: " + player.getHealth() + "\nFPS: " + Gdx.graphics.getFramesPerSecond(), INFO_CORNER.getX(), INFO_CORNER.getY());
+		batch.end();
 		if(isMinimized) {
+			batch.begin();
 			batch.draw(maximizeTexture, maximizeButton.getX(), maximizeButton.getY());
+			batch.end();
 		}
 		else {
+			batch.begin();
 			Color c = batch.getColor();
 			batch.setColor(c.r, c.g, c.b, 0.6f);
 			batch.draw(background, 0, 0);
@@ -315,6 +326,7 @@ public class Overlay {
 			font.draw(batch, shopMessage, SHOP.getX() + BUTTON_TEXT_PADDING_WIDTH, SHOP.getY() + BUTTON_TEXT_PADDING_HEIGHT);
 			font.draw(batch, pathMessage, PATH.getX() + BUTTON_TEXT_PADDING_WIDTH, PATH.getY() + BUTTON_TEXT_PADDING_HEIGHT);
 			font.draw(batch, gemChancesMessage, GEM_CHANCES.getX() + BUTTON_TEXT_PADDING_WIDTH, GEM_CHANCES.getY() + BUTTON_TEXT_PADDING_HEIGHT);
+			batch.end();
 			if(clickHandler.getClickedGem() != null) {
 				IGem gem = clickHandler.getClickedGem();
 				TextureRegion texture = new TextureRegion(gem.getTexture());
@@ -332,6 +344,7 @@ public class Overlay {
 						"\nLevel: " + level + "          Damage: " + damage + 
 						"\nSpeed: " + speed + "        Range: " + range +
 						"\nCrit Chance: " + critChance;
+				batch.begin();
 				batch.draw(infoArea, GEM_INFO_AREA.getX(), GEM_INFO_AREA.getY());
 				batch.draw(texture, GEM.getX(), GEM.getY());
 				font.setColor(Color.BLACK);
@@ -346,8 +359,10 @@ public class Overlay {
 				else {
 					upgradeSpecialGemButton.remove();
 				}
+				batch.end();
 			}
 			else if(clickHandler.getClickedRock() != null) {
+				batch.begin();
 				String info = "I am a rock.";
 				TextureRegion texture = new TextureRegion(clickHandler.getClickedRock().getTexture());
 				texture.setRegionWidth(GEM_DISPLAY_WIDTH);
@@ -357,8 +372,10 @@ public class Overlay {
 				font.setColor(Color.BLACK);
 				font.getData().setScale(0.7f);
 				font.draw(batch, info, GEM_INFO_TEXT.getX(), GEM_INFO_TEXT.getY());
+				batch.end();
 			}
 			if(showGemChances) {
+				batch.begin();
 				Float[] gemChances = gemHandler.getGemChances();
 				batch.draw(gemChancesTexture, GEM_CHANCES_IMAGE.getX(), GEM_CHANCES_IMAGE.getY());
 				font.setColor(Color.RED);
@@ -368,8 +385,10 @@ public class Overlay {
 				font.draw(batch, formatter.format(gemChances[2]*100) + "%", GEM_CHANCES_3.getX(), GEM_CHANCES_3.getY());
 				font.draw(batch, formatter.format(gemChances[1]*100) + "%", GEM_CHANCES_2.getX(), GEM_CHANCES_2.getY());
 				font.draw(batch, formatter.format(gemChances[0]*100) + "%", GEM_CHANCES_1.getX(), GEM_CHANCES_1.getY());
+				batch.end();
 			}
 			if(showShop) {
+				batch.begin();
 				batch.draw(shopTexture, 0, 100);
 				batch.draw(buttonTexture, upgradeGemChancesButton.getX(), upgradeGemChancesButton.getY());
 				font.setColor(Color.WHITE);
@@ -378,6 +397,7 @@ public class Overlay {
 				font.setColor(Color.YELLOW);
 				font.getData().setScale(1f);
 				font.draw(batch, "Purchase?\n" + Settings.upgradePrices.get(gemHandler.getGemChancesLevel()) + "g", upgradeGemChancesButton.getX() + 6, upgradeGemChancesButton.getY() + 40);
+				batch.end();
 				if(!gemHandler.canIncreaseGemChances()) {
 					purchaseMessage = "Max level gem chances reached.";
 					font.setColor(Color.YELLOW);
@@ -388,11 +408,44 @@ public class Overlay {
 				else {
 					font.setColor(Color.RED);
 				}
+				batch.begin();
 				font.getData().setScale(2f);
 				font.draw(batch, purchaseMessage, 180, 390);
+				batch.end();
+			}
+			if(summoner.isSummoning()) {
+				batch.begin();
+				int height = 550;
+				int width = 905;
+				batch.setColor(c.r, c.g, c.b, 0.15f);
+				batch.draw(monsterSideBarTexture, 900, 100);
+				batch.setColor(c.r, c.g, c.b, 1f);
+				batch.end();
+				for(Monster m : summoner.getMonsters()) {
+					if(!m.isDead()) {
+						renderer.begin(ShapeType.Filled);
+						renderer.setColor(m.getHpColor());
+						renderer.rect(width + m.getMonsterIcon().getRegionWidth() + 2, height, m.getLengthOfHpBar(), m.getHpFill().getHeight());
+						renderer.end();
+						renderer.begin(ShapeType.Line);
+						renderer.setColor(Color.BLACK);
+						renderer.rect(width + m.getMonsterIcon().getRegionWidth() + 2, height, m.getHpFrame().getWidth(), m.getHpFrame().getHeight());
+						renderer.end();
+						batch.begin();
+						batch.draw(m.getMonsterIcon(), width, height);
+						font.setColor(Color.BLACK);
+						font.getData().setScale(0.7f);
+						font.draw(batch, ""+m.getHp()+"/"+m.getMaxHp(), width + m.getMonsterIcon().getRegionWidth() + 4 + m.getHpFrame().getWidth(), height);
+						batch.end();
+						if(height - (m.getMonsterIcon().getRegionHeight() + 2) > 105) {
+							height -= (m.getMonsterIcon().getRegionHeight() + 2);
+						}
+						else {
+							break;
+						}
+					}
+				}
 			}
 		}
-		batch.end();
-		stage.act();
 	}
 }

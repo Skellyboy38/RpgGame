@@ -709,5 +709,7 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("silver_animation1.png", Texture.class);
 		manager.load("silver_animation2.png", Texture.class);
 		manager.load("silver_animation3.png", Texture.class);
+		
+		manager.load("monsterSideBar.png", Texture.class);
 	}
 }

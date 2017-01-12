@@ -31,6 +31,7 @@ public class Monster implements IMonster {
 	private Texture typeTexture;
 	private Texture animationSheet;
 	private TextureRegion texture;
+	private TextureRegion monsterIcon;
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 	
@@ -98,6 +99,14 @@ public class Monster implements IMonster {
 		this.tileCounter = -1;
 	}
 	
+	public Rectangle getHpFrame() {
+		return hpFrame;
+	}
+	
+	public Rectangle getHpFill() {
+		return hpFill;
+	}
+	
 	public void setInformation(Texture texture, int posX, int posY, int speed, int maxHp, int value, String type, boolean isFlying) {
 		this.animationSheet = texture;
 		this.speed = speed;
@@ -111,12 +120,17 @@ public class Monster implements IMonster {
 		this.texture = new TextureRegion(texture);
 		this.texture.setRegionWidth(RpgGame.TILE_WIDTH);
 		this.animation = createAnimation(animationSheet);
+		this.monsterIcon = animation.getKeyFrame(0);
 		this.collisionBox = new Rectangle(posX, posY, this.texture.getRegionWidth(), this.texture.getRegionHeight());
 		this.hpFrame = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
 		this.hpFill = new Rectangle(posX, (int)(posY + this.texture.getRegionHeight()*1.1), this.texture.getRegionWidth(), 5);
 		this.typeTexture = Settings.elementTypes.get(type);
 		this.currentHp = maxHp; 
 		this.originalSpeed = speed;
+	}
+	
+	public TextureRegion getMonsterIcon() {
+		return monsterIcon;
 	}
 
 	public void dispose() {
@@ -239,8 +253,7 @@ public class Monster implements IMonster {
 	public void render() {
 		if(!isDead()) {
 			animationCounter += Gdx.graphics.getDeltaTime();
-			TextureRegion currentFrame;
-			currentFrame = animation.getKeyFrame(animationCounter, true);
+			TextureRegion currentFrame = animation.getKeyFrame(animationCounter, true);
 			batch.begin();
 			Color c = batch.getColor();
 			batch.draw(currentFrame, posX, posY);
