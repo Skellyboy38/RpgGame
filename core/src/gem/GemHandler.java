@@ -313,6 +313,7 @@ public class GemHandler {
 		}
 		newGem.setPermanent();
 		gems.add(newGem);
+		gem.removeListeners();
 		currentGems.remove(gem);
 		for(IGem g : currentGems) {
 			rocks.add(new Rock(batch, stage, clickHandler, manager.get("rock.png", Texture.class), g.getCoordinates().getX(), g.getCoordinates().getY()));
@@ -423,6 +424,7 @@ public class GemHandler {
 			specialGem = creator.createSpecialGem("silver", gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			specialGem.setPermanent();
 		}
+		gem.removeListeners();
 		currentGems.remove(gem);
 		commitGem(specialGem, false);
 	}
@@ -510,7 +512,7 @@ public class GemHandler {
 					level2 = recipe.level2;
 				}
 			}
-			
+			gem.removeListeners();
 			gems.remove(gem);
 			for(IGem g : gems) {
 				if(g.getType().equals(type1) && g.getLevel() == level1) {
