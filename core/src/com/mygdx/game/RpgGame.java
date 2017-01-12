@@ -701,5 +701,13 @@ public class RpgGame extends ApplicationAdapter {
 		manager.load("star_ruby_animation1.png", Texture.class);
 		manager.load("star_ruby_animation2.png", Texture.class);
 		manager.load("star_ruby_animation3.png", Texture.class);
+		
+		manager.load("malachite_animation1.png", Texture.class);
+		manager.load("malachite_animation2.png", Texture.class);
+		manager.load("malachite_animation3.png", Texture.class);
+
+		manager.load("silver_animation1.png", Texture.class);
+		manager.load("silver_animation2.png", Texture.class);
+		manager.load("silver_animation3.png", Texture.class);
 	}
 }

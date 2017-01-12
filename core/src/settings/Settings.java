@@ -54,6 +54,8 @@ public class Settings {
 	public void getGemUpgradePrices() {
 		specialGemUpgradePrices.put("jade", Arrays.asList(50, 100));
 		specialGemUpgradePrices.put("star_ruby", Arrays.asList(50, 100));
+		specialGemUpgradePrices.put("malachite", Arrays.asList(50, 100));
+		specialGemUpgradePrices.put("silver", Arrays.asList(50, 100));
 	}
 	
 	public void createEvolutions() {
@@ -362,6 +364,18 @@ public class Settings {
 		StarRuby.put(2, new GemSettings(180, 600, 600, 0, 0, 0, 0, 0f, 0f));
 		StarRuby.put(3, new GemSettings(180, 1200, 600, 0, 0, 0, 0, 0f, 0f));
 		gemSettings.put("star_ruby", StarRuby);
+		
+		Map<Integer, GemSettings> Malachite = new HashMap<Integer, GemSettings>();
+		Malachite.put(1, new GemSettings(150, 300, 600, 0, 0, 0, 0, 0f, 0f));
+		Malachite.put(2, new GemSettings(180, 600, 600, 0, 0, 0, 0, 0f, 0f));
+		Malachite.put(3, new GemSettings(180, 1200, 600, 0, 0, 0, 0, 0f, 0f));
+		gemSettings.put("malachite", Malachite);
+		
+		Map<Integer, GemSettings> Silver = new HashMap<Integer, GemSettings>();
+		Silver.put(1, new GemSettings(150, 300, 400, 1, 2000, 0, 0, 0f, 0f));
+		Silver.put(2, new GemSettings(180, 600, 400, 2, 4000, 0, 0, 0f, 0f));
+		Silver.put(3, new GemSettings(180, 1200, 400, 3, 6000, 0, 0, 0f, 0f));
+		gemSettings.put("silver", Silver);
 	}
 	
 	public void populateGemChances() {

@@ -415,6 +415,15 @@ public class GemHandler {
 			specialGem = creator.createSpecialGem("star_ruby", gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			specialGem.setPermanent();
 		}
+		else if(gemToSummon.equals("malachite")) {
+			specialGem = creator.createSpecialGem("malachite", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		else if(gemToSummon.equals("silver")) {
+			specialGem = creator.createSpecialGem("silver", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		currentGems.remove(gem);
 		commitGem(specialGem, false);
 	}
 	
@@ -426,6 +435,14 @@ public class GemHandler {
 		}
 		else if(gemToSummon.equals("star_ruby")) {
 			specialGem = creator.createSpecialGem("star_ruby", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		else if(gemToSummon.equals("malachite")) {
+			specialGem = creator.createSpecialGem("malachite", gem.getCoordinates().getX(), gem.getCoordinates().getY());
+			specialGem.setPermanent();
+		}
+		else if(gemToSummon.equals("silver")) {
+			specialGem = creator.createSpecialGem("silver", gem.getCoordinates().getX(), gem.getCoordinates().getY());
 			specialGem.setPermanent();
 		}
 		if(specialGem != null) {
@@ -616,6 +633,12 @@ public class GemHandler {
 			}
 			else if(name.equals("star_ruby")) {
 				return new StarRuby(batch, renderer, stage, clickHandler, "star_ruby_animation", posX, posY, "star_ruby", 1, manager);
+			}
+			else if(name.equals("malachite")) {
+				return new Malachite(batch, renderer, stage, clickHandler, "malachite_animation", posX, posY, "malachite", 1, manager);
+			}
+			else if(name.equals("silver")) {
+				return new Silver(batch, renderer, stage, clickHandler, posX, posY, "silver", 1, manager);
 			}
 			else {
 				return null;

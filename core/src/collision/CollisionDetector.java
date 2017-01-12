@@ -52,10 +52,10 @@ public class CollisionDetector {
 					}
 				}
 			}
-			if((type.equals("yellow") || type.equals("star_ruby")) && g.canHit() && !allMonstersInRange.isEmpty()) {
+			if((type.equals("yellow") || type.equals("star_ruby") || type.equals("malachite")) && g.canHit() && !allMonstersInRange.isEmpty()) {
 				g.hit(allMonstersInRange);
 			}
-			if(type.equals("blue") && g.canHit()) {
+			if((type.equals("blue") || type.equals("silver")) && g.canHit()) {
 				if(areAllMonstersSlowed && !allMonstersInRange.isEmpty()) {
 					g.hit(allMonstersInRange.get(0));
 				}
